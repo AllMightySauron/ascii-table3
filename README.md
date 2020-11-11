@@ -31,7 +31,7 @@ Usage
 Node.js
 
 ```js
-var AsciiTable2 = require('ascii-table2');
+var AsciiTable3 = require('./ascii-table3');
 ```
 
 Examples
@@ -42,13 +42,13 @@ Examples
 Tables are created programmatically.
 
 ```js
-var AsciiTable2 = require('ascii-table2');
+var AsciiTable3 = require('./ascii-table3');
 
 // create table
 var table = 
-    new AsciiTable2.AsciiTable2('Sample table')
+    new AsciiTable3.AsciiTable3('Sample table')
     .setHeading('Name', 'Age', 'Eye color')
-    .setAlign(3, AsciiTable2.AlignmentEnum.CENTER)
+    .setAlign(3, AsciiTable3.CENTER)
     .addRowMatrix([
         ['John', 23, 'green'],
         ['Mary', 16, 'brown'],
@@ -75,7 +75,7 @@ console.log(table.toString());
 We can make simpler tables without a title or headings as well.
 
 ```js
-var table = new AsciiTable2.AsciiTable2();
+var table = new AsciiTable3.AsciiTable3();
 
 table
   .addRow('a', 'apple', 'Some longer string')
@@ -99,14 +99,11 @@ console.log(table.toString());
 
 Tables may be rendered using different styles.
 
-```
-var AsciiTable2 = require('./ascii-table2');
-
-// create table
+```js
 var table = 
-    new AsciiTable2.AsciiTable2('Sample table')
+    new AsciiTable3.AsciiTable3('Sample table')
     .setHeading('Name', 'Age', 'Eye color')
-    .setAlign(3, AsciiTable2.AlignmentEnum.CENTER)
+    .setAlign(3, AsciiTable3.CENTER)
     .addRowMatrix([
         ['John', 23, 'green'],
         ['Mary', 16, 'brown'],
@@ -114,6 +111,7 @@ var table =
         ['Peter', 8, 'brown']
     ]);
 
+// set compact style
 table.setStyle('compact');
 console.log(table.toString());
 ```
@@ -132,7 +130,7 @@ Peter   8   brown
 
 These styles range from simple to more elaborate.
 
-```
+```js
 table.setStyle('unicode-single');
 console.log(table.toString());
 ```

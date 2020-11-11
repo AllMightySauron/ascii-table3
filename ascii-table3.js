@@ -29,7 +29,7 @@ class AsciiTable3 {
 
         // load styles
         var fs = require('fs');
-        this.styles = JSON.parse(fs.readFileSync(STYLES_FILENAME, 'utf8'));
+        this.styles = JSON.parse(fs.readFileSync(module.path + '/' + STYLES_FILENAME, 'utf8'));
 
         // set default style
         this.setStyle("ramac");
