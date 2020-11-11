@@ -5,7 +5,7 @@
   "description": "Javascript ASCII renderer for beautiful console-based tables",
   "repository": {
     "type": "git",
-    "url": "git://github.com/AllMightySauron/ascii-table2"
+    "url": "git://github.com/AllMightySauron/ascii-table3"
   },
   "license": "GPLv3",
   "keywords": [
