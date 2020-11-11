@@ -1,0 +1,176 @@
+[
+    {
+        "name": "none",
+        "borders": {
+            "top": {
+                "left": "",
+                "center": " ",
+                "right": "",
+                "colSeparator": " "
+            },
+            "middle": {
+                "left": "",
+                "center": " ",
+                "right": "",
+                "colSeparator": " "
+            },
+            "bottom": {
+                "left": "",
+                "center": " ",
+                "right": "",
+                "colSeparator": " "
+            },
+            "data" : {
+                "left": "",
+                "center": " ",
+                "right": "",
+                "colSeparator": " "
+            }
+        }
+    },
+    {
+        "name": "compact",
+        "borders": {
+            "top": {
+                "left": "",
+                "center": "-",
+                "right": "",
+                "colSeparator": "-"
+            },
+            "middle": {
+                "left": "",
+                "center": "-",
+                "right": "",
+                "colSeparator": " "
+            },
+            "bottom": {
+                "left": "",
+                "center": "",
+                "right": "",
+                "colSeparator": ""
+            },
+            "data" : {
+                "left": "",
+                "center": " ",
+                "right": "",
+                "colSeparator": " "
+            }
+        }
+    },
+    {
+        "name": "ramac",
+        "borders": {
+            "top": {
+                "left": "+",
+                "center": "-",
+                "right": "+",
+                "colSeparator": "+"
+            },
+            "middle": {
+                "left": "+",
+                "center": "-",
+                "right": "+",
+                "colSeparator": "+"
+            },
+            "bottom": {
+                "left": "+",
+                "center": "-",
+                "right": "+",
+                "colSeparator": "+"
+            },
+            "data" : {
+                "left": "|",
+                "center": " ",
+                "right": "|",
+                "colSeparator": "|"
+            }
+        }
+    },
+    {
+        "name": "unicode-single",
+        "borders": {
+            "top": {
+                "left": "┌",
+                "center": "─",
+                "right": "┐",
+                "colSeparator": "┬"
+            },
+            "middle": {
+                "left": "├",
+                "center": "─",
+                "right": "┤",
+                "colSeparator": "┼"
+            },
+            "bottom": {
+                "left": "└",
+                "center": "─",
+                "right": "┘",
+                "colSeparator": "┴"
+            },
+            "data" : {
+                "left": "│",
+                "center": " ",
+                "right": "│",
+                "colSeparator": "│"
+            }
+        }
+    },
+    {
+        "name": "unicode-double",
+        "borders": {
+            "top": {
+                "left": "╔",
+                "center": "═",
+                "right": "╗",
+                "colSeparator": "╦"
+            },
+            "middle": {
+                "left": "╠",
+                "center": "═",
+                "right": "╣",
+                "colSeparator": "╬"
+            },
+            "bottom": {
+                "left": "╚",
+                "center": "═",
+                "right": "╝",
+                "colSeparator": "╩"
+            },
+            "data" : {
+                "left": "║",
+                "center": " ",
+                "right": "║",
+                "colSeparator": "║"
+            }
+        }
+    },
+    {
+        "name": "ascii-table",
+        "borders": {
+            "top": {
+                "left": ".",
+                "center": "-",
+                "right": ".",
+                "colSeparator": "-"
+            },
+            "middle": {
+                "left": "|",
+                "center": "-",
+                "right": "|",
+                "colSeparator": "-"
+            },
+            "bottom": {
+                "left": ".",
+                "center": "-",
+                "right": ".",
+                "colSeparator": "-"
+            },
+            "data" : {
+                "left": "|",
+                "center": " ",
+                "right": "|",
+                "colSeparator": "|"
+            }
+        }
+    }
+]

@@ -1,0 +1,33 @@
+{
+  "name": "ascii-table3",
+  "version": "0.0.1",
+  "author": "João Simões <joao.santos.simoes@gmail.com> (https://github.com/AllMightySauron)",
+  "description": "Javascript ASCII renderer for beautiful console-based tables",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/AllMightySauron/ascii-table2"
+  },
+  "license": "GPLv3",
+  "keywords": [
+    "table",
+    "ascii",
+    "console"
+  ],
+  "contributors": [
+    {
+      "name": "João Simões",
+      "github": "https://github.com/AllMightySauron"
+    }
+  ],
+  "main": "index.js",
+  "scripts": {
+    "qa": "npm run hint && npm run test",
+    "hint": "jshint ./",
+    "test": "mocha -R spec"
+  },
+  "devdependencies": {
+    "jshint": "^2.12.0",
+    "mocha": "^8.2.1"
+  },
+  "dependencies": {}
+}
