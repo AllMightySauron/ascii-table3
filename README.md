@@ -211,7 +211,7 @@ be left aligned, `Number` types will be right aligned.
 Example:
 
 ```javascript
-AsciiTable3.align(AsciiTable.LEFT, 'hey', 7) // 'hey    '
+AsciiTable3.align(AsciiTable3.LEFT, 'hey', 7) // 'hey    '
 ```
 
 ### AsciiTable3.truncateString(str, len)
@@ -361,17 +361,17 @@ table.setHeadingAlign(AsciiTable3.LEFT);
 
 #### instance.setHeadingAlignLeft()
 
-Alias to `instance.setHeadingAlignLeft(AsciiTable.LEFT)`
+Alias to `instance.setHeadingAlignLeft(AsciiTable3.LEFT)`
 
 
 #### instance.setHeadingAlignCenter()
 
-Alias to `instance.setHeadingAlignLeft(AsciiTable.CENTER)`
+Alias to `instance.setHeadingAlignLeft(AsciiTable3.CENTER)`
 
 
 #### instance.setHeadingAlignRight()
 
-Alias to `instance.setHeadingAlignLeft(AsciiTable.RIGHT)`
+Alias to `instance.setHeadingAlignLeft(AsciiTable3.RIGHT)`
 
 #### instance.getHeadingAlign()
 
@@ -732,15 +732,15 @@ console.log(table.toString());
 
 #### instance.setAlignLeft(idx)
 
-Alias to `instance.setAlign(idx, AsciiTable.LEFT)`
+Alias to `instance.setAlign(idx, AsciiTable3.LEFT)`
 
 #### instance.setAlignCenter(idx)
 
-Alias to `instance.setAlign(idx, AsciiTable.CENTER)`
+Alias to `instance.setAlign(idx, AsciiTable3.CENTER)`
 
 #### instance.setAlignRight(idx)
 
-Alias to `instance.setAlign(idx, AsciiTable.RIGHT)`
+Alias to `instance.setAlign(idx, AsciiTable3.RIGHT)`
 
 #### instance.getAlign(idx)
 
