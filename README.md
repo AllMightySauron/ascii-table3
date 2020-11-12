@@ -913,5 +913,5 @@ console.log(table.toString());
 With [npm](https://npmjs.org):
 
 ```bash
-npm install ascii-table
+npm install ascii-table3
 ```
