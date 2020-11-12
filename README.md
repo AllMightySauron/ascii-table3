@@ -952,8 +952,6 @@ Renders the instance as a string for output.
 Example:
 
 ```javascript
-var AsciiTable3 = require('./ascii-table3');
-
 // create table
 var table = 
     new AsciiTable3.AsciiTable3('Sample table')
