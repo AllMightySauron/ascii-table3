@@ -16,8 +16,23 @@ var table =
         ['Rita', 47, 'blue'],
         ['Peter', 8, 'brown']
     ]);
+
+console.log(`initial table:\n${table.toString()}`);
+
+/* -----------------------------------
+   -- Example 2. cell margins
+   ----------------------------------- */
+table.setCellMargin(0);
+console.log(`cell margin = 0:\n${table.toString()}`);
+
+table.setCellMargin(2);
+console.log(`cell margin = 2:\n${table.toString()}`);
     
-// test out styles
+/* -----------------------------------
+   -- Example 3. Test out styles
+   ----------------------------------- */
+table.setCellMargin(1);
+
 table.setStyle('none');
 console.log(`none:\n${table.toString()}`);
 
@@ -37,14 +52,17 @@ table.setStyle('unicode-double');
 console.log(`unicode-double:\n${table.toString()}`);
 
 /* -----------------------------------
-   -- Example 2. no title or heading
+   -- Example 4. setting column width
    ----------------------------------- */
-var table2 = new AsciiTable3.AsciiTable3();
+   table.setStyle("ramac");
+   table.setWidth(1, 10);
+   console.log(`name width = 10:\n${table.toString()}`);
 
-table2
-  .addRow('a', 'apple', 'Some longer string')
-  .addRow('b', 'banana', 'hi')
-  .addRow('c', 'carrot', 'meow')
-  .addRow('e', 'elephants');
+/* -----------------------------------
+   -- Example 5. no title or heading
+   ----------------------------------- */
+table.setTitle();
+table.setHeading();
 
-console.log(table2.toString());
+table.setStyle('ramac');
+console.log(`no title/heading:\n${table.toString()}`);

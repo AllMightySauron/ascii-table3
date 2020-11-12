@@ -74,24 +74,17 @@ describe('Array methods', () => {
     });
 });
 
+const asciiTable = new AsciiTable3.AsciiTable3();
+
 // instance methods
-describe('Table methods (normal)', () => {
-    const asciiTable = 
-        new AsciiTable3.AsciiTable3('Dummy title')
-                .setHeading('Title', 'Count', 'Rate (%)')
-                .setAlign(1, AsciiTable3.CENTER)
-                .setAlign(2, AsciiTable3.RIGHT)
-                .setWidth(1, 5)
-                .addRow('Dummy 1', 10, 2.3)
-                .addRowMatrix([ ['Dummy 2', 5, 3.1],  ['Dummy 3', 100, 3.14] ]);
+describe('Title', () => {
 
-    const tableJSON = JSON.parse(asciiTable.toJSON());
-
-    it('Title', () => {
+    it('setTitle/getTitle', () => {
+        asciiTable.setTitle('Dummy title');
         assert.strictEqual(asciiTable.getTitle(), 'Dummy title');
     });
 
-    it('Title align', () => {
+    it('setTitleAlign/getTitleAlign', () => {
         // default is center
         assert.strictEqual(asciiTable.getTitleAlign(), AsciiTable3.CENTER);
 
@@ -104,12 +97,15 @@ describe('Table methods (normal)', () => {
         asciiTable.setTitleAlignCenter();
         assert.strictEqual(asciiTable.getTitleAlign(), AsciiTable3.CENTER);
     });
+});
 
-    it ('Heading', () => {
+describe('Heading', () => {
+    it ('setHeading/getHeading', () => {
+        asciiTable.setHeading('Title', 'Count', 'Rate (%)');
         assert.notStrictEqual(asciiTable.getHeading(), [ 'Title', 'Count', 'Rate (%)' ]);
     });
 
-    it('Heading align', () => {
+    it('setHeadingAlign/getHeadingAlign', () => {
         // default is center
         assert.strictEqual(asciiTable.getHeadingAlign(), AsciiTable3.CENTER);
 
@@ -122,14 +118,20 @@ describe('Table methods (normal)', () => {
         asciiTable.setHeadingAlignCenter();
         assert.strictEqual(asciiTable.getHeadingAlign(), AsciiTable3.CENTER);
     });
-
-    it ('Col width', () => {
-        assert.strictEqual(asciiTable.getWidth(1), 5);
-        assert.strictEqual(asciiTable.getWidth(2), undefined);
-        assert.strictEqual(asciiTable.getWidth(3), undefined);
+});
+ 
+describe('DataRows', () => {
+    it ('addRow/getRows', () => {
+        asciiTable.addRow('Dummy 1', 10, 2.3);
+        
+        const rows = asciiTable.getRows();
+        assert.strict(rows.length, 1);
+        assert.notStrictEqual(rows[0], [ 'Dummy 1', 10, 2.3 ]);
     });
 
-    it ('addRow/addRowMatrix', () => {
+    it ('addRowMatrix/getRows', () => {
+        asciiTable.addRowMatrix([ ['Dummy 2', 5, 3.1],  ['Dummy 3', 100, 3.14] ]);
+
         const rows = asciiTable.getRows();
 
         assert.strictEqual(rows.length, 3);
@@ -137,27 +139,10 @@ describe('Table methods (normal)', () => {
         assert.notStrictEqual(rows[1], [ 'Dummy 2', 5, 3.1 ]);
         assert.notStrictEqual(rows[2], [ 'Dummy 3', 100, 3.14 ]);
     });
+});
 
-    it('Data align', () => {
-        // default alignment should be auto
-        assert.strictEqual(asciiTable.getAlign(1), AsciiTable3.CENTER);
-        assert.strictEqual(asciiTable.getAlign(2), AsciiTable3.RIGHT);
-        assert.strictEqual(asciiTable.getAlign(3), AsciiTable3.AUTO);
-    });
-
-    it ('toJSON', () => {
-        assert.strictEqual(tableJSON.title, asciiTable.getTitle());
-        assert.notStrictEqual(tableJSON.heading, asciiTable.getHeading());
-        assert.notStrictEqual(tableJSON.rows, asciiTable.getRows());
-    });
-
-    it ('fromJSON', () => {
-        const newTable = new AsciiTable3.AsciiTable3().fromJSON(tableJSON);
-
-        assert.strictEqual(newTable.toJSON(), asciiTable.toJSON());
-    });
-
-    it ('sort', () => {
+describe('Sorting', () => {
+   it ('sort', () => {
         const aTable = 
             new AsciiTable3.AsciiTable3('one column data table')
             .addRowMatrix([ [1], [9], [5] ]);
@@ -177,9 +162,54 @@ describe('Table methods (normal)', () => {
 
         assert.notStrictEqual(aTable, [ ['a', 1], ['c', 5], ['b', 9] ]);
     });
+});
 
-    it ('toString', () => {
-        // ramac (default)
+describe('Styling', () => {
+    it ('setStyle/getStyle', () => {
+        const style = asciiTable.getStyle();
+
+        // ramac should be the default
+        assert.strictEqual(style.name, "ramac");
+        
+        asciiTable.setStyle("none");
+        assert.strictEqual(asciiTable.getStyle().name, "none");
+    });
+
+    it ('removeBorder', () => {
+        asciiTable.removeBorder();
+        assert.strictEqual(asciiTable.getStyle().name, "none");
+    });
+
+    it ('setWidth/getWidth', () => {
+        asciiTable.setWidth(1, 5);
+
+        assert.strictEqual(asciiTable.getWidth(1), 5);
+        assert.strictEqual(asciiTable.getWidth(2), undefined);
+        assert.strictEqual(asciiTable.getWidth(3), undefined);
+    });
+
+    it ('setWidths/getWidths', () => {
+        asciiTable.setWidths([5, undefined, undefined]);
+        assert.notStrictEqual(asciiTable.getWidths(), [5, undefined, undefined]);
+    });
+
+    it('setAlign/getAlign', () => {
+        asciiTable
+            .setAlign(1, AsciiTable3.CENTER)
+            .setAlign(2, AsciiTable3.RIGHT);
+
+        // default alignment should be auto
+        assert.strictEqual(asciiTable.getAlign(1), AsciiTable3.CENTER);
+        assert.strictEqual(asciiTable.getAlign(2), AsciiTable3.RIGHT);
+        assert.strictEqual(asciiTable.getAlign(3), AsciiTable3.AUTO);
+    });
+});
+
+describe('Rendering', () => {
+    it ('toString (full)', () => {
+        asciiTable.setCellMargin(0);
+
+        asciiTable.setStyle("ramac");
         assert.strictEqual(
             asciiTable.toString(),
             '+--------------------+\n' +
@@ -244,26 +274,50 @@ describe('Table methods (normal)', () => {
             '╚═════╩═════╩════════╝\n'
         );
     });
-});
 
-describe('Table methods (no heading)', () => {
-    const asciiTable = 
-        new AsciiTable3.AsciiTable3('Dummy title')
-                .setAlign(1, AsciiTable3.LEFT)
-                .setAlign(2, AsciiTable3.RIGHT)
-                .setWidths([10, 4, 6])
-                .addRowMatrix([ ['Dummy 1', 10, 2.3], ['Dummy 2', 5, 3.1],  ['Dummy 3', 100, 3.14] ]);
+    it ('toString (cell margins)', () => {
+        asciiTable.setWidths();
+        asciiTable.setStyle('ramac');
 
-    const tableJSON = JSON.parse(asciiTable.toJSON());
+        asciiTable.setCellMargin(1);
+        assert.strictEqual(asciiTable.toString(),
+            '+----------------------------+\n' + 
+            '|        Dummy title         |\n' + 
+            '+---------+-------+----------+\n' + 
+            '|  Title  | Count | Rate (%) |\n' + 
+            '+---------+-------+----------+\n' + 
+            '| Dummy 1 |    10 |      2.3 |\n' + 
+            '| Dummy 2 |     5 |      3.1 |\n' + 
+            '| Dummy 3 |   100 |     3.14 |\n' + 
+            '+---------+-------+----------+\n'
+        );
 
-    it ('Col width', () => {
-        assert.notStrictEqual(asciiTable.getWidths(), [5, 4, 6]);
+        asciiTable.setCellMargin(2);
+        assert.strictEqual(asciiTable.toString(),
+            '+----------------------------------+\n' + 
+            '|           Dummy title            |\n' + 
+            '+-----------+---------+------------+\n' + 
+            '|   Title   |  Count  |  Rate (%)  |\n' + 
+            '+-----------+---------+------------+\n' + 
+            '|  Dummy 1  |     10  |       2.3  |\n' + 
+            '|  Dummy 2  |      5  |       3.1  |\n' + 
+            '|  Dummy 3  |    100  |      3.14  |\n' + 
+            '+-----------+---------+------------+\n'
+        );
     });
 
-    it ('toString', () => {
+    it ('toString (no heading)', () => {
+        const aTable = new AsciiTable3.AsciiTable3('Dummy title')
+            .setAlign(1, AsciiTable3.LEFT)
+            .setAlign(2, AsciiTable3.RIGHT)
+            .setWidths([10, 4, 6])
+            .setCellMargin(0)
+            .addRowMatrix([ ['Dummy 1', 10, 2.3], ['Dummy 2', 5, 3.1],  ['Dummy 3', 100, 3.14] ]);
+
         // ramac
+        aTable.setStyle("ramac");
         assert.strictEqual(
-            asciiTable.toString(),
+            aTable.toString(),
             '+----------------------+\n' +
             '|     Dummy title      |\n' +
             '+----------+----+------+\n' +
@@ -273,14 +327,56 @@ describe('Table methods (no heading)', () => {
             '+----------+----+------+\n'
         );
 
-        asciiTable.setStyle("none");
+        aTable.setStyle("none");
         assert.strictEqual(
-            asciiTable.toString(),
+            aTable.toString(),
             '     Dummy title      \n' +
             'Dummy 1      10    2.3\n' +
             'Dummy 2       5    3.1\n' +
             'Dummy 3     100   3.14\n'
         );
     });
+});
 
+describe('Serialization', () => {
+    const aTable = new AsciiTable3.AsciiTable3('Title')
+        .setHeading('Name', 'Age', 'Gender')
+        .setWidths([10, 3, 6])
+        .addRowMatrix([
+            ['Mary', 20, 'F'],
+            ['John', 23, 'M'],
+            ['Susan', 32, 'F']
+        ]);
+
+    const tableJSON = JSON.parse(aTable.toJSON());
+
+    it ('toJSON', () => {
+        assert.strictEqual(tableJSON.title, aTable.getTitle());
+        assert.notStrictEqual(tableJSON.widths, aTable.getWidths());
+        assert.notStrictEqual(tableJSON.heading, aTable.getHeading());
+        assert.notStrictEqual(tableJSON.rows, aTable.getRows());
+    });
+
+    it ('fromJSON', () => {
+        const newTable = new AsciiTable3.AsciiTable3().fromJSON(tableJSON);
+
+        assert.strictEqual(newTable.toJSON(), aTable.toJSON());
+    });
+});
+
+describe('Clearing data', () => {
+    it ('clearRows', () => {
+        assert.strictEqual(asciiTable.getRows().length, 3);
+
+        asciiTable.clearRows();
+        assert.strictEqual(asciiTable.getRows().length, 0);
+    });
+
+    it ('clear', () => {
+        asciiTable.clear();
+
+        assert.strictEqual(asciiTable.getTitle(), '');
+        assert.notStrictEqual(asciiTable.getHeading(), []);
+        assert.strictEqual(asciiTable.getRows().length, 0);
+    });
 });

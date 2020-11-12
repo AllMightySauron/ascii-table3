@@ -37,36 +37,39 @@ var table =
 console.log(table.toString());
 ```
 ```asciidoc
-+-------------------+
-|   Sample table    |
-+-----+---+---------+
-|Name |Age|Eye color|
-+-----+---+---------+
-|John | 23|  green  |
-|Mary | 16|  brown  |
-|Rita | 47|  blue   |
-|Peter|  8|  brown  |
-+-----+---+---------+
++-------------------------+
+|      Sample table       |
++-------+-----+-----------+
+| Name  | Age | Eye color |
++-------+-----+-----------+
+| John  |  23 |   green   |
+| Mary  |  16 |   brown   |
+| Rita  |  47 |   blue    |
+| Peter |   8 |   brown   |
++-------+-----+-----------+
 ```
 We can make simpler tables without a title or headings as well.
-```javascript
-var table = new AsciiTable3.AsciiTable3();
 
-table
-  .addRow('a', 'apple', 'Some longer string')
-  .addRow('b', 'banana', 'hi')
-  .addRow('c', 'carrot', 'meow')
-  .addRow('e', 'elephants');
+```javascript
+var table = 
+    new AsciiTable3.AsciiTable3()
+    .setAlign(3, AsciiTable3.CENTER)
+    .addRowMatrix([
+        ['John', 23, 'green'],
+        ['Mary', 16, 'brown'],
+        ['Rita', 47, 'blue'],
+        ['Peter', 8, 'brown']
+    ]);
 
 console.log(table.toString());
 ```
 ```asciidoc
-+-+---------+------------------+
-|a|apple    |Some longer string|
-|b|banana   |hi                |
-|c|carrot   |meow              |
-|e|elephants|                  |
-+-+---------+------------------+
++-------+----+-------+
+| John  | 23 | green |
+| Mary  | 16 | brown |
+| Rita  | 47 | blue  |
+| Peter |  8 | brown |
++-------+----+-------+
 ```
 
 ## Using styles
@@ -91,15 +94,13 @@ console.log(table.toString());
 ```
 
 ```asciidoc
--------------------
-   Sample table    
--------------------
-Name  Age Eye color
------ --- ---------
-John   23   green  
-Mary   16   brown  
-Rita   47   blue   
-Peter   8   brown  
+-------------------------
+ Name    Age   Eye color
+------- ----- -----------
+ John     23     green
+ Mary     16     brown
+ Rita     47     blue
+ Peter     8     brown
 ```
 
 These styles range from simple to more elaborate.
@@ -109,16 +110,16 @@ table.setStyle('unicode-single');
 console.log(table.toString());
 ```
 ```asciidoc
-┌───────────────────┐
-│   Sample table    │
-├─────┬───┬─────────┤
-│Name │Age│Eye color│
-├─────┼───┼─────────┤
-│John │ 23│  green  │
-│Mary │ 16│  brown  │
-│Rita │ 47│  blue   │
-│Peter│  8│  brown  │
-└─────┴───┴─────────┘
+┌─────────────────────────┐
+│      Sample table       │
+├───────┬─────┬───────────┤
+│ Name  │ Age │ Eye color │
+├───────┼─────┼───────────┤
+│ John  │  23 │   green   │
+│ Mary  │  16 │   brown   │
+│ Rita  │  47 │   blue    │
+│ Peter │   8 │   brown   │
+└───────┴─────┴───────────┘
 ```
 
 # API
@@ -134,7 +135,7 @@ Creates new table object.
 ```javascript
 var AsciiTable3 = require('ascii-table3');
 
-var table = AsciiTable3.AsciiTable3('Class data');
+var table = AsciiTable3.AsciiTable3('Data');
 ```
 ## Static Methods
 
@@ -425,7 +426,16 @@ table.addRowMatrix([
   [2, 'John', 34]
 , [3, 'Jim', 83]
 ]);
+
+console.log(table.toString());
 ```
+```asciidoc
++---+------+----+
+| 2 | John | 34 |
+| 3 | Jim  | 83 |
++---+------+----+
+```
+
 #### instance.getRows()
 
 Get the multidimension array of rows from the table.
@@ -447,7 +457,7 @@ console.log(table.getRows());
 ]
 ```
 
-### Style
+### Styles
 
 #### instance.setStyle(name)
 
@@ -459,76 +469,76 @@ Currently available styles are:
 
 * **none** - Borderless
 ```asciidoc
-  Sample table    
-Name  Age Eye color
-John   23   green  
-Mary   16   brown  
-Rita   47   blue   
-Peter   8   brown
+      Sample table
+ Name    Age   Eye color
+ John     23     green
+ Mary     16     brown
+ Rita     47     blue
+ Peter     8     brown
 ```
 * **compact** - Compact
 ```asciidoc
--------------------
-   Sample table    
--------------------
-Name  Age Eye color
------ --- ---------
-John   23   green
-Mary   16   brown
-Rita   47   blue
-Peter   8   brown
+-------------------------
+      Sample table
+-------------------------
+ Name    Age   Eye color
+------- ----- -----------
+ John     23     green
+ Mary     16     brown
+ Rita     47     blue
+ Peter     8     brown
 ```
-* **ascii-table** - mimics the original "ascii-table" package table style
+* **ascii-table** - mimics the original `ascii-table` npm package table style
 ```asciidoc
-.-------------------.
-|   Sample table    |
-|-------------------|
-|Name |Age|Eye color|
-|-------------------|
-|John | 23|  green  |
-|Mary | 16|  brown  |
-|Rita | 47|  blue   |
-|Peter|  8|  brown  |
-.-------------------.
+.-------------------------.
+|      Sample table       |
+|-------------------------|
+| Name  | Age | Eye color |
+|-------------------------|
+| John  |  23 |   green   |
+| Mary  |  16 |   brown   |
+| Rita  |  47 |   blue    |
+| Peter |   8 |   brown   |
+.-------------------------.
 ```
 * `**ramac** - beautified 7-bit ASCII output (default)
 ```asciidoc
-+-------------------+
-|   Sample table    |
-+-----+---+---------+
-|Name |Age|Eye color|
-+-----+---+---------+
-|John | 23|  green  |
-|Mary | 16|  brown  |
-|Rita | 47|  blue   |
-|Peter|  8|  brown  |
-+-----+---+---------+
++-------------------------+
+|      Sample table       |
++-------+-----+-----------+
+| Name  | Age | Eye color |
++-------+-----+-----------+
+| John  |  23 |   green   |
+| Mary  |  16 |   brown   |
+| Rita  |  47 |   blue    |
+| Peter |   8 |   brown   |
++-------+-----+-----------+
 ```
 * **unicode-single** - Single line unicode chars border
 ```asciidoc
-┌───────────────────┐
-│   Sample table    │
-├─────┬───┬─────────┤
-│Name │Age│Eye color│
-├─────┼───┼─────────┤
-│John │ 23│  green  │
-│Mary │ 16│  brown  │
-│Rita │ 47│  blue   │
-│Peter│  8│  brown  │
-└─────┴───┴─────────┘
+┌─────────────────────────┐
+│      Sample table       │
+├───────┬─────┬───────────┤
+│ Name  │ Age │ Eye color │
+├───────┼─────┼───────────┤
+│ John  │  23 │   green   │
+│ Mary  │  16 │   brown   │
+│ Rita  │  47 │   blue    │
+│ Peter │   8 │   brown   │
+└───────┴─────┴───────────┘
 ```
 * **unicode-double**- Double line unicode chars border
 ```asciidoc
-╔═══════════════════╗
-║   Sample table    ║
-╠═════╦═══╦═════════╣
-║Name ║Age║Eye color║
-╠═════╬═══╬═════════╣
-║John ║ 23║  green  ║
-║Mary ║ 16║  brown  ║
-║Rita ║ 47║  blue   ║
-║Peter║  8║  brown  ║
-╚═════╩═══╩═════════╝
+╔═════════════════════════╗
+║      Sample table       ║
+╠═══════╦═════╦═══════════╣
+║ Name  ║ Age ║ Eye color ║
+╠═══════╬═════╬═══════════╣
+║ John  ║  23 ║   green   ║
+║ Mary  ║  16 ║   brown   ║
+║ Rita  ║  47 ║   blue    ║
+║ Peter ║   8 ║   brown   ║
+╚═══════╩═════╩═══════════╝
 ```
 
 #### instance.getStyle()
@@ -597,12 +607,12 @@ var table =
   console.log(table);
 ```
 ```asciidoc
-  Sample table    
-Name  Age Eye color
-John   23   green  
-Mary   16   brown  
-Rita   47   blue   
-Peter   8   brown
+      Sample table
+ Name    Age   Eye color
+ John     23     green
+ Mary     16     brown
+ Rita     47     blue
+ Peter     8     brown
 ```
 
 #### instance.setWidth(idx, width)
@@ -626,21 +636,19 @@ var table =
     ]);
     
 // set the age column width to 5 characters
-table.setWidth(2, 5);
+table.setWidth(1, 10);
 
 console.log(table.toString());
 ```
 ```asciidoc
-+---------------------+
-|    Sample table     |
-+-----+-----+---------+
-|Name |Age  |Eye color|
-+-----+-----+---------+
-|John |   23|green    |
-|Mary |   16|brown    |
-|Rita |   47|blue     |
-|Peter|    8|brown    |
-+-----+-----+---------+
++----------+-----+-----------+
+|   Name   | Age | Eye color |
++----------+-----+-----------+
+| John     |  23 |   green   |
+| Mary     |  16 |   brown   |
+| Rita     |  47 |   blue    |
+| Peter    |   8 |   brown   |
++----------+-----+-----------+
 ```
 
 #### instance.getWidth(idx)
@@ -670,6 +678,7 @@ Example:
 var table = 
     new AsciiTable3.AsciiTable3('Sample table')
     .setHeading('Name', 'Age', 'Eye color')
+    .setCellMargin(0)
     .addRowMatrix([
         ['John', 23, 'green'],
         ['Mary', 16, 'brown'],
@@ -722,12 +731,12 @@ table
 console.log(table.toString());
 ```
 ```
-+-+---------+------------------+
-|a|  apple  |Some longer string|
-|b|  banana |                hi|
-|c|  carrot |              meow|
-|e|elephants|                  |
-+-+---------+------------------+
++---+-----------+--------------------+
+| a |   apple   | Some longer string |
+| b |   banana  |                 hi |
+| c |   carrot  |               meow |
+| e | elephants |                    |
++---+-----------+--------------------+
 ```
 
 #### instance.setAlignLeft(idx)
@@ -793,11 +802,11 @@ table.sort(function(a, b) {
 console.log(table.toString())
 ```
 ```asciidoc
-+-+----+--+
-|2|John|34|
-|1|Bob |52|
-|3|Jim |83|
-+-+----+--+
++---+------+----+
+| 2 | John | 34 |
+| 1 | Bob  | 52 |
+| 3 | Jim  | 83 |
++---+------+----+
 ```
 
 #### instance.sortColumn(index, comparefunc)
@@ -898,14 +907,16 @@ var table =
 console.log(table.toString());
 ```
 ```asciidoc
-+-----+---+---------+
-|Name |Age|Eye color|
-+-----+---+---------+
-|John | 23|  green  |
-|Mary | 16|  brown  |
-|Rita | 47|  blue   |
-|Peter|  8|  brown  |
-+-----+---+---------+
++-------------------------+
+|      Sample table       |
++-------+-----+-----------+
+| Name  | Age | Eye color |
++-------+-----+-----------+
+| John  |  23 |   green   |
+| Mary  |  16 |   brown   |
+| Rita  |  47 |   blue    |
+| Peter |   8 |   brown   |
++-------+-----+-----------+
 ```
 
 # Install

@@ -200,13 +200,19 @@ class AsciiTable3 {
      * @returns {AsciiTable3} The AsciiTable3 object instance.
      */
     clear() {
+        // clear title and set defualt alignment
         this.setTitle();
         this.setTitleAlignCenter();
 
+        // clear heading and set defualt alignment
         this.setHeading();
         this.setHeadingAlignCenter();
 
+        // clear data rows
         this.clearRows();
+
+        // set default cell margin
+        this.setCellMargin(1);
 
         return this;
     }
@@ -237,7 +243,7 @@ class AsciiTable3 {
      * @returns {string} The table title.
      */
     getTitle() {
-        return this.title;
+        return this.title ? this.title : '';
     }
 
     /**
@@ -305,7 +311,7 @@ class AsciiTable3 {
      * @returns {*[]} Array with heading values.
      */
     getHeading() {
-        return Array.from(this.heading);
+        return this.heading ? Array.from(this.heading): [];
     }
 
     /**
@@ -388,7 +394,7 @@ class AsciiTable3 {
      * @returns {*[]} Array with row cell values (column array).
      */
     getRows() {
-        return Array.from(this.rows);
+        return this.rows ? Array.from(this.rows): [];
     }
 
     /**
@@ -449,6 +455,25 @@ class AsciiTable3 {
         } else {
             return [];
         }
+    }
+
+    /**
+     * Sets the internal cell margin (in characters)
+     * @param {number} margin 
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
+    setCellMargin(margin) {
+        this.cellMargin = margin;
+
+        return this;
+    }
+
+    /**
+     * Gets the internal cell margin (in characters)
+     * @returns {number} The cell margin in characters.
+     */
+    getCellMargin() {
+        return this.cellMargin;
     }
 
     /**
@@ -579,8 +604,8 @@ class AsciiTable3 {
 
         const headings = this.getHeading();
 
-        // init col sizes
-        if (this.headings && this.headings.length > 0) {
+        // init col sizes (heading)
+        if (headings.length > 0) {
             // use heading
             colSizes = AsciiTable3.arrayFill(headings.length, 0);
         } else {
@@ -591,7 +616,7 @@ class AsciiTable3 {
         // loop over headings
         for(var col = 0; col < headings.length; col++) {
             // get current cell value string
-            const cell = '' + headings[col];
+            const cell = ''.padStart(this.getCellMargin()) + '' + headings[col]+ ''.padStart(this.getCellMargin());
 
             if (cell.length > colSizes[col]) colSizes[col] = cell.length;
         }
@@ -601,7 +626,7 @@ class AsciiTable3 {
             // loop over columns
             for(var col = 0; col < row.length; col++) {
                 // get current cell value string
-                const cell = '' + row[col];
+                const cell = ''.padStart(this.getCellMargin()) + '' + row[col]+ ''.padStart(this.getCellMargin());
 
                 if (cell.length > colSizes[col]) colSizes[col] = cell.length;
             }
@@ -686,7 +711,10 @@ class AsciiTable3 {
             var cellAligned;
 
             if (cell) {
-                 cellAligned = AsciiTable3.align(this.getAlign(col + 1), cell, colsWidth[col]);
+                 cellAligned = 
+                    AsciiTable3.align(this.getAlign(col + 1), 
+                                    ''.padStart(this.getCellMargin()) + cell + ''.padStart(this.getCellMargin()) , 
+                                    colsWidth[col]);
             } else {
                 cellAligned = ''.padStart(colsWidth[col]);
             }
@@ -705,8 +733,8 @@ class AsciiTable3 {
      * @returns {string} String rendiring of this instance table.
      */
     toString() {
+        // determine table columns max width
         const colsWidth = this.getColumnsWidth();
-        //console.log(colsWidth);
 
         // get style
         const style = this.getStyle();
@@ -715,12 +743,11 @@ class AsciiTable3 {
         const maxWidth = 
             colsWidth.reduce(function(a, b) { return a + b; }, 0) +            // data column sizes
             (colsWidth.length - 1) * style.borders.data.colSeparator.length;   // mid column separators
-        //console.log(maxWidth);
 
         var result = '';
 
         // title
-        if (this.getTitle()) {
+        if (this.getTitle() && this.getTitle().length > 0) {
             // top line (above title)
             result += style.borders.top.left + ''.padStart(maxWidth, style.borders.top.center) + style.borders.top.right + '\n';
 
