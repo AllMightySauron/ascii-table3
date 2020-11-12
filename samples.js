@@ -59,6 +59,13 @@ console.log(`unicode-double:\n${table.toString()}`);
    console.log(`name width = 10:\n${table.toString()}`);
 
 /* -----------------------------------
+   -- Example 4. setting multiple widths
+   ----------------------------------- */
+   table.setStyle("ramac");
+   table.setWidths([10, 8, 12]);
+   console.log(`multiple widths = [10, 8, 12]:\n${table.toString()}`);
+
+/* -----------------------------------
    -- Example 5. no title or heading
    ----------------------------------- */
 table.setTitle();

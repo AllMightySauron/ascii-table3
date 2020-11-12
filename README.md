@@ -1,9 +1,10 @@
 Ascii Table 3
 =============
 
-![Build stats](https://travis-ci.com/AllMightySauron/ascii-table3.png)
+[![Build stats](https://travis-ci.com/AllMightySauron/ascii-table3.png)](https://travis-ci.com/AllMightySauron/ascii-table3)
+[![npm version](https://badge.fury.io/js/ascii-table3.png)](https://badge.fury.io/js/ascii-table3)
 
-ascii-table2 is an pure ascii table renderer and beautifier, heavily inspired by the `ascii-table` package created by Beau Sorensen <mail@beausorensen.com> (http://github.com/sorensen). The original package lacked support for multiple table styles and that is what motivated me to create this new one.
+ascii-table3 is an pure ascii table renderer and beautifier, heavily inspired by the `ascii-table` package created by Beau Sorensen <mail@beausorensen.com> (http://github.com/sorensen). The original package lacked support for multiple table styles and that is what motivated me to create this new one.
 
 Existing code for the original `ascii-table` package should run fine with very few changes (see examples below).
 
@@ -678,7 +679,6 @@ Example:
 var table = 
     new AsciiTable3.AsciiTable3('Sample table')
     .setHeading('Name', 'Age', 'Eye color')
-    .setCellMargin(0)
     .addRowMatrix([
         ['John', 23, 'green'],
         ['Mary', 16, 'brown'],
@@ -687,21 +687,19 @@ var table =
     ]);
     
 // set the age column width to 5 characters
-table.setWidths([6, 5, 10]);
+table.setWidths([10, 8, 12]);
 
 console.log(table.toString());
 ```
 ```asciidoc
-+-----------------------+
-|     Sample table      |
-+------+-----+----------+
-|Name  |Age  |Eye color |
-+------+-----+----------+
-|John  |   23|green     |
-|Mary  |   16|brown     |
-|Rita  |   47|blue      |
-|Peter |    8|brown     |
-+------+-----+----------+
++----------+--------+------------+
+|   Name   |  Age   | Eye color  |
++----------+--------+------------+
+| John     |     23 | green      |
+| Mary     |     16 | brown      |
+| Rita     |     47 | blue       |
+| Peter    |      8 | brown      |
++----------+--------+------------+
 ```
 
 #### instance.getWidths()
@@ -763,6 +761,70 @@ Example:
 table.setAlignRight(2);
 
 table.getAlign(2)       // AsciiTable3.RIGHT
+```
+
+#### instance.setCellMargin(margin)
+
+Sets internal margin for cell data (table default is 1).
+
+* `margin` - number of empty characters to use for cell margin
+
+Example 1 (no cell margin):
+
+```javascript
+var table = 
+    new AsciiTable3.AsciiTable3('Sample table')
+    .setHeading('Name', 'Age', 'Eye color')
+    .setAlign(3, AsciiTable3.CENTER)
+    .addRowMatrix([
+        ['John', 23, 'green'],
+        ['Mary', 16, 'brown'],
+        ['Rita', 47, 'blue'],
+        ['Peter', 8, 'brown']
+    ]);
+    
+table.setCellMargin(0);
+```
+```asciidoc
++-------------------+
+|   Sample table    |
++-----+---+---------+
+|Name |Age|Eye color|
++-----+---+---------+
+|John | 23|  green  |
+|Mary | 16|  brown  |
+|Rita | 47|  blue   |
+|Peter|  8|  brown  |
++-----+---+---------+
+```
+
+Example 2 (cell margin set to 2):
+
+```javascript
+table.setCellMargin(2);
+```
+```asciidoc
++-------------------------------+
+|         Sample table          |
++---------+-------+-------------+
+|  Name   |  Age  |  Eye color  |
++---------+-------+-------------+
+|  John   |   23  |    green    |
+|  Mary   |   16  |    brown    |
+|  Rita   |   47  |    blue     |
+|  Peter  |    8  |    brown    |
++---------+-------+-------------+
+```
+#### instance.getCellMargin()
+
+Gets the current cell margin for the specified table instance.
+
+Example:
+
+```javascript
+table.setCellMargin(2);
+
+table.getCellMargin()      // 2
 ```
 
 ### Clearing data
