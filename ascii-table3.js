@@ -38,7 +38,7 @@ class AsciiTable3 {
     }
 
     /**
-     * Returns wether a valye is numeric or not, irrespective of its type.
+     * Returns wether a value is numeric or not, irrespective of its type.
      * @static
      * @param {*} value Value to test.
      */
@@ -473,7 +473,7 @@ class AsciiTable3 {
     }
 
     /**
-     * Set the alignment direction for a given column.
+     * Get the alignment direction for a given column.
      * @param {number} idx Column index to align (starts at 1).
      * @returns {AlignmentEnum} The alignment set for a column.
      */
@@ -543,8 +543,35 @@ class AsciiTable3 {
         return this;
     }
 
+       /**
+     * Sorts the table rows based on a specific methods.
+     * @param {function} func The comparison function to use when sorting.
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
+    sort(func) {
+        this.rows.sort(func);
+
+        return this;
+    }
+
     /**
+     * Sorts the table rows based on a specific methods.
+     * @param {number} idx  The column number to base sort on.
+     * @param {function} func The comparison function to use when sorting.
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
+    sortColumn(idx, func) {
+        this.rows.sort(function(a, b) {
+            // zero-based array
+            return func(a[idx - 1], b[idx - 1]);
+          });
+
+        return this;
+    }
+
+     /**
      * Get the column sizes for table rendering (in characters).
+     * @private
      * @returns {number[]} Array with column sizes for rendering.
      */
     getColumnsWidth() {
@@ -589,32 +616,6 @@ class AsciiTable3 {
         }
 
         return colSizes;
-    }
-
-       /**
-     * Sorts the table rows based on a specific methods.
-     * @param {function} func The comparison function to use when sorting.
-     * @returns {AsciiTable3} The AsciiTable3 object instance.
-     */
-    sort(func) {
-        this.rows.sort(func);
-
-        return this;
-    }
-
-    /**
-     * Sorts the table rows based on a specific methods.
-     * @param {number} idx  The column number to base sort on.
-     * @param {function} func The comparison function to use when sorting.
-     * @returns {AsciiTable3} The AsciiTable3 object instance.
-     */
-    sortColumn(idx, func) {
-        this.rows.sort(function(a, b) {
-            // zero-based array
-            return func(a[idx - 1], b[idx - 1]);
-          });
-
-        return this;
     }
 
     /**

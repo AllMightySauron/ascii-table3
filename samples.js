@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+
 /* -----------------------------------
    -- Example 1. simple table
    ----------------------------------- */
@@ -14,15 +16,25 @@ var table =
         ['Rita', 47, 'blue'],
         ['Peter', 8, 'brown']
     ]);
-
-console.log(table.toString());
-
+    
 // test out styles
+table.setStyle('none');
+console.log(`none:\n${table.toString()}`);
+
 table.setStyle('compact');
-console.log(table.toString());
+console.log(`compact:\n${table.toString()}`);
+
+table.setStyle('ascii-table');
+console.log(`ascii-table:\n${table.toString()}`);
+
+table.setStyle('ramac');
+console.log(`ramac:\n${table.toString()}`);
 
 table.setStyle('unicode-single');
-console.log(table.toString());
+console.log(`unicode-single:\n${table.toString()}`);
+
+table.setStyle('unicode-double');
+console.log(`unicode-double:\n${table.toString()}`);
 
 /* -----------------------------------
    -- Example 2. no title or heading
