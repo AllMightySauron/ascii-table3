@@ -4,7 +4,7 @@ Ascii Table 3
 [![Build stats](https://travis-ci.com/AllMightySauron/ascii-table3.png)](https://travis-ci.com/AllMightySauron/ascii-table3)
 [![npm version](https://badge.fury.io/js/ascii-table3.png)](https://badge.fury.io/js/ascii-table3)
 
-ascii-table3 is an pure ascii table renderer and beautifier, heavily inspired by the `ascii-table` package created by Beau Sorensen <mail@beausorensen.com> (http://github.com/sorensen). The original package lacked support for multiple table styles and that is what motivated me to create this new one.
+ascii-table3 is a pure ascii table renderer and beautifier, heavily inspired by the `ascii-table` package created by Beau Sorensen <mail@beausorensen.com> (http://github.com/sorensen). The original package lacked support for multiple table styles and that is what motivated me to create this new one.
 
 Existing code for the original `ascii-table` package should run fine with very few changes (see examples below).
 
