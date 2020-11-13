@@ -682,9 +682,13 @@ class AsciiTable3 {
 
         for (var col = 0; col < heading.length; col++) {
             const cell = '' + heading[col];
-            const cellAligned = AsciiTable3.align(this.getHeadingAlign(), cell, colsWidth[col]);
 
-            result += AsciiTable3.truncateString(cellAligned, colsWidth[col]);
+            // align contents disregarding margins
+            const cellAligned = AsciiTable3.align(this.getHeadingAlign(), cell, colsWidth[col] - this.getCellMargin() * 2);
+
+            result += ''.padStart(this.getCellMargin()) + 
+                        AsciiTable3.truncateString(cellAligned, colsWidth[col] - this.getCellMargin() * 2) +
+                        ''.padStart(this.getCellMargin());
 
             if (col < heading.length - 1) result += posStyle.colSeparator;
         }
@@ -706,19 +710,14 @@ class AsciiTable3 {
 
         // loop over data columns in row
         for (var col = 0; col < colsWidth.length; col++) {
-            const cell = row[col];
-            var cellAligned;
+            const cell = '' + row[col];
 
-            if (cell) {
-                 cellAligned = 
-                    AsciiTable3.align(this.getAlign(col + 1), 
-                                    ''.padStart(this.getCellMargin()) + cell + ''.padStart(this.getCellMargin()) , 
-                                    colsWidth[col]);
-            } else {
-                cellAligned = ''.padStart(colsWidth[col]);
-            }
-            
-            result += AsciiTable3.truncateString(cellAligned, colsWidth[col]);
+            // align cell contents disregarding cell margins
+            const cellAligned = AsciiTable3.align(this.getAlign(col + 1), cell, colsWidth[col] - this.getCellMargin() * 2);
+
+            result += ''.padStart(this.getCellMargin()) + 
+                        AsciiTable3.truncateString(cellAligned, colsWidth[col] - this.getCellMargin() * 2) +
+                        ''.padStart(this.getCellMargin());
 
             if (col < colsWidth.length - 1) result += posStyle.colSeparator;
         }
