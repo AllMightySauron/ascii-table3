@@ -139,6 +139,17 @@ describe('DataRows', () => {
         assert.notStrictEqual(rows[1], [ 'Dummy 2', 5, 3.1 ]);
         assert.notStrictEqual(rows[2], [ 'Dummy 3', 100, 3.14 ]);
     });
+
+    it ("addNonZeroRow", () =>  {
+        // should not be added
+        asciiTable.addNonZeroRow('Dummy 4', 0, 0, 0);
+
+        assert.strictEqual(asciiTable.getRows().length, 3);
+
+        asciiTable.addNonZeroRow('Dummy 4', 0, 1, 0);
+
+        assert.strictEqual(asciiTable.getRows().length, 4);
+    });
 });
 
 describe('Sorting', () => {
@@ -220,6 +231,7 @@ describe('Rendering', () => {
             '|Du...|   10|     2.3|\n' +
             '|Du...|    5|     3.1|\n' +
             '|Du...|  100|    3.14|\n' +
+            '|Du...|    0|       1|\n' +
             '+-----+-----+--------+\n'
         );
 
@@ -230,7 +242,8 @@ describe('Rendering', () => {
             'Title Count Rate (%)\n' +
             'Du...    10      2.3\n' +
             'Du...     5      3.1\n' +
-            'Du...   100     3.14\n'
+            'Du...   100     3.14\n' +
+            'Du...     0        1\n'
         );
 
         asciiTable.setStyle("compact");
@@ -243,7 +256,8 @@ describe('Rendering', () => {
             '----- ----- --------\n' +
             'Du...    10      2.3\n' +
             'Du...     5      3.1\n' +
-            'Du...   100     3.14\n'
+            'Du...   100     3.14\n' +
+            'Du...     0        1\n'
         );
 
         asciiTable.setStyle("unicode-single");
@@ -257,6 +271,7 @@ describe('Rendering', () => {
             '│Du...│   10│     2.3│\n' +
             '│Du...│    5│     3.1│\n' +
             '│Du...│  100│    3.14│\n' +
+            '│Du...│    0│       1│\n' +
             '└─────┴─────┴────────┘\n'
         );
 
@@ -271,6 +286,7 @@ describe('Rendering', () => {
             '║Du...║   10║     2.3║\n' +
             '║Du...║    5║     3.1║\n' +
             '║Du...║  100║    3.14║\n' +
+            '║Du...║    0║       1║\n' +
             '╚═════╩═════╩════════╝\n'
         );
     });
@@ -289,6 +305,7 @@ describe('Rendering', () => {
             '| Dummy 1 |    10 |      2.3 |\n' + 
             '| Dummy 2 |     5 |      3.1 |\n' + 
             '| Dummy 3 |   100 |     3.14 |\n' + 
+            '| Dummy 4 |     0 |        1 |\n' +
             '+---------+-------+----------+\n'
         );
 
@@ -302,6 +319,7 @@ describe('Rendering', () => {
             '|  Dummy 1  |     10  |       2.3  |\n' + 
             '|  Dummy 2  |      5  |       3.1  |\n' + 
             '|  Dummy 3  |    100  |      3.14  |\n' + 
+            '|  Dummy 4  |      0  |         1  |\n' + 
             '+-----------+---------+------------+\n'
         );
 
@@ -315,6 +333,7 @@ describe('Rendering', () => {
             '|  D...  |     10  |       2.3  |\n' + 
             '|  D...  |      5  |       3.1  |\n' + 
             '|  D...  |    100  |      3.14  |\n' + 
+            '|  D...  |      0  |         1  |\n' + 
             '+--------+---------+------------+\n'
         );
     });
@@ -379,7 +398,7 @@ describe('Serialization', () => {
 
 describe('Clearing data', () => {
     it ('clearRows', () => {
-        assert.strictEqual(asciiTable.getRows().length, 3);
+        assert.strictEqual(asciiTable.getRows().length, 4);
 
         asciiTable.clearRows();
         assert.strictEqual(asciiTable.getRows().length, 0);

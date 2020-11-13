@@ -409,6 +409,37 @@ class AsciiTable3 {
     }
 
     /**
+     * Adds row to table only if all numeric values are not 0 (zero).
+     * @param {*[]} args Row cell values to set.
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
+    addNonZeroRow(...args) {
+        var skipRow = true;
+
+        // create array for new row 
+        const row = AsciiTable3.arrayFill(args.length);
+
+        // loop over arguments
+        for (var i = 0; i < args.length; i++) {
+            const cell = args[i];
+
+            // special test for numeric values
+            if (AsciiTable3.isNumeric(cell) && cell != 0) {
+                skipRow = false;
+            }
+
+            row[i] = args[i];
+        }
+
+        if (!skipRow) {
+            // at least one non-zero value
+            this.rows.push(row);
+        }
+
+        return this;
+    }
+
+    /**
      * Bulk addRow operation.
      * @param {*[]} rows Multidimensional array of rows.
      * @returns {AsciiTable3} The AsciiTable3 object instance.
