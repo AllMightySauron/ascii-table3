@@ -214,6 +214,29 @@ describe('Styling', () => {
         assert.strictEqual(asciiTable.getAlign(2), AsciiTable3.RIGHT);
         assert.strictEqual(asciiTable.getAlign(3), AsciiTable3.AUTO);
     });
+
+    it('addStyle', () => {
+        const roundedStyle = {
+            name: "rounded",
+            borders: {
+              top: {
+                  left: ".", center: "-", right: ".", colSeparator: "."
+              },
+              middle: {
+                  left: ":", center: "-", right: ":", colSeparator: "+"
+              },
+              bottom: {
+                  left: "'", center: "-", right: "'", colSeparator: "'"
+              },
+              data : {
+                  left: "|", center: " ", right: "|", colSeparator: "|"
+              }
+            }
+          };
+          
+        asciiTable.addStyle(roundedStyle);
+        assert.notStrictEqual(asciiTable.getStyle("roundStyle"), roundedStyle);
+    });
 });
 
 describe('Rendering', () => {
@@ -288,6 +311,27 @@ describe('Rendering', () => {
             '║Du...║  100║    3.14║\n' +
             '║Du...║    0║       1║\n' +
             '╚═════╩═════╩════════╝\n'
+        );
+    });
+
+    it ('toString (new style)', () => {
+        // back to default
+        asciiTable.setWidths();
+        asciiTable.setCellMargin(1);
+
+        asciiTable.setStyle("rounded");
+        assert.strictEqual(
+            asciiTable.toString(),
+            '.----------------------------.\n' +
+            '|        Dummy title         |\n' +
+            ':---------.-------.----------:\n' +
+            '|  Title  | Count | Rate (%) |\n' +
+            ':---------+-------+----------:\n' +
+            '| Dummy 1 |    10 |      2.3 |\n' +
+            '| Dummy 2 |     5 |      3.1 |\n' +
+            '| Dummy 3 |   100 |     3.14 |\n' +
+            '| Dummy 4 |     0 |        1 |\n' +
+            "'---------'-------'----------'\n"
         );
     });
 
