@@ -1,6 +1,6 @@
 {
   "name": "ascii-table3",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": "João Simões <joao.santos.simoes@gmail.com> (https://github.com/AllMightySauron)",
   "description": "Javascript ASCII renderer for beautiful console-based tables",
   "repository": {

@@ -214,6 +214,14 @@ class AsciiTable3 {
     }
 
     /**
+     * Gets all available pre-defined styles for this table.
+     * @returns {Style[]} Array of predefined border styles.
+     */
+    getStyles() {
+        return Array.from(this.styles);
+    }
+
+    /**
      * Adds a new style to the style library.
      * @param {Style} style The style object to add.
      * @returns {AsciiTable3} The AsciiTable3 object instance.
@@ -833,8 +841,10 @@ class AsciiTable3 {
                 colSeparator: style.borders.top.colSeparator
             };
 
-            // title / heading separator line
-            result += this.getHorizontalLine(newStyle, colsWidth);
+            if (newStyle.center != '' || newStyle.colSeparator != '') {
+                // title / heading separator line
+                result += this.getHorizontalLine(newStyle, colsWidth);
+            }
         } else {
             // top line
             result += this.getHorizontalLine(style.borders.top, colsWidth);

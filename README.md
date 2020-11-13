@@ -4,7 +4,9 @@ Ascii Table 3
 [![Build stats](https://travis-ci.com/AllMightySauron/ascii-table3.png)](https://travis-ci.com/AllMightySauron/ascii-table3)
 [![npm version](https://badge.fury.io/js/ascii-table3.png)](https://badge.fury.io/js/ascii-table3)
 
-ascii-table3 is a pure ascii table renderer and beautifier, heavily inspired by the `ascii-table` package created by Beau Sorensen <mail@beausorensen.com> (http://github.com/sorensen). The original package lacked support for multiple table styles and that is what motivated me to create this new one.
+`ascii-table3` is a pure ascii table renderer and beautifier, heavily inspired by the ascii-table package created by Beau Sorensen <mail@beausorensen.com> (http://github.com/sorensen). The original package lacked support for multiple table styles and that is what motivated me to create this new one.
+
+Currently with **over a dozen** predefined table styles, the collection style keeps growing. I am pretty sure there is a style for everyone. If not, you can even design your own custom stye and add it to the library!
 
 Existing code for the original `ascii-table` package should run fine with very few changes (see examples below).
 
@@ -527,6 +529,19 @@ Currently available styles are:
  Rita     47     blue
  Peter     8     brown
 ```
+* `**ramac** - beautified 7-bit ASCII output ( the *default* style)
+```asciidoc
++-------------------------+
+|      Sample table       |
++-------+-----+-----------+
+| Name  | Age | Eye color |
++-------+-----+-----------+
+| John  |  23 |   green   |
+| Mary  |  16 |   brown   |
+| Rita  |  47 |   blue    |
+| Peter |   8 |   brown   |
++-------+-----+-----------+
+```
 * **ascii-table** - mimics the original `ascii-table` npm package table style
 ```asciidoc
 .-------------------------.
@@ -540,18 +555,70 @@ Currently available styles are:
 | Peter |   8 |   brown   |
 .-------------------------.
 ```
-* `**ramac** - beautified 7-bit ASCII output (default)
+* **ascii-reStructuredText** - [reStructuredText](http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#tables) grid style
 ```asciidoc
 +-------------------------+
 |      Sample table       |
 +-------+-----+-----------+
 | Name  | Age | Eye color |
-+-------+-----+-----------+
++=======+=====+===========+
 | John  |  23 |   green   |
 | Mary  |  16 |   brown   |
 | Rita  |  47 |   blue    |
 | Peter |   8 |   brown   |
 +-------+-----+-----------+
+```
+* **ascii-reStructuredText-simple** - [reStructuredText](http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#tables) simple style
+```asciidoc
+===========================
+       Sample table
+======== ===== ============
+  Name    Age   Eye color
+======== ===== ============
+  John     23     green
+  Mary     16     brown
+  Rita     47     blue
+  Peter     8     brown
+======== ===== ============
+```
+* **ascii-dots** - Ascii dotted border
+```asciidoc
+...........................
+:      Sample table       :
+:.........................:
+: Name  : Age : Eye color :
+:.......:.....:...........:
+: John  :  23 :   green   :
+: Mary  :  16 :   brown   :
+: Rita  :  47 :   blue    :
+: Peter :   8 :   brown   :
+:.......:.....:...........:
+```
+* **ascii-rounded** - Ascii rounded-corner border
+```asciidoc
+.-------------------------.
+|      Sample table       |
+:-------.-----.-----------:
+| Name  | Age | Eye color |
+:-------+-----+-----------:
+| John  |  23 |   green   |
+| Mary  |  16 |   brown   |
+| Rita  |  47 |   blue    |
+| Peter |   8 |   brown   |
+'-------'-----'-----------'
+```
+* **ascii-girder** - Ascii girder-like border
+```asciicode
+//===========================\\
+||       Sample table        ||
+|]=======[]=====[]===========[|
+|| Name  || Age || Eye color ||
+|]=======[]=====[]===========[|
+|| John  ||  23 ||   green   ||
+|| Mary  ||  16 ||   brown   ||
+|| Rita  ||  47 ||   blue    ||
+|| Peter ||   8 ||   brown   ||
+\\=======[]=====[]===========//
 ```
 * **unicode-single** - Single line unicode chars border
 ```asciidoc
@@ -578,6 +645,39 @@ Currently available styles are:
 ║ Rita  ║  47 ║   blue    ║
 ║ Peter ║   8 ║   brown   ║
 ╚═══════╩═════╩═══════════╝
+```
+* **unicode-mix** - Mixed single/double line unicode style (single internal border and double external border)
+```asciidoc
+╔═════════════════════════╗
+║      Sample table       ║
+╟═══════╤═════╤═══════════╢
+║ Name  │ Age │ Eye color ║
+╟───────┼─────┼───────────╢
+║ John  │  23 │   green   ║
+║ Mary  │  16 │   brown   ║
+║ Rita  │  47 │   blue    ║
+║ Peter │   8 │   brown   ║
+╚═══════╧═════╧═══════════╝
+```
+* **github-markdown** - github markdown style
+```asciidoc
+|      Sample table       |
+| Name  | Age | Eye color |
+|-------|-----|-----------|
+| John  |  23 |   green   |
+| Mary  |  16 |   brown   |
+| Rita  |  47 |   blue    |
+| Peter |   8 |   brown   |
+```
+* **reddit-markdown** - reddit markdown style
+```asciidoc
+      Sample table
+ Name  | Age | Eye color
+-------|-----|-----------
+ John  |  23 |   green
+ Mary  |  16 |   brown
+ Rita  |  47 |   blue
+ Peter |   8 |   brown
 ```
 
 #### instance.getStyle()
