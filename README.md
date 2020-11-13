@@ -414,6 +414,44 @@ console.log(table.toString());
 +---+------+----+
 ```
 
+#### instance.addNonZeroRow(row, [...])
+
+Adds new row to table, as long as at least one of the numeric cells' value is not 0 (zero).
+
+* `row` - array or arguments of column values
+
+Example:
+
+```javascript
+var table = new AsciiTable3.AsciiTable3();
+
+table
+  .addRow(1, 'Bob', 52)
+  .addRow([2, 'John', 34]);
+
+console.log(table.toString());
+```
+```asciidoc
++---+------+----+
+| 1 | Bob  | 52 |
+| 2 | John | 34 |
++---+------+----+
+```
+
+If all numeric values are 0 (zero) the new row is not added.
+
+```javascript
+table.addNonZeroRow(0, 'Dummy', 0); // should not be added
+
+console.log(table.toString());
+```
+```asciidoc
++---+------+----+
+| 1 | Bob  | 52 |
+| 2 | John | 34 |
++---+------+----+
+```
+
 #### instance.addRowMatrix(rows)
 
 Bulk `addRow` operation.
