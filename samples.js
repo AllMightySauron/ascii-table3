@@ -68,8 +68,34 @@ console.log(`unicode-double:\n${table.toString()}`);
    table.setWidths([10, 8, 12]);
    console.log(`multiple widths = [10, 8, 12]:\n${table.toString()}`);
 
+/*  -----------------------------------
+    -- Example 5. adding a new style
+    ----------------------------------- */
+const roundedStyle = {
+  name: "rounded",
+  borders: {
+    top: {
+        left: ".", center: "-", right: ".", colSeparator: "."
+    },
+    middle: {
+        left: ":", center: "-", right: ":", colSeparator: "+"
+    },
+    bottom: {
+        left: "'", center: "-", right: "'", colSeparator: "'"
+    },
+    data : {
+        left: "|", center: " ", right: "|", colSeparator: "|"
+    }
+  }
+};
+
+table.addStyle(roundedStyle);
+table.setStyle("rounded");
+console.log(`rounded style:\n${table.toString()}`);
+
+
 /* -----------------------------------
-   -- Example 5. no title or heading
+   -- Example 6. no title or heading
    ----------------------------------- */
 table.setTitle();
 table.setHeading();

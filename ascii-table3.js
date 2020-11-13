@@ -9,14 +9,20 @@
  * @property {string} colSeparator  The column separator character.
  */
 
+ /**
+  * Borders style definition.
+  * @typedef {Object} Borders
+  * @property {SectionStyle} top    The style for top section borders (above heading). 
+  * @property {SectionStyle} middle The style for middle section borders (between heading and data). 
+  * @property {SectionStyle} bottom The style for bottom section borders (below data). 
+  * @property {SectionStyle} data   The style for data row borders. 
+  */
+
 /**
  * Type definition for a table style.
  * @typedef {Object} Style
  * @property {string} name Style name.
- * @property {SectionStyle} top     The style for top border (above heading).
- * @property {SectionStyle} middle  The style for middle border (below heading).
- * @property {SectionStyle} bottow  The style for bottom border (below data rows).
- * @property {SectionStyle} data    The style for data row border.
+ * @property {Borders} borders The border styles for each section.
  */
 
 /**
@@ -809,7 +815,7 @@ class AsciiTable3 {
         var result = '';
 
         // title
-        if (this.getTitle() && this.getTitle().length > 0) {
+        if (this.getTitle().length > 0) {
             // top line (above title)
             result += style.borders.top.left + ''.padStart(maxWidth, style.borders.top.center) + style.borders.top.right + '\n';
 
@@ -835,7 +841,7 @@ class AsciiTable3 {
         }
 
         // headings
-        if (this.getHeading() && this.getHeading().length > 0) {
+        if (this.getHeading().length > 0) {
             result += this.getHeadingRow(style.borders.data, colsWidth);
 
             // heading / rows separator line

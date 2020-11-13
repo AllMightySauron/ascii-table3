@@ -623,6 +623,62 @@ console.log (style);
     }
 ```
 
+#### instance.addStyle(style)
+
+Adds a custom new style to the list of predefined table styles.
+
+* `style` - style object to add
+
+Example:
+
+```javascript
+var table = 
+    new AsciiTable3.AsciiTable3('Sample table')
+    .setHeading('Name', 'Age', 'Eye color')
+    .setAlign(3, AsciiTable3.CENTER)
+    .addRowMatrix([
+        ['John', 23, 'green'],
+        ['Mary', 16, 'brown'],
+        ['Rita', 47, 'blue'],
+        ['Peter', 8, 'brown']
+    ]);
+    
+const roundedStyle = {
+  name: "rounded",
+  borders: {
+    top: {
+        left: ".", center: "-", right: ".", colSeparator: "."
+    },
+    middle: {
+        left: ":", center: "-", right: ":", colSeparator: "+"
+    },
+    bottom: {
+        left: "'", center: "-", right: "'", colSeparator: "'"
+    },
+    data : {
+        left: "|", center: " ", right: "|", colSeparator: "|"
+    }
+  }
+};
+
+table.addStyle(roundedStyle);
+table.setStyle("rounded");
+
+console.log(table.toString());
+```
+```asciidoc
+.--------------------------------.
+|          Sample table          |
+:----------.--------.------------:
+|   Name   |  Age   | Eye color  |
+:----------+--------+------------:
+| John     |     23 |   green    |
+| Mary     |     16 |   brown    |
+| Rita     |     47 |    blue    |
+| Peter    |      8 |   brown    |
+'----------'--------'------------'
+```
+
 #### instance.removeBorder()
 
 Shortcut for **instance.setStyle('none')**.
