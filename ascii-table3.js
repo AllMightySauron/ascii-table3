@@ -24,7 +24,7 @@ class AsciiTable3 {
      * Default constructor.
      * @param {string} title The table title (optional).
      */
-    constructor(title) {
+    constructor(title = '') {
         this.clear();
 
         // load styles
@@ -54,16 +54,15 @@ class AsciiTable3 {
      * @param {number} len The maximum alignment length.
      * @param {string} pad The pad char (optional, defaults to ' ').
      */
-    static align(direction, value, len, pad) {
-        const padChar = pad ? pad : ' ';
+    static align(direction, value, len, pad = ' ') {
         const strValue = '' + value;
 
         if (direction == AlignmentEnum.RIGHT) {
-            return strValue.padStart(len, padChar);
+            return strValue.padStart(len, pad);
         } else if (direction == AlignmentEnum.LEFT) {
-            return strValue.padEnd(len, padChar);
+            return strValue.padEnd(len, pad);
         } else if (direction == AlignmentEnum.CENTER) {
-            return strValue.padStart(strValue.length + Math.floor((len - strValue.length) / 2), padChar).padEnd(len, padChar);
+            return strValue.padStart(strValue.length + Math.floor((len - strValue.length) / 2), pad).padEnd(len, pad);
         } else {
             return AsciiTable3.alignAuto(value, len, pad);
         }
@@ -76,7 +75,7 @@ class AsciiTable3 {
      * @param {number} len The maximum alignment length.
      * @param {string} pad The pad char (optional, defaults to ' ').
      */
-    static alignLeft(value, len, pad) {
+    static alignLeft(value, len, pad = ' ') {
         return this.align(AlignmentEnum.LEFT, value, len, pad);
     }
 
@@ -87,7 +86,7 @@ class AsciiTable3 {
      * @param {number} len The maximum alignment length.
      * @param {string} pad The pad char (optional, defaults to ' ').
      */
-    static alignRight(value, len, pad) {
+    static alignRight(value, len, pad = ' ') {
         return this.align(AlignmentEnum.RIGHT, value, len, pad);
     }
 
@@ -98,7 +97,7 @@ class AsciiTable3 {
      * @param {number} len The maximum alignment length.
      * @param {string} pad The pad char (optional, defaults to ' ').
      */
-    static alignCenter(value, len, pad) {
+    static alignCenter(value, len, pad = ' ') {
         return this.align(AlignmentEnum.CENTER, value, len, pad);
     }
 
@@ -109,7 +108,7 @@ class AsciiTable3 {
      * @param {number} len The maximum alignment length.
      * @param {string} pad The pad char (optional, defaults to ' ').
      */
-    static alignAuto(value, len, pad) {    
+    static alignAuto(value, len, pad = ' ') {    
         if (AsciiTable3.isNumeric(value)) {
             return this.alignRight(value, len, pad);
         } else if (typeof value == "string") {
@@ -201,7 +200,7 @@ class AsciiTable3 {
      */
     clear() {
         // clear title and set defualt alignment
-        this.setTitle();
+        this.setTitle('');
         this.setTitleAlignCenter();
 
         // clear heading and set defualt alignment

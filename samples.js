@@ -58,6 +58,9 @@ console.log(`unicode-double:\n${table.toString()}`);
    table.setWidth(1, 10);
    console.log(`name width = 10:\n${table.toString()}`);
 
+   table.setWidth(1, 5);
+   console.log(`name width = 5:\n${table.toString()}`);
+
 /* -----------------------------------
    -- Example 4. setting multiple widths
    ----------------------------------- */
