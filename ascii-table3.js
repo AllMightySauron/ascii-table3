@@ -1,6 +1,25 @@
 /*jshint esversion: 6 */
 
 /**
+ * Type definition for table section style.
+ * @typedef {Object} SectionStyle
+ * @property {string} left          The left border character.
+ * @property {string} center        The center border character.
+ * @property {string} right         The right border character.
+ * @property {string} colSeparator  The column separator character.
+ */
+
+/**
+ * Type definition for a table style.
+ * @typedef {Object} Style
+ * @property {string} name Style name.
+ * @property {SectionStyle} top     The style for top border (above heading).
+ * @property {SectionStyle} middle  The style for middle border (below heading).
+ * @property {SectionStyle} bottow  The style for bottom border (below data rows).
+ * @property {SectionStyle} data    The style for data row border.
+ */
+
+/**
  * Filename containing rendering styles.
  */
 const STYLES_FILENAME = 'ascii-table3.styles.json';
@@ -22,13 +41,14 @@ class AsciiTable3 {
 
     /**
      * Default constructor.
-     * @param {string} title The table title (optional).
+     * @param {string} [title] The table title (optional).
      */
     constructor(title = '') {
         this.clear();
 
         // load styles
-        var fs = require('fs');
+        const fs = require('fs');
+        /** @type {Style[]}  */
         this.styles = JSON.parse(fs.readFileSync(module.path + '/' + STYLES_FILENAME, 'utf8'));
 
         // set default style
@@ -52,7 +72,7 @@ class AsciiTable3 {
      * @param {AlignmentEnum} direction The desired aligment direction according to the enum (left, right or center)
      * @param {*} value The value to align.
      * @param {number} len The maximum alignment length.
-     * @param {string} pad The pad char (optional, defaults to ' ').
+     * @param {string} [pad] The pad char (optional, defaults to ' ').
      */
     static align(direction, value, len, pad = ' ') {
         const strValue = '' + value;
@@ -73,7 +93,7 @@ class AsciiTable3 {
      * @static
      * @param {*} value The value to align.
      * @param {number} len The maximum alignment length.
-     * @param {string} pad The pad char (optional, defaults to ' ').
+     * @param {string} [pad] The pad char (optional, defaults to ' ').
      */
     static alignLeft(value, len, pad = ' ') {
         return this.align(AlignmentEnum.LEFT, value, len, pad);
@@ -84,7 +104,7 @@ class AsciiTable3 {
      * @static
      * @param {*} value The value to align.
      * @param {number} len The maximum alignment length.
-     * @param {string} pad The pad char (optional, defaults to ' ').
+     * @param {string} [pad] The pad char (optional, defaults to ' ').
      */
     static alignRight(value, len, pad = ' ') {
         return this.align(AlignmentEnum.RIGHT, value, len, pad);
@@ -95,7 +115,7 @@ class AsciiTable3 {
      * @static
      * @param {*} value The value to align.
      * @param {number} len The maximum alignment length.
-     * @param {string} pad The pad char (optional, defaults to ' ').
+     * @param {string} [pad] The pad char (optional, defaults to ' ').
      */
     static alignCenter(value, len, pad = ' ') {
         return this.align(AlignmentEnum.CENTER, value, len, pad);
@@ -106,7 +126,7 @@ class AsciiTable3 {
      * @static
      * @param {*} value The value to align.
      * @param {number} len The maximum alignment length.
-     * @param {string} pad The pad char (optional, defaults to ' ').
+     * @param {string} [pad] The pad char (optional, defaults to ' ').
      */
     static alignAuto(value, len, pad = ' ') {    
         if (AsciiTable3.isNumeric(value)) {
@@ -121,8 +141,8 @@ class AsciiTable3 {
     /**
      * Truncates a string up to a maximum number of characters (if needed).
      * @static
-     * @param {*} str The string to truncate.
-     * @param {*} maxSize The string maximum size.
+     * @param {string} str The string to truncate.
+     * @param {number} maxSize The string maximum size.
      * @returns {string} The truncated string (in case of truncation, '...' are appended to the end).
      */
     static truncateString(str, maxSize) {
@@ -142,7 +162,7 @@ class AsciiTable3 {
      * Create a new array at the given len, filled with the given value, mainly used internally.
      * @static
      * @param {number} len Length of array.
-     * @param {*} value The fill value (optional).
+     * @param {*} [value] The fill value (optional).
      */
     static arrayFill(len, value) {
         var result = [];
@@ -158,8 +178,8 @@ class AsciiTable3 {
      * Increases existing array size up to the desired limit.
      * @static
      * @param {Array} array The array to increase.
-     * @param {*} len The desired array size.
-     * @param {*} value The fill value (optional).
+     * @param {number} len The desired array size.
+     * @param {*} [value] The fill value (optional).
      */
     static arrayResize(array, len, value) {
         // resize as needed
@@ -173,6 +193,7 @@ class AsciiTable3 {
      * @returns {AsciiTable3} The AsciiTable3 object instance.
      */
     setStyle(name) {
+        /** @type {Style} */
         this.style = this.styles.find(style => style.name == name);
 
         return this;
@@ -180,10 +201,21 @@ class AsciiTable3 {
 
     /**
      * Gets the output style for this table instance.
-     * @returns {object} The current table style settings.
+     * @returns {Style} The current table style settings.
      */
     getStyle() {
         return this.style;
+    }
+
+    /**
+     * Adds a new style to the style library.
+     * @param {Style} style The style object to add.
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
+    addStyle(style) {
+        this.styles.push(style);
+
+        return this;
     }
 
     /**
@@ -378,7 +410,7 @@ class AsciiTable3 {
 
     /**
      * Bulk addRow operation.
-     * @param {*} rows Multidimensional array of rows.
+     * @param {*[]} rows Multidimensional array of rows.
      * @returns {AsciiTable3} The AsciiTable3 object instance.
      */
     addRowMatrix(rows) {
@@ -407,7 +439,8 @@ class AsciiTable3 {
             // resize if needed
             AsciiTable3.arrayResize(this.colWidths, idx);
         } else {
-            // create array            
+            // create array
+            /** @type {number[]} */
             this.colWidths = AsciiTable3.arrayFill(idx);
         }
 
@@ -435,7 +468,7 @@ class AsciiTable3 {
 
     /**
      * Sets the present widths for each column using an array.
-     * @param {number[]} Array with widths for columns.
+     * @param {number[]} widths Array with widths for columns.
      * @returns {AsciiTable3} The AsciiTable3 object instance.
      */
     setWidths(widths) {
@@ -645,7 +678,7 @@ class AsciiTable3 {
     /**
      * Get string with the rendering of a horizontal line.
      * @private
-     * @param {object} posStyle The line style for the desired position (between top, middle and bottom).
+     * @param {Style} posStyle The line style for the desired position (between top, middle and bottom).
      * @param {number[]} colsWidth Array with the desired width for each data column.
      * @returns {string} String representation of table horizontal line.
      */
@@ -671,7 +704,7 @@ class AsciiTable3 {
     /**
      * Get string with the rendering of a heading row.
      * @private
-     * @param {object} posStyle The heading row style.
+     * @param {Style} posStyle The heading row style.
      * @param {number[]} colsWidth Array with the desired width for each heading column.
      * @returns {string} String representation of table heading row line.
      */
@@ -700,7 +733,7 @@ class AsciiTable3 {
     /**
      * Get string with the rendering of a data row.
      * @private
-     * @param {object} posStyle The data row style.
+     * @param {Style} posStyle The data row style.
      * @param {number[]} colsWidth Array with the desired width for each data column.
      * @param {*[]} row Array with cell values for this row.
      * @returns {string} String representation of table data row line.
