@@ -77,11 +77,20 @@ table.addStyle(roundedStyle);
 table.setStyle("rounded");
 console.log(`rounded style:\n${table.toString()}`);
 
-// example 6. no title or heading
-console.log ('>>>>>> example 6: no title or heading');
+// example 6. row data wrapping
+console.log ('>>>>>> example 6: row data wrapping');
+table.clearRows();
+table.addRow('James Bond', 41, 'blue').addRow('Harry Potter', 18, 'brown').addRow('Scooby Doo', 23, 'brown').addRow('Mickey Mouse', 120, 'black');
+table.setWidth(1, 8).setWrapped(1);
+
+console.log(`data wrapping:\n${table.toString()}`);
+
+// example 7. no title or heading
+console.log ('>>>>>> example 7: no title or heading');
 
 table.setTitle();
 table.setHeading();
 
 table.setStyle('ramac');
 console.log(`no title/heading:\n${table.toString()}`);
+

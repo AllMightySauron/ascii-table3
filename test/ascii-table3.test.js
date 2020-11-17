@@ -43,6 +43,21 @@ describe('String methods', () => {
     it('Truncate string (small)', () => {
         assert.strictEqual(AsciiTable3.AsciiTable3.truncateString('Dummy 1', 2), '..');
     });
+
+    // word wrapping
+    it('Test for white space', () => {
+        assert.strictEqual(AsciiTable3.AsciiTable3.isWhiteSpace(' '), true);
+        assert.strictEqual(AsciiTable3.AsciiTable3.isWhiteSpace('\t'), true);
+        assert.strictEqual(AsciiTable3.AsciiTable3.isWhiteSpace('\n'), true);
+
+        assert.strictEqual(AsciiTable3.AsciiTable3.isWhiteSpace('a'), false);
+    });
+    it('Word wrapping', () => {
+        assert.strictEqual(AsciiTable3.AsciiTable3.wordWrap('dummy', 5), 'dummy');
+        assert.strictEqual(AsciiTable3.AsciiTable3.wordWrap('this is a test', 5), 'this\nis a\ntest');
+        assert.strictEqual(AsciiTable3.AsciiTable3.wordWrap('this is a test', 3), 'thi\ns\nis\na\ntes\nt');
+        assert.strictEqual(AsciiTable3.AsciiTable3.wordWrap('rate (%)', 4), 'rate\n(%)');
+    });
 });
 
 
@@ -215,6 +230,17 @@ describe('Styling', () => {
         assert.strictEqual(asciiTable.getAlign(3), AsciiTable3.AUTO);
     });
 
+    it('setWrapped/isWrapped', () => {
+        // default is false
+        assert.strictEqual(asciiTable.isWrapped(1), false);
+
+        asciiTable.setWrapped(2);
+        assert.strictEqual(asciiTable.isWrapped(2), true);
+
+        asciiTable.setWrapped(2, false);
+        assert.strictEqual(asciiTable.isWrapped(2), false);
+    });
+
     it('addStyle', () => {
         const roundedStyle = {
             name: "rounded",
@@ -382,6 +408,68 @@ describe('Rendering', () => {
         );
     });
 
+    it ('toString (wrapping)', () => {
+        asciiTable
+            .setWidths().setWidth(1, 7)
+            .setWrapped(1).setAlign(1, AsciiTable3.LEFT)
+            .setStyle('ramac').setCellMargin(1);
+
+        assert.strictEqual(asciiTable.toString(),
+            '+--------------------------+\n' + 
+            '|       Dummy title        |\n' + 
+            '+-------+-------+----------+\n' + 
+            '| Title | Count | Rate (%) |\n' + 
+            '+-------+-------+----------+\n' + 
+            '| Dummy |    10 |      2.3 |\n' + 
+            '| 1     |       |          |\n' + 
+            '| Dummy |     5 |      3.1 |\n' + 
+            '| 2     |       |          |\n' + 
+            '| Dummy |   100 |     3.14 |\n' + 
+            '| 3     |       |          |\n' + 
+            '| Dummy |     0 |        1 |\n' +
+            '| 4     |       |          |\n' + 
+            '+-------+-------+----------+\n'
+        );
+
+        asciiTable.setWidth(3, 6).setWrapped(3);
+        assert.strictEqual(asciiTable.toString(),
+            '+----------------------+\n' + 
+            '|     Dummy title      |\n' + 
+            '+-------+-------+------+\n' + 
+            '| Title | Count | Rate |\n' + 
+            '|       |       | (%)  |\n' + 
+            '+-------+-------+------+\n' + 
+            '| Dummy |    10 |  2.3 |\n' + 
+            '| 1     |       |      |\n' + 
+            '| Dummy |     5 |  3.1 |\n' + 
+            '| 2     |       |      |\n' + 
+            '| Dummy |   100 | 3.14 |\n' + 
+            '| 3     |       |      |\n' + 
+            '| Dummy |     0 |    1 |\n' +
+            '| 4     |       |      |\n' + 
+            '+-------+-------+------+\n'
+        );
+
+        asciiTable.setAlign(1, AsciiTable3.CENTER);
+        assert.strictEqual(asciiTable.toString(),
+            '+----------------------+\n' + 
+            '|     Dummy title      |\n' + 
+            '+-------+-------+------+\n' + 
+            '| Title | Count | Rate |\n' + 
+            '|       |       | (%)  |\n' + 
+            '+-------+-------+------+\n' + 
+            '| Dummy |    10 |  2.3 |\n' + 
+            '|   1   |       |      |\n' + 
+            '| Dummy |     5 |  3.1 |\n' + 
+            '|   2   |       |      |\n' + 
+            '| Dummy |   100 | 3.14 |\n' + 
+            '|   3   |       |      |\n' + 
+            '| Dummy |     0 |    1 |\n' +
+            '|   4   |       |      |\n' + 
+            '+-------+-------+------+\n'
+        );
+    });
+    
     it ('toString (no heading)', () => {
         const aTable = new AsciiTable3.AsciiTable3('Dummy title')
             .setAlign(1, AsciiTable3.LEFT)

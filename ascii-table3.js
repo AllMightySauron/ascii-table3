@@ -72,6 +72,18 @@ class AsciiTable3 {
         return !isNaN(parseFloat(value)) && isFinite(value);
     }
 
+     /**
+     * Returns on whether the character is white space.
+     * @static
+     * @param {string} x   The character to test.
+     * @returns {boolean}   Whether we have found a white char.
+     */
+    static isWhiteSpace(x) {
+        var white = new RegExp(/^\s$/);
+
+        return white.test(x.charAt(0));
+    }
+
     /**
      * Generic string alignment.
      * @static
@@ -142,6 +154,43 @@ class AsciiTable3 {
         } else {
             return this.alignLeft(value, len, pad);
         }
+    }
+
+    /**
+     * Wraps a string into multiple lines of a limited width.
+     * @param {string} str      The string to wrap.
+     * @param {num} maxWidth    The maximum width for the wrapped string.
+     * @returns {string}        The wrapped string.
+     */
+    static wordWrap(str, maxWidth) {
+        const NEW_LINE = "\n";
+
+        // make sure we have a string as parameter
+        str = '' + str;
+
+        var found = false; 
+        var res = '';
+
+        while (str.length > maxWidth) {                 
+            found = false;
+            // Inserts new line at first whitespace of the line
+            for (var i = maxWidth - 1; i >= 0; i--) {
+                if (AsciiTable3.isWhiteSpace(str.charAt(i))) {
+                    res += str.substring(0, i).trimStart() + NEW_LINE;
+                    str = str.slice(i + 1);
+                    found = true;
+                    break;
+                }
+            }
+
+            // Inserts new line at maxWidth position, the word is too long to wrap
+            if (!found) {
+                res += str.substring(0, maxWidth).trimStart() + NEW_LINE;
+                str = str.slice(maxWidth);
+            }
+        }
+    
+        return res + str.trimStart();
     }
 
     /**
@@ -618,6 +667,43 @@ class AsciiTable3 {
     }
 
     /**
+     * Sets the wrapping property for a specific column (wrapped content will generate more than one data row if needed).
+     * @param {number} idx Column index to align (starts at 1).
+     * @param {boolean} wrap Whether to wrap the content (default is true).
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
+    setWrapped(idx, wrap = true) {
+        if (this.wrapping) {
+            // resize if needed
+            AsciiTable3.arrayResize(this.wrapping, idx);
+        } else {
+            // create array            
+            this.wrapping = AsciiTable3.arrayFill(idx);
+        }
+
+        // arrays are 0-based
+        this.wrapping[idx - 1] = wrap;
+
+        return this;
+    }
+
+    /**
+     * Gets the wrapping setting for a given column.
+     * @param {number} idx Column index to get wrapping (starts at 1).
+     */
+    isWrapped(idx) {
+        // wrapping defaults to false
+        var result = false;
+
+        if (this.wrapping && idx <= this.wrapping.length) {
+            // arrays are 0-based
+            result = this.wrapping[idx - 1];
+        }
+        
+        return result;
+    }
+
+    /**
      * Return the JSON representation of the table, this also allows us to call JSON.stringify on the instance.
      * @returns {string} The table JSON representation.
      */
@@ -747,19 +833,59 @@ class AsciiTable3 {
     }
 
     /**
-     * Get string with the rendering of a heading row.
+     * Get array of wrapped row data from a "normal" row.
+     * @private
+     * @param {*[]} row Row of data.
+     * @returns         Array of data rows after word wrapping.
+     */
+    getWrappedRows(row) {
+        // setup a new wrapped row
+        const wrappedRow = AsciiTable3.arrayFill(row.length);
+
+        var maxRows = 1;
+
+        // loop over columns and wrap
+        for (var col = 0; col < row.length; col++) {
+            const cell = row[col];
+
+            if (this.getWidth(col + 1) && this.isWrapped(col + 1)) {
+                wrappedRow[col] = AsciiTable3.wordWrap(cell, this.getWidth(col + 1) - this.getCellMargin() * 2).split("\n");
+
+                if (wrappedRow[col].length > maxRows) maxRows = wrappedRow[col].length;
+            } else {
+                wrappedRow[col] = [ cell ];
+            }
+        }
+
+        // create resulting array with (potentially) multiple rows
+        const result = AsciiTable3.arrayFill(maxRows);
+        for (var i = 0; i < maxRows; i++) {
+            result[i] = AsciiTable3.arrayFill(row.length, '');
+        }
+
+        // fill in values
+        for (var nCol = 0; nCol < row.length; nCol++) {
+            for (var nRow = 0; nRow < wrappedRow[nCol].length; nRow++) {
+                result[nRow][nCol] = wrappedRow[nCol][nRow];
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Get string with the rendering of a heading row (truncating if needed).
      * @private
      * @param {Style} posStyle The heading row style.
      * @param {number[]} colsWidth Array with the desired width for each heading column.
+     * @param {string} row The heading row to generate.
      * @returns {string} String representation of table heading row line.
      */
-    getHeadingRow(posStyle, colsWidth) {
-        const heading = this.getHeading();
-
+    getHeadingRowTruncated(posStyle, colsWidth, row) {
         var result = posStyle.left;
 
-        for (var col = 0; col < heading.length; col++) {
-            const cell = '' + heading[col];
+        for (var col = 0; col < row.length; col++) {
+            const cell = '' + row[col];
 
             // align contents disregarding margins
             const cellAligned = AsciiTable3.align(this.getHeadingAlign(), cell, colsWidth[col] - this.getCellMargin() * 2);
@@ -768,7 +894,7 @@ class AsciiTable3 {
                         AsciiTable3.truncateString(cellAligned, colsWidth[col] - this.getCellMargin() * 2) +
                         ''.padStart(this.getCellMargin());
 
-            if (col < heading.length - 1) result += posStyle.colSeparator;
+            if (col < row.length - 1) result += posStyle.colSeparator;
         }
         result += posStyle.right + '\n';
 
@@ -776,14 +902,34 @@ class AsciiTable3 {
     }
 
     /**
-     * Get string with the rendering of a data row.
+     * Get string with the rendering of a heading row.
+     * @private
+     * @param {Style} posStyle The heading row style.
+     * @param {number[]} colsWidth Array with the desired width for each heading column.
+     * @returns {string} String representation of table heading row line.
+     */
+    getHeadingRow(posStyle, colsWidth) {
+        var result = '';
+
+        // wrap heading if needed
+        const rows = this.getWrappedRows(this.getHeading());
+
+        rows.forEach(aRow => {
+            result += this.getHeadingRowTruncated(posStyle, colsWidth, aRow);
+        });
+
+        return result;
+    }
+
+    /**
+     * Get string with the rendering of a data row (truncating if needed).
      * @private
      * @param {Style} posStyle The data row style.
      * @param {number[]} colsWidth Array with the desired width for each data column.
      * @param {*[]} row Array with cell values for this row.
      * @returns {string} String representation of table data row line.
      */
-    getDataRow(posStyle, colsWidth, row) {
+    getDataRowTruncated(posStyle, colsWidth, row) {
         var result = posStyle.left;
 
         // loop over data columns in row
@@ -800,6 +946,27 @@ class AsciiTable3 {
             if (col < colsWidth.length - 1) result += posStyle.colSeparator;
         }
         result += posStyle.right + '\n';
+
+        return result;
+    }
+
+    /**
+     * Get string with the rendering of a data row (please not that it may result in several rows, depending on wrap settings).
+     * @private
+     * @param {Style} posStyle The data row style.
+     * @param {number[]} colsWidth Array with the desired width for each data column.
+     * @param {*[]} row Array with cell values for this row.
+     * @returns {string} String representation of table data row line.
+     */
+    getDataRow(posStyle, colsWidth, row) {
+        var result = '';
+
+        // wrap data row if needed
+        const rows = this.getWrappedRows(row);
+
+        rows.forEach(aRow => {
+            result += this.getDataRowTruncated(posStyle, colsWidth, aRow);
+        });
 
         return result;
     }

@@ -4,9 +4,11 @@ Ascii Table 3
 [![Build stats](https://travis-ci.com/AllMightySauron/ascii-table3.png)](https://travis-ci.com/AllMightySauron/ascii-table3)
 [![npm version](https://badge.fury.io/js/ascii-table3.png)](https://badge.fury.io/js/ascii-table3)
 
-`ascii-table3` is a pure ascii table renderer and beautifier, heavily inspired by the ascii-table package created by Beau Sorensen <mail@beausorensen.com> (http://github.com/sorensen). The original package lacked support for multiple table styles and that is what motivated me to create this new one.
+`ascii-table3` is a pure ascii table renderer and beautifier, heavily inspired by the `ascii-table` package created by Beau Sorensen. The original package lacked support for multiple table styles and that is what motivated me to create this new one.
 
 Currently with **over a dozen** predefined table styles, the collection style keeps growing. I am pretty sure there is a style for everyone. If not, you can even design your own custom stye and add it to the library!
+
+Please direct any issues, suggestions or feature requests to the [ascii-table3 github] (https://github.com/AllMightySauron/ascii-table3) page.
 
 Existing code for the original `ascii-table` package should run fine with very few changes (see examples below).
 
@@ -146,10 +148,23 @@ var table = AsciiTable3.AsciiTable3('Data');
 
 Returns wether a `val` is numeric or not, irrespective of its type.
 
+* `val` - value to check
+
 ```javascript
 AsciiTable3.isNumeric('test')  // false
 AsciiTable3.isNumeric(10)      // true
 AsciiTable3.isNumeric(3.14)    // true
+```
+### AsciiTable3.isWhiteSpace(str)
+
+Return whether this character is whitespace (used internally for word wrapping purposes).
+
+* `str` - character to test
+
+```javascript
+AsciiTable3.isWhiteSpace(' '')   // true
+AsciiTable3.isWhiteSpace('\t')   // true
+AsciiTable3.isWhiteSpace('*')    // false
 ```
 
 ### AsciiTable3.align(direction, val, len, [pad])
@@ -216,6 +231,30 @@ Example:
 
 ```javascript
 AsciiTable3.align(AsciiTable3.LEFT, 'hey', 7) // 'hey    '
+```
+
+### AsciiTable3.wordWrap(str, maxWidth)
+
+Wraps a string into multiple lines of a limited width.
+
+* `str` - string to wrap
+* `maxWidth` - maximum width for the wrapped string
+
+```javascript
+AsciiTable3.wordWrap('dummy', 5)           // dummy
+
+AsciiTable3.wordWrap('this is a test', 5)  
+// this
+// is a
+// test
+
+AsciiTable3.wordWrap('this is a test', 3)
+// thi
+// s
+// is
+// a
+// tes
+// t
 ```
 
 ### AsciiTable3.truncateString(str, len)
@@ -955,6 +994,72 @@ Example:
 table.setAlignRight(2);
 
 table.getAlign(2)       // AsciiTable3.RIGHT
+```
+
+#### instance.setWrapped(idx, [wrap])
+
+Sets the wrapping property for a specific column (wrapped content will generate more than one data row if needed).
+
+* `idx` - column to wrap (starts at 1).
+* `wrap` - wrap boolean setting (default is true).
+
+```javascript
+var table = 
+    new AsciiTable3.AsciiTable3('Sample table')
+    .setHeading('Name', 'Age', 'Eye color')
+    .setAlign(3, AsciiTable3.CENTER)
+    .addRowMatrix([
+        ['James Bond', 41, 'blue'],
+        ['Harry Potter', 18, 'brown'],
+        ['Scooby Doo', 23, 'brown'],
+        ['Mickey Mouse', 120, 'black']
+    ]);
+
+// first column width is 8 characters and wrapped
+table.setWidth(1, 8).setWrapped(1);
+
+console.log(table.toString());
+```
+```asciidoc
+.------------------------------.
+|         Sample table         |
+:--------.--------.------------:
+|  Name  |  Age   | Eye color  |
+:--------+--------+------------:
+| James  |     41 |    blue    |
+| Bond   |        |            |
+| Harry  |     18 |   brown    |
+| Potter |        |            |
+| Scooby |     23 |   brown    |
+| Doo    |        |            |
+| Mickey |    120 |   black    |
+| Mouse  |        |            |
+'--------'--------'------------'
+```
+
+#### instance.isWrapped(idx)
+
+Gets the wrapping setting for a given column (true or false).
+
+* `idx` - column to check (starts at 1)
+
+```javascript
+var table = 
+    new AsciiTable3.AsciiTable3('Sample table')
+    .setHeading('Name', 'Age', 'Eye color')
+    .setAlign(3, AsciiTable3.CENTER)
+    .addRowMatrix([
+        ['James Bond', 41, 'blue'],
+        ['Harry Potter', 18, 'brown'],
+        ['Scooby Doo', 23, 'brown'],
+        ['Mickey Mouse', 120, 'black']
+    ]);
+
+// first column width is 8 characters and wrapped
+table.setWidth(1, 8).setWrapped(1);
+
+table.isWrapped(1)     // true
+table.isWrapped(2)     // false
 ```
 
 #### instance.setCellMargin(margin)
