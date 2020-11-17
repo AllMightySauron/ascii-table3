@@ -37,6 +37,10 @@ describe('String methods', () => {
         assert.strictEqual(AsciiTable3.AsciiTable3.alignAuto(32, 4), '  32');
     });
 
+    it('Auto Alignment (object)', () => {
+        assert.strictEqual(AsciiTable3.AsciiTable3.alignAuto([ 'a', 'b' ], 5), 'a,b  ');
+    });
+
     it('Truncate string (normal)', () => {
         assert.strictEqual(AsciiTable3.AsciiTable3.truncateString('Dummy 1', 5), 'Du...');
     });
@@ -89,65 +93,83 @@ describe('Array methods', () => {
     });
 });
 
-const asciiTable = new AsciiTable3.AsciiTable3();
-
 // instance methods
 describe('Title', () => {
 
     it('setTitle/getTitle', () => {
-        asciiTable.setTitle('Dummy title');
-        assert.strictEqual(asciiTable.getTitle(), 'Dummy title');
+        const aTable = new AsciiTable3.AsciiTable3();
+
+        // empty title is the default
+        assert.strictEqual(aTable.getTitle(), '');
+
+        aTable.setTitle('Dummy title');
+        assert.strictEqual(aTable.getTitle(), 'Dummy title');
     });
 
     it('setTitleAlign/getTitleAlign', () => {
+        const aTable = new AsciiTable3.AsciiTable3('Dummy title');
+
         // default is center
-        assert.strictEqual(asciiTable.getTitleAlign(), AsciiTable3.CENTER);
+        assert.strictEqual(aTable.getTitleAlign(), AsciiTable3.CENTER);
 
-        asciiTable.setTitleAlignLeft();
-        assert.strictEqual(asciiTable.getTitleAlign(), AsciiTable3.LEFT);
+        aTable.setTitleAlignLeft();
+        assert.strictEqual(aTable.getTitleAlign(), AsciiTable3.LEFT);
 
-        asciiTable.setTitleAlignRight();
-        assert.strictEqual(asciiTable.getTitleAlign(), AsciiTable3.RIGHT);
+        aTable.setTitleAlignRight();
+        assert.strictEqual(aTable.getTitleAlign(), AsciiTable3.RIGHT);
 
-        asciiTable.setTitleAlignCenter();
-        assert.strictEqual(asciiTable.getTitleAlign(), AsciiTable3.CENTER);
+        aTable.setTitleAlignCenter();
+        assert.strictEqual(aTable.getTitleAlign(), AsciiTable3.CENTER);
     });
 });
 
 describe('Heading', () => {
     it ('setHeading/getHeading', () => {
-        asciiTable.setHeading('Title', 'Count', 'Rate (%)');
-        assert.notStrictEqual(asciiTable.getHeading(), [ 'Title', 'Count', 'Rate (%)' ]);
+        const aTable = new AsciiTable3.AsciiTable3('Dummy title');
+
+        aTable.setHeading();
+        assert.notStrictEqual(aTable.getHeading(), []);
+
+        aTable.setHeading('Title', 'Count', 'Rate (%)');  
+        assert.notStrictEqual(aTable.getHeading(), [ 'Title', 'Count', 'Rate (%)' ]);
     });
 
     it('setHeadingAlign/getHeadingAlign', () => {
+        const aTable = new AsciiTable3.AsciiTable3('Dummy title')
+            .setHeading('Title', 'Count', 'Rate (%)');
+
         // default is center
-        assert.strictEqual(asciiTable.getHeadingAlign(), AsciiTable3.CENTER);
+        assert.strictEqual(aTable.getHeadingAlign(), AsciiTable3.CENTER);
 
-        asciiTable.setHeadingAlignLeft();
-        assert.strictEqual(asciiTable.getHeadingAlign(), AsciiTable3.LEFT);
+        aTable.setHeadingAlignLeft();
+        assert.strictEqual(aTable.getHeadingAlign(), AsciiTable3.LEFT);
 
-        asciiTable.setHeadingAlignRight();
-        assert.strictEqual(asciiTable.getHeadingAlign(), AsciiTable3.RIGHT);
+        aTable.setHeadingAlignRight();
+        assert.strictEqual(aTable.getHeadingAlign(), AsciiTable3.RIGHT);
 
-        asciiTable.setHeadingAlignCenter();
-        assert.strictEqual(asciiTable.getHeadingAlign(), AsciiTable3.CENTER);
+        aTable.setHeadingAlignCenter();
+        assert.strictEqual(aTable.getHeadingAlign(), AsciiTable3.CENTER);
     });
 });
  
 describe('DataRows', () => {
     it ('addRow/getRows', () => {
-        asciiTable.addRow('Dummy 1', 10, 2.3);
+        const aTable = new AsciiTable3.AsciiTable3('Dummy title')
+            .setHeading('Title', 'Count', 'Rate (%)')
+            .addRow('Dummy 1', 10, 2.3);
         
-        const rows = asciiTable.getRows();
+        const rows = aTable.getRows();
         assert.strict(rows.length, 1);
         assert.notStrictEqual(rows[0], [ 'Dummy 1', 10, 2.3 ]);
     });
 
     it ('addRowMatrix/getRows', () => {
-        asciiTable.addRowMatrix([ ['Dummy 2', 5, 3.1],  ['Dummy 3', 100, 3.14] ]);
+        const aTable = new AsciiTable3.AsciiTable3('Dummy title')
+            .setHeading('Title', 'Count', 'Rate (%)')
+            .addRow('Dummy 1', 10, 2.3)
+            .addRowMatrix([ ['Dummy 2', 5, 3.1],  ['Dummy 3', 100, 3.14] ]);
 
-        const rows = asciiTable.getRows();
+        const rows = aTable.getRows();
 
         assert.strictEqual(rows.length, 3);
         assert.notStrictEqual(rows[0], [ 'Dummy 1', 10, 2.3 ]);
@@ -156,14 +178,17 @@ describe('DataRows', () => {
     });
 
     it ("addNonZeroRow", () =>  {
-        // should not be added
-        asciiTable.addNonZeroRow('Dummy 4', 0, 0, 0);
+        const aTable = new AsciiTable3.AsciiTable3('Dummy title')
+            .setHeading('Title', 'Count', 'Rate (%)')
+            .addRow('Dummy 1', 10, 2.3)
+            .addRowMatrix([ ['Dummy 2', 5, 3.1],  ['Dummy 3', 100, 3.14] ])
+            .addNonZeroRow('Dummy 4', 0, 0, 0);
 
-        assert.strictEqual(asciiTable.getRows().length, 3);
+        assert.strictEqual(aTable.getRows().length, 3);
 
-        asciiTable.addNonZeroRow('Dummy 4', 0, 1, 0);
+        aTable.addNonZeroRow('Dummy 4', 0, 1, 0);
 
-        assert.strictEqual(asciiTable.getRows().length, 4);
+        assert.strictEqual(aTable.getRows().length, 4);
     });
 });
 
@@ -192,56 +217,103 @@ describe('Sorting', () => {
 
 describe('Styling', () => {
     it ('setStyle/getStyle', () => {
-        const style = asciiTable.getStyle();
+        const aTable = new AsciiTable3.AsciiTable3();
+        
+        const style = aTable.getStyle();
 
         // ramac should be the default
         assert.strictEqual(style.name, "ramac");
         
-        asciiTable.setStyle("none");
-        assert.strictEqual(asciiTable.getStyle().name, "none");
+        aTable.setStyle("none");
+        assert.strictEqual(aTable.getStyle().name, "none");
+    });
+
+    it('getStyles', () => {
+        const aTable = new AsciiTable3.AsciiTable3();
+
+        const styles = aTable.getStyles();
+
+        // must be an array
+        assert.strictEqual(typeof styles, "object");
+        assert.strictEqual(styles.length, 14);
+
+        const names = [ "none", "ramac", "ascii-table", "reddit-markdown" ];
+        names.forEach(name => {
+            assert.strictEqual(styles.find(style => style.name == name).name, name);
+        });
+        
     });
 
     it ('removeBorder', () => {
-        asciiTable.removeBorder();
-        assert.strictEqual(asciiTable.getStyle().name, "none");
+        const aTable = new AsciiTable3.AsciiTable3();
+
+        aTable.removeBorder();
+        assert.strictEqual(aTable.getStyle().name, "none");
     });
 
     it ('setWidth/getWidth', () => {
-        asciiTable.setWidth(1, 5);
+        const aTable = new AsciiTable3.AsciiTable3()
+            .setHeading('Title', 'Count', 'Rate (%)')
+            .addRow('Dummy 1', 10, 2.3);
 
-        assert.strictEqual(asciiTable.getWidth(1), 5);
-        assert.strictEqual(asciiTable.getWidth(2), undefined);
-        assert.strictEqual(asciiTable.getWidth(3), undefined);
+        aTable.setWidth(1, 5);
+
+        assert.strictEqual(aTable.getWidth(1), 5);
+        assert.strictEqual(aTable.getWidth(2), undefined);
+        assert.strictEqual(aTable.getWidth(3), undefined);
     });
 
     it ('setWidths/getWidths', () => {
-        asciiTable.setWidths([5, undefined, undefined]);
-        assert.notStrictEqual(asciiTable.getWidths(), [5, undefined, undefined]);
+        const aTable = new AsciiTable3.AsciiTable3()
+            .setHeading('Title', 'Count', 'Rate (%)')
+            .addRow('Dummy 1', 10, 2.3);
+
+        aTable.setWidths();
+        assert.notStrictEqual(aTable.getWidths(), []);
+
+        aTable.setWidths([5, undefined, undefined]);
+        assert.notStrictEqual(aTable.getWidths(), [5, undefined, undefined]);
     });
 
     it('setAlign/getAlign', () => {
-        asciiTable
+        const aTable = new AsciiTable3.AsciiTable3()
+            .setHeading('Title', 'Count', 'Rate (%)')
+            .addRow('Dummy 1', 10, 2.3)
             .setAlign(1, AsciiTable3.CENTER)
             .setAlign(2, AsciiTable3.RIGHT);
 
         // default alignment should be auto
-        assert.strictEqual(asciiTable.getAlign(1), AsciiTable3.CENTER);
-        assert.strictEqual(asciiTable.getAlign(2), AsciiTable3.RIGHT);
-        assert.strictEqual(asciiTable.getAlign(3), AsciiTable3.AUTO);
+        assert.strictEqual(aTable.getAlign(1), AsciiTable3.CENTER);
+        assert.strictEqual(aTable.getAlign(2), AsciiTable3.RIGHT);
+        assert.strictEqual(aTable.getAlign(3), AsciiTable3.AUTO);
+
+        aTable.setAlignLeft(1).setAlignRight(2);
+
+        assert.strictEqual(aTable.getAlign(1), AsciiTable3.LEFT);
+        assert.strictEqual(aTable.getAlign(2), AsciiTable3.RIGHT);
+
+        aTable.setAlignCenter(1);
+        assert.strictEqual(aTable.getAlign(1), AsciiTable3.CENTER);
     });
 
     it('setWrapped/isWrapped', () => {
+        const aTable = new AsciiTable3.AsciiTable3()
+            .setHeading('Title', 'Count', 'Rate (%)')
+            .addRow('Dummy 1', 10, 2.3);
+
         // default is false
-        assert.strictEqual(asciiTable.isWrapped(1), false);
+        assert.strictEqual(aTable.isWrapped(1), false);
 
-        asciiTable.setWrapped(2);
-        assert.strictEqual(asciiTable.isWrapped(2), true);
+        aTable.setWrapped(2);
+        assert.strictEqual(aTable.isWrapped(2), true);
 
-        asciiTable.setWrapped(2, false);
-        assert.strictEqual(asciiTable.isWrapped(2), false);
+        aTable.setWrapped(2, false);
+        assert.strictEqual(aTable.isWrapped(2), false);
     });
 
     it('addStyle', () => {
+        const aTable = new AsciiTable3.AsciiTable3();
+
         const roundedStyle = {
             name: "rounded",
             borders: {
@@ -260,94 +332,129 @@ describe('Styling', () => {
             }
           };
           
-        asciiTable.addStyle(roundedStyle);
-        assert.notStrictEqual(asciiTable.getStyle("roundStyle"), roundedStyle);
+        aTable.addStyle(roundedStyle);
+        assert.notStrictEqual(aTable.getStyle("roundStyle"), roundedStyle);
     });
 });
 
 describe('Rendering', () => {
-    it ('toString (full)', () => {
-        asciiTable.setCellMargin(0);
+    it ('toString (ramac)', () => {
+        const aTable = new AsciiTable3.AsciiTable3('Dummy title')
+            .setHeading('Title', 'Count', 'Rate (%)')
+            .setAlign(1, AsciiTable3.LEFT)
+            .addRowMatrix([ 
+                ['Dummy 1', 10, 2.3], 
+                ['Dummy 2', 5, 3.1],  
+                ['Dummy 3', 100, 3.14],
+                ['Dummy 4', 0, 1],
+             ])
+             .setCellMargin(0);
 
-        asciiTable.setStyle("ramac");
+        aTable.setStyle("ramac");
         assert.strictEqual(
-            asciiTable.toString(),
-            '+--------------------+\n' +
-            '|    Dummy title     |\n' +
-            '+-----+-----+--------+\n' +
-            '|Title|Count|Rate (%)|\n' +
-            '+-----+-----+--------+\n' +
-            '|Du...|   10|     2.3|\n' +
-            '|Du...|    5|     3.1|\n' +
-            '|Du...|  100|    3.14|\n' +
-            '|Du...|    0|       1|\n' +
-            '+-----+-----+--------+\n'
+            aTable.toString(),
+            '+----------------------+\n' +
+            '|     Dummy title      |\n' +
+            '+-------+-----+--------+\n' +
+            '| Title |Count|Rate (%)|\n' +
+            '+-------+-----+--------+\n' +
+            '|Dummy 1|   10|     2.3|\n' +
+            '|Dummy 2|    5|     3.1|\n' +
+            '|Dummy 3|  100|    3.14|\n' +
+            '|Dummy 4|    0|       1|\n' +
+            '+-------+-----+--------+\n'
         );
 
-        asciiTable.setStyle("none");
+        aTable.setStyle("none");
         assert.strictEqual(
-            asciiTable.toString(),
-            '    Dummy title     \n' +
-            'Title Count Rate (%)\n' +
-            'Du...    10      2.3\n' +
-            'Du...     5      3.1\n' +
-            'Du...   100     3.14\n' +
-            'Du...     0        1\n'
+            aTable.toString(),
+            '     Dummy title      \n' +
+            ' Title  Count Rate (%)\n' +
+            'Dummy 1    10      2.3\n' +
+            'Dummy 2     5      3.1\n' +
+            'Dummy 3   100     3.14\n' +
+            'Dummy 4     0        1\n'
         );
 
-        asciiTable.setStyle("compact");
+        aTable.setStyle("compact");
         assert.strictEqual(
-            asciiTable.toString(),
-            '--------------------\n' +
-            '    Dummy title     \n' +
-            '--------------------\n' +
-            'Title Count Rate (%)\n' +
-            '----- ----- --------\n' +
-            'Du...    10      2.3\n' +
-            'Du...     5      3.1\n' +
-            'Du...   100     3.14\n' +
-            'Du...     0        1\n'
+            aTable.toString(),
+            '----------------------\n' +
+            '     Dummy title      \n' +
+            '----------------------\n' +
+            ' Title  Count Rate (%)\n' +
+            '------- ----- --------\n' +
+            'Dummy 1    10      2.3\n' +
+            'Dummy 2     5      3.1\n' +
+            'Dummy 3   100     3.14\n' +
+            'Dummy 4     0        1\n'
         );
 
-        asciiTable.setStyle("unicode-single");
+        aTable.setStyle("unicode-single");
         assert.strictEqual(
-            asciiTable.toString(),
-            '┌────────────────────┐\n' +
-            '│    Dummy title     │\n' +
-            '├─────┬─────┬────────┤\n' +
-            '│Title│Count│Rate (%)│\n' +
-            '├─────┼─────┼────────┤\n' +
-            '│Du...│   10│     2.3│\n' +
-            '│Du...│    5│     3.1│\n' +
-            '│Du...│  100│    3.14│\n' +
-            '│Du...│    0│       1│\n' +
-            '└─────┴─────┴────────┘\n'
+            aTable.toString(),
+            '┌──────────────────────┐\n' +
+            '│     Dummy title      │\n' +
+            '├───────┬─────┬────────┤\n' +
+            '│ Title │Count│Rate (%)│\n' +
+            '├───────┼─────┼────────┤\n' +
+            '│Dummy 1│   10│     2.3│\n' +
+            '│Dummy 2│    5│     3.1│\n' +
+            '│Dummy 3│  100│    3.14│\n' +
+            '│Dummy 4│    0│       1│\n' +
+            '└───────┴─────┴────────┘\n'
         );
 
-        asciiTable.setStyle("unicode-double");
+        aTable.setStyle("unicode-double");
         assert.strictEqual(
-            asciiTable.toString(),
-            '╔════════════════════╗\n' +
-            '║    Dummy title     ║\n' +
-            '╠═════╦═════╦════════╣\n' +
-            '║Title║Count║Rate (%)║\n' +
-            '╠═════╬═════╬════════╣\n' +
-            '║Du...║   10║     2.3║\n' +
-            '║Du...║    5║     3.1║\n' +
-            '║Du...║  100║    3.14║\n' +
-            '║Du...║    0║       1║\n' +
-            '╚═════╩═════╩════════╝\n'
+            aTable.toString(),
+            '╔══════════════════════╗\n' +
+            '║     Dummy title      ║\n' +
+            '╠═══════╦═════╦════════╣\n' +
+            '║ Title ║Count║Rate (%)║\n' +
+            '╠═══════╬═════╬════════╣\n' +
+            '║Dummy 1║   10║     2.3║\n' +
+            '║Dummy 2║    5║     3.1║\n' +
+            '║Dummy 3║  100║    3.14║\n' +
+            '║Dummy 4║    0║       1║\n' +
+            '╚═══════╩═════╩════════╝\n'
         );
     });
 
-    it ('toString (new style)', () => {
-        // back to default
-        asciiTable.setWidths();
-        asciiTable.setCellMargin(1);
+    it ('toString (custom style)', () => {
+        const aTable = new AsciiTable3.AsciiTable3('Dummy title')
+            .setHeading('Title', 'Count', 'Rate (%)')
+            .setAlign(1, AsciiTable3.LEFT)
+            .addRowMatrix([ 
+                ['Dummy 1', 10, 2.3], 
+                ['Dummy 2', 5, 3.1],  
+                ['Dummy 3', 100, 3.14],
+                ['Dummy 4', 0, 1],
+             ]);
 
-        asciiTable.setStyle("rounded");
+        const roundedStyle = {
+            name: "rounded",
+            borders: {
+                top: {
+                    left: ".", center: "-", right: ".", colSeparator: "."
+                },
+                middle: {
+                    left: ":", center: "-", right: ":", colSeparator: "+"
+                },
+                bottom: {
+                    left: "'", center: "-", right: "'", colSeparator: "'"
+                },
+                data : {
+                    left: "|", center: " ", right: "|", colSeparator: "|"
+                }
+            }
+        };
+        
+        aTable.addStyle(roundedStyle);
+
+        aTable.setStyle("rounded");
         assert.strictEqual(
-            asciiTable.toString(),
+            aTable.toString(),
             '.----------------------------.\n' +
             '|        Dummy title         |\n' +
             ':---------.-------.----------:\n' +
@@ -362,11 +469,18 @@ describe('Rendering', () => {
     });
 
     it ('toString (cell margins)', () => {
-        asciiTable.setWidths();
-        asciiTable.setStyle('ramac');
+        const aTable = new AsciiTable3.AsciiTable3('Dummy title')
+            .setHeading('Title', 'Count', 'Rate (%)')
+            .setAlign(1, AsciiTable3.LEFT)
+            .addRowMatrix([ 
+                ['Dummy 1', 10, 2.3], 
+                ['Dummy 2', 5, 3.1],  
+                ['Dummy 3', 100, 3.14],
+                ['Dummy 4', 0, 1],
+             ]);
 
-        asciiTable.setCellMargin(1);
-        assert.strictEqual(asciiTable.toString(),
+        // default margin is 1
+        assert.strictEqual(aTable.toString(),
             '+----------------------------+\n' + 
             '|        Dummy title         |\n' + 
             '+---------+-------+----------+\n' + 
@@ -379,8 +493,9 @@ describe('Rendering', () => {
             '+---------+-------+----------+\n'
         );
 
-        asciiTable.setCellMargin(2);
-        assert.strictEqual(asciiTable.toString(),
+        // new cell margin
+        aTable.setCellMargin(2);
+        assert.strictEqual(aTable.toString(),
             '+----------------------------------+\n' + 
             '|           Dummy title            |\n' + 
             '+-----------+---------+------------+\n' + 
@@ -393,8 +508,9 @@ describe('Rendering', () => {
             '+-----------+---------+------------+\n'
         );
 
-        asciiTable.setWidth(1, 8);
-        assert.strictEqual(asciiTable.toString(),
+        // cell margin with truncation
+        aTable.setWidth(1, 8);
+        assert.strictEqual(aTable.toString(),
             '+-------------------------------+\n' + 
             '|          Dummy title          |\n' + 
             '+--------+---------+------------+\n' + 
@@ -409,12 +525,19 @@ describe('Rendering', () => {
     });
 
     it ('toString (wrapping)', () => {
-        asciiTable
-            .setWidths().setWidth(1, 7)
-            .setWrapped(1).setAlign(1, AsciiTable3.LEFT)
-            .setStyle('ramac').setCellMargin(1);
+        const aTable = new AsciiTable3.AsciiTable3('Dummy title')
+            .setHeading('Title', 'Count', 'Rate (%)')
+            .setAlign(1, AsciiTable3.LEFT)
+            .addRowMatrix([ 
+                ['Dummy 1', 10, 2.3], 
+                ['Dummy 2', 5, 3.1],  
+                ['Dummy 3', 100, 3.14],
+                ['Dummy 4', 0, 1],
+             ]);
 
-        assert.strictEqual(asciiTable.toString(),
+        aTable.setWidth(1, 7).setWrapped(1);
+
+        assert.strictEqual(aTable.toString(),
             '+--------------------------+\n' + 
             '|       Dummy title        |\n' + 
             '+-------+-------+----------+\n' + 
@@ -431,8 +554,8 @@ describe('Rendering', () => {
             '+-------+-------+----------+\n'
         );
 
-        asciiTable.setWidth(3, 6).setWrapped(3);
-        assert.strictEqual(asciiTable.toString(),
+        aTable.setWidth(3, 6).setWrapped(3);
+        assert.strictEqual(aTable.toString(),
             '+----------------------+\n' + 
             '|     Dummy title      |\n' + 
             '+-------+-------+------+\n' + 
@@ -450,8 +573,8 @@ describe('Rendering', () => {
             '+-------+-------+------+\n'
         );
 
-        asciiTable.setAlign(1, AsciiTable3.CENTER);
-        assert.strictEqual(asciiTable.toString(),
+        aTable.setAlign(1, AsciiTable3.CENTER);
+        assert.strictEqual(aTable.toString(),
             '+----------------------+\n' + 
             '|     Dummy title      |\n' + 
             '+-------+-------+------+\n' + 
@@ -470,6 +593,28 @@ describe('Rendering', () => {
         );
     });
     
+    it ('toString (no title)', () => {
+        const aTable = new AsciiTable3.AsciiTable3()
+            .setHeading('Name', 'Age', 'Size')
+            .addRowMatrix([ 
+                ['Dummy 1', 10, 2.3], 
+                ['Dummy 2', 5, 3.1],  
+                ['Dummy 3', 100, 3.14] ]);
+
+        // ramac
+        aTable.setStyle("ramac");
+        assert.strictEqual(
+            aTable.toString(),
+            '+---------+-----+------+\n' +
+            '|  Name   | Age | Size |\n' +
+            '+---------+-----+------+\n' +
+            '| Dummy 1 |  10 |  2.3 |\n' +
+            '| Dummy 2 |   5 |  3.1 |\n' +
+            '| Dummy 3 | 100 | 3.14 |\n' +
+            '+---------+-----+------+\n'
+        );
+    });
+
     it ('toString (no heading)', () => {
         const aTable = new AsciiTable3.AsciiTable3('Dummy title')
             .setAlign(1, AsciiTable3.LEFT)
@@ -530,17 +675,37 @@ describe('Serialization', () => {
 
 describe('Clearing data', () => {
     it ('clearRows', () => {
-        assert.strictEqual(asciiTable.getRows().length, 4);
+        const aTable = new AsciiTable3.AsciiTable3('Dummy title')
+            .setHeading('Title', 'Count', 'Rate (%)')
+            .setAlign(1, AsciiTable3.LEFT)
+            .addRowMatrix([ 
+                ['Dummy 1', 10, 2.3], 
+                ['Dummy 2', 5, 3.1],  
+                ['Dummy 3', 100, 3.14],
+                ['Dummy 4', 0, 1],
+             ]);
 
-        asciiTable.clearRows();
-        assert.strictEqual(asciiTable.getRows().length, 0);
+        assert.strictEqual(aTable.getRows().length, 4);
+
+        aTable.clearRows();
+        assert.strictEqual(aTable.getRows().length, 0);
     });
 
     it ('clear', () => {
-        asciiTable.clear();
+        const aTable = new AsciiTable3.AsciiTable3('Dummy title')
+            .setHeading('Title', 'Count', 'Rate (%)')
+            .setAlign(1, AsciiTable3.LEFT)
+            .addRowMatrix([ 
+                ['Dummy 1', 10, 2.3], 
+                ['Dummy 2', 5, 3.1],  
+                ['Dummy 3', 100, 3.14],
+                ['Dummy 4', 0, 1],
+             ]);
 
-        assert.strictEqual(asciiTable.getTitle(), '');
-        assert.notStrictEqual(asciiTable.getHeading(), []);
-        assert.strictEqual(asciiTable.getRows().length, 0);
+        aTable.clear();
+
+        assert.strictEqual(aTable.getTitle(), '');
+        assert.notStrictEqual(aTable.getHeading(), []);
+        assert.strictEqual(aTable.getRows().length, 0);
     });
 });

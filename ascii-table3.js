@@ -405,7 +405,7 @@ class AsciiTable3 {
      * @returns {*[]} Array with heading values.
      */
     getHeading() {
-        return this.heading ? Array.from(this.heading): [];
+        return Array.from(this.heading);
     }
 
     /**
@@ -519,7 +519,7 @@ class AsciiTable3 {
      * @returns {*[]} Array with row cell values (column array).
      */
     getRows() {
-        return this.rows ? Array.from(this.rows): [];
+        return Array.from(this.rows);
     }
 
     /**
