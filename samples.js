@@ -85,9 +85,16 @@ table.setWidth(1, 8).setWrapped(1);
 
 console.log(`data wrapping:\n${table.toString()}`);
 
-// example 7. no title or heading
-console.log ('>>>>>> example 7: no title or heading');
+// example 7. justification (all columns of same width)
+console.log ('>>>>>> example 7: justification (all columns of same width)');
+table.setWidths().setWrapped(1, false);
+table.setJustify();
 
+console.log(`justified:\n${table.toString()}`);
+
+// example 8. no title or heading
+console.log ('>>>>>> example 8: no title or heading');
+table.setJustify(false);
 table.setTitle();
 table.setHeading();
 

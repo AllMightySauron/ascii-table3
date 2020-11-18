@@ -55,7 +55,7 @@ class AsciiTable3 {
         // load styles
         const fs = require('fs');
         /** @type {Style[]}  */
-        this.styles = JSON.parse(fs.readFileSync(module.path + '/' + STYLES_FILENAME, 'utf8'));
+        this.styles = JSON.parse(fs.readFileSync(module.path ? module.path + '/' + STYLES_FILENAME : STYLES_FILENAME, 'utf8'));
 
         // set default style
         this.setStyle("ramac");
@@ -704,6 +704,24 @@ class AsciiTable3 {
     }
 
     /**
+     * Justify all columns to be the same width.
+     * @param {boolean} enabled Boolean for turning justify on or off (default is true).
+     */
+    setJustify(enabled = true) {
+        this.justify = enabled;
+
+        return this;
+    }
+
+    /**
+     * Returns whether all columns are to be rendered with the same width.
+     * @returns {boolean} Whether all columns are to be rendered with the same width.
+     */
+    isJustify() {
+        return this.justify ? this.justify : false;
+    }
+
+    /**
      * Return the JSON representation of the table, this also allows us to call JSON.stringify on the instance.
      * @returns {string} The table JSON representation.
      */
@@ -801,6 +819,11 @@ class AsciiTable3 {
             if (this.getWidth(col2 + 1)) {
                 colSizes[col2] = this.getWidth(col2 + 1);
             }
+        }
+
+        // check for justification (all columns of same width)
+        if (this.isJustify()) {
+            colSizes = AsciiTable3.arrayFill(colSizes.length, Math.max(...colSizes));
         }
 
         return colSizes;

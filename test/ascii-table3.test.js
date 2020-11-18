@@ -311,6 +311,18 @@ describe('Styling', () => {
         assert.strictEqual(aTable.isWrapped(2), false);
     });
 
+    it('setJustify/isJustify', () => {
+        const aTable = new AsciiTable3.AsciiTable3()
+            .setHeading('Title', 'Count', 'Rate (%)')
+            .addRow('Dummy 1', 10, 2.3);
+
+        assert.strictEqual(aTable.isJustify(), false);
+
+        aTable.setJustify();
+
+        assert.strictEqual(aTable.isJustify(), true);
+    });
+
     it('addStyle', () => {
         const aTable = new AsciiTable3.AsciiTable3();
 
@@ -593,6 +605,48 @@ describe('Rendering', () => {
         );
     });
     
+    it ('toString (justified)', () => {
+        const aTable = new AsciiTable3.AsciiTable3('Dummy title')
+            .setHeading('Title', 'Count', 'Rate (%)')
+            .addRowMatrix([ 
+                ['Dummy 1', 10, 2.3], 
+                ['Dummy 2', 5, 3.1],  
+                ['Dummy 3', 100, 3.14],
+                ['Dummy 4', 0, 1],
+             ]);
+
+        aTable.setJustify();
+
+        assert.strictEqual(aTable.toString(),
+            '+--------------------------------+\n' + 
+            '|          Dummy title           |\n' + 
+            '+----------+----------+----------+\n' + 
+            '|  Title   |  Count   | Rate (%) |\n' + 
+            '+----------+----------+----------+\n' + 
+            '| Dummy 1  |       10 |      2.3 |\n' + 
+            '| Dummy 2  |        5 |      3.1 |\n' + 
+            '| Dummy 3  |      100 |     3.14 |\n' + 
+            '| Dummy 4  |        0 |        1 |\n' +
+            '+----------+----------+----------+\n'
+        );
+
+        aTable.setWidth(3, 6).setWrapped(3);
+
+        assert.strictEqual(aTable.toString(),
+            '+-----------------------------+\n' + 
+            '|         Dummy title         |\n' + 
+            '+---------+---------+---------+\n' + 
+            '|  Title  |  Count  |  Rate   |\n' + 
+            '|         |         |   (%)   |\n' + 
+            '+---------+---------+---------+\n' + 
+            '| Dummy 1 |      10 |     2.3 |\n' + 
+            '| Dummy 2 |       5 |     3.1 |\n' + 
+            '| Dummy 3 |     100 |    3.14 |\n' + 
+            '| Dummy 4 |       0 |       1 |\n' +
+            '+---------+---------+---------+\n'
+        );
+    });
+
     it ('toString (no title)', () => {
         const aTable = new AsciiTable3.AsciiTable3()
             .setHeading('Name', 'Age', 'Size')

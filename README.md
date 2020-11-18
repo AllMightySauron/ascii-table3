@@ -1126,6 +1126,49 @@ table.setCellMargin(2);
 table.getCellMargin()      // 2
 ```
 
+#### instance.setJustify([enabled])
+
+Justify all columns to be the same width.
+
+* `enabled` - Boolean for turning justify on or off (default is true).
+
+```javascript
+var table = new AsciiTable3.AsciiTable3('Dummy title')
+            .setHeading('Title', 'Count', 'Rate (%)')
+            .addRowMatrix([ 
+                ['Dummy 1', 10, 2.3], 
+                ['Dummy 2', 5, 3.1],  
+                ['Dummy 3', 100, 3.14],
+                ['Dummy 4', 0, 1],
+             ]);
+
+table.setJustify();
+
+console.log(table.toString());
+```
+```
++--------------------------------+
+|          Dummy title           |
++----------+----------+----------+
+|  Title   |  Count   | Rate (%) |
++----------+----------+----------+
+| Dummy 1  |       10 |      2.3 |
+| Dummy 2  |        5 |      3.1 |
+| Dummy 3  |      100 |     3.14 |
+| Dummy 4  |        0 |        1 |
++----------+----------+----------+
+```
+
+#### instance.getJustify()
+
+Returns whether all table columns are to be rendered with the same width.
+
+```javascript
+table.setJustify();
+
+table.getJustify()      // true
+```
+
 ### Clearing data
 
 #### instance.clear()
