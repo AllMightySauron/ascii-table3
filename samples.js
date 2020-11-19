@@ -3,10 +3,10 @@
 // example 1: base table
 console.log ('>>>>>> example 1. base table');
 
-var AsciiTable3 = require('./ascii-table3');
+const AsciiTable3 = require('./ascii-table3');
 
 // create table
-var table = 
+const table = 
     new AsciiTable3.AsciiTable3('Sample table')
     .setHeading('Name', 'Age', 'Eye color')
     .setAlign(3, AsciiTable3.CENTER)
@@ -46,8 +46,8 @@ table.setStyle("ramac");
 table.setWidth(1, 10);
 console.log(`name width = 10:\n${table.toString()}`);
 
-table.setWidth(1, 5);
-console.log(`name width = 5:\n${table.toString()}`);
+table.setWidth(1, 6);
+console.log(`name width = 6:\n${table.toString()}`);
 
 table.setWidths([10, 8, 12]);
 console.log(`multiple widths = [10, 8, 12]:\n${table.toString()}`);

@@ -762,7 +762,7 @@ class AsciiTable3 {
 
     /**
      * Sorts the table rows based on a specific methods.
-     * @param {number} idx  The column number to base sort on.
+     * @param {number} idx  The column number to base sort on (starts at 1).
      * @param {function} func The comparison function to use when sorting.
      * @returns {AsciiTable3} The AsciiTable3 object instance.
      */

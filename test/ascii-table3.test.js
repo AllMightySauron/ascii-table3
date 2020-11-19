@@ -234,9 +234,9 @@ describe('Styling', () => {
         const styles = aTable.getStyles();
 
         // must be an array
-        assert.strictEqual(typeof styles, "object");
-        assert.strictEqual(styles.length, 14);
+        assert.strictEqual(Array.isArray(styles), true);
 
+        // must include styles
         const names = [ "none", "ramac", "ascii-table", "reddit-markdown" ];
         names.forEach(name => {
             assert.strictEqual(styles.find(style => style.name == name).name, name);

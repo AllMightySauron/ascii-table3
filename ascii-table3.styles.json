@@ -136,6 +136,23 @@
           }
     },
     {
+        "name": "ascii-clean",
+        "borders": {
+            "top": {
+                "left": "", "center": "-", "right": "", "colSeparator": "|"
+            },
+            "middle": {
+                "left": "", "center": "-", "right": "", "colSeparator": "|"
+            },
+            "bottom": {
+                "left": "", "center": "-", "right": "", "colSeparator": "|"
+            },
+            "data" : {
+                "left": "", "center": " ", "right": "", "colSeparator": "|"
+            }
+        }
+    },
+    {
         "name": "ascii-girder",
         "borders": {
             "top": {

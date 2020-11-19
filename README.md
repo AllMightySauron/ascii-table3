@@ -646,6 +646,19 @@ Currently available styles are:
 | Peter |   8 |   brown   |
 '-------'-----'-----------'
 ```
+* **ascii-clean** - Clean(er) ascii table (no left and right borders)
+```asciicode
+-------------------------
+      Sample table
+-------|-----|-----------
+ Name  | Age | Eye color
+-------|-----|-----------
+ John  |  23 |   green
+ Mary  |  16 |   brown
+ Rita  |  47 |   blue
+ Peter |   8 |   brown
+-------|-----|-----------
+```
 * **ascii-girder** - Ascii girder-like border
 ```asciicode
 //===========================\\
