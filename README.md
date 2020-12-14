@@ -17,7 +17,7 @@ Existing code for the original `ascii-table` package should run fine with very f
 **Node.js**
 
 ```javascript
-var AsciiTable3 = require('ascii-table3');
+var { AsciiTable3 } = require('ascii-table3');
 ```
 
 ##  Basic usage
@@ -25,13 +25,13 @@ var AsciiTable3 = require('ascii-table3');
 Tables are created programmatically.
 
 ```javascript
-var AsciiTable3 = require('ascii-table3');
+var { AsciiTable3, AlignmentEnum } = require('ascii-table3');
 
 // create table
 var table = 
-    new AsciiTable3.AsciiTable3('Sample table')
+    new AsciiTable3('Sample table')
     .setHeading('Name', 'Age', 'Eye color')
-    .setAlign(3, AsciiTable3.CENTER)
+    .setAlignCenter(3, AlignmentEnum.CENTER)
     .addRowMatrix([
         ['John', 23, 'green'],
         ['Mary', 16, 'brown'],
@@ -57,8 +57,8 @@ We can make simpler tables without a title or headings as well.
 
 ```javascript
 var table = 
-    new AsciiTable3.AsciiTable3()
-    .setAlign(3, AsciiTable3.CENTER)
+    new AsciiTable3()
+    .setAlignCenter(3)
     .addRowMatrix([
         ['John', 23, 'green'],
         ['Mary', 16, 'brown'],
@@ -83,9 +83,9 @@ Tables may be rendered using different styles.
 
 ```javascript
 var table = 
-    new AsciiTable3.AsciiTable3('Sample table')
+    new AsciiTable3('Sample table')
     .setHeading('Name', 'Age', 'Eye color')
-    .setAlign(3, AsciiTable3.CENTER)
+    .setAlignCenter(3)
     .addRowMatrix([
         ['John', 23, 'green'],
         ['Mary', 16, 'brown'],
@@ -138,9 +138,9 @@ Creates new table object.
 * `title` - table title (optional)
 
 ```javascript
-var AsciiTable3 = require('ascii-table3');
+var { AsciiTable3 } = require('ascii-table3');
 
-var table = AsciiTable3.AsciiTable3('Data');
+var table = AsciiTable3('Data');
 ```
 ## Static Methods
 
@@ -171,7 +171,7 @@ AsciiTable3.isWhiteSpace('*')    // false
 
 Shortcut to one of the three following methods.
 
-* `direction` - alignment direction (`AsciiTable3.LEFT`, `AsciiTable3.CENTER`, `AsciiTable3.RIGHT`, `AsciiTable3.AUTO`)
+* `direction` - alignment direction (`AlignmentEnum.LEFT`, `AlignmentEnum.CENTER`, `AlignmentEnum.RIGHT`, `AlignmentEnum.AUTO`)
 * `val` - string to align
 * `len` - total length of created string
 * `pad` - padding / fill char (optional, default `' '`)
@@ -179,7 +179,7 @@ Shortcut to one of the three following methods.
 Example:
 
 ```javascript
-AsciiTable3.align(AsciiTable3.LEFT, 'hey', 7) // 'hey    '
+AsciiTable3.align(AlignmentEnum.LEFT, 'hey', 7) // 'hey    '
 ```
 
 ### AsciiTable3.alignLeft(val, len, [pad])
@@ -230,7 +230,7 @@ be left aligned, `Number` types will be right aligned.
 Example:
 
 ```javascript
-AsciiTable3.align(AsciiTable3.LEFT, 'hey', 7) // 'hey    '
+AsciiTable3.alignAuto('hey', 7) // 'hey    '
 ```
 
 ### AsciiTable3.wordWrap(str, maxWidth)
@@ -311,9 +311,9 @@ Sets the table title.
 Example:
 
 ```javascript
-var table = new AsciiTable('Old Title')
+var table = new AsciiTable3('Old Title');
 
-table.setTitle('New Title')
+table.setTitle('New Title');
 ```
 
 ####  instance.getTitle()
@@ -336,30 +336,30 @@ Example:
 
 ```javascript
 // center table title
-table.setTitleAlign(AsciiTable3.CENTER);
+table.setTitleAlign(AlignmentEnum.CENTER);
 ```
 #### instance.setTitleAlignLeft()
 
-Alias to `instance.setTitleAlign(AsciiTable3.LEFT)`
+Alias to `instance.setTitleAlign(AlignmentEnum.LEFT)`
 
 #### instance.setTitleAlignCenter()
 
-Alias to `instance.setTitleAlign(AsciiTable3.CENTER)`
+Alias to `instance.setTitleAlign(AlignmentEnum.CENTER)`
 
 ####  instance.setTitleAlignRight()
 
-Alias to `instance.setTitleAlign(AsciiTable3.RIGHT)`
+Alias to `instance.setTitleAlign(AlignmentEnum.RIGHT)`
 
 #### instance.getTitleAlign()
 
-Gets the current title alignment type (between `AsciiTable3.LEFT`, `AsciiTable3.CENTER` and `AsciiTable3.RIGHT`).
+Gets the current title alignment type (between `AlignmentEnum.LEFT`, `AlignmentEnum.CENTER` and `AlignmentEnum.RIGHT`).
 
 Example:
 
 ```javascript
 table.setTitleAlignLeft();
 
-table.getTitleAlign()      // AsciiTable3.LEFT
+table.getTitleAlign()      // AlignmentEnum.LEFT
 ```
 
 ### Heading
@@ -399,33 +399,33 @@ table.getHeading()    // [ 'Name', 'Age', 'Height' ]
 Example:
 
 ```javascript
-table.setHeadingAlign(AsciiTable3.LEFT);
+table.setHeadingAlign(AlignmentEnum.LEFT);
 ```
 
 #### instance.setHeadingAlignLeft()
 
-Alias to `instance.setHeadingAlignLeft(AsciiTable3.LEFT)`
+Alias to `instance.setHeadingAlignLeft(AlignmentEnum.LEFT)`
 
 
 #### instance.setHeadingAlignCenter()
 
-Alias to `instance.setHeadingAlignLeft(AsciiTable3.CENTER)`
+Alias to `instance.setHeadingAlignLeft(AlignmentEnum.CENTER)`
 
 
 #### instance.setHeadingAlignRight()
 
-Alias to `instance.setHeadingAlignLeft(AsciiTable3.RIGHT)`
+Alias to `instance.setHeadingAlignLeft(AlignmentEnum.RIGHT)`
 
 #### instance.getHeadingAlign()
 
-Gets the current heading alignment type (between `AsciiTable3.LEFT`, `AsciiTable3.CENTER` and `AsciiTable3.RIGHT`).
+Gets the current heading alignment type (between `AlignmentEnum.LEFT`, `AlignmentEnum.CENTER` and `AlignmentEnum.RIGHT`).
 
 Example:
 
 ```javascript
 table.setHeadinglignLeft();
 
-table.getHeadingAlign()      // AsciiTable3.LEFT
+table.getHeadingAlign()      // AlignmentEnum.LEFT
 ```
 
 ### Data rows
@@ -440,7 +440,7 @@ args are used when calling the method.
 Example:
 
 ```javascript
-var table = new AsciiTable3.AsciiTable3();
+var table = new AsciiTable3();
 
 table
   .addRow(1, 'Bob', 52)
@@ -464,7 +464,7 @@ Adds new row to table, as long as at least one of the numeric cells' value is no
 Example:
 
 ```javascript
-var table = new AsciiTable3.AsciiTable3();
+var table = new AsciiTable3();
 
 table
   .addRow(1, 'Bob', 52)
@@ -785,9 +785,9 @@ Example:
 
 ```javascript
 var table = 
-    new AsciiTable3.AsciiTable3('Sample table')
+    new AsciiTable3('Sample table')
     .setHeading('Name', 'Age', 'Eye color')
-    .setAlign(3, AsciiTable3.CENTER)
+    .setAlignCenter(3)
     .addRowMatrix([
         ['John', 23, 'green'],
         ['Mary', 16, 'brown'],
@@ -839,9 +839,9 @@ Example:
 
 ```javascript
 var table = 
-    new AsciiTable3.AsciiTable3('Sample table')
+    new AsciiTable3('Sample table')
     .setHeading('Name', 'Age', 'Eye color')
-    .setAlign(3, AsciiTable3.CENTER)
+    .setAlignCenter(3)
     .addRowMatrix([
         ['John', 23, 'green'],
         ['Mary', 16, 'brown'],
@@ -873,8 +873,9 @@ Example:
 
 ```javascript
 var table = 
-    new AsciiTable3.AsciiTable3('Sample table')
+    new AsciiTable3('Sample table')
     .setHeading('Name', 'Age', 'Eye color')
+    .setAlignCenter(3)
     .addRowMatrix([
         ['John', 23, 'green'],
         ['Mary', 16, 'brown'],
@@ -923,7 +924,7 @@ Example:
 
 ```javascript
 var table = 
-    new AsciiTable3.AsciiTable3('Sample table')
+    new AsciiTable3('Sample table')
     .setHeading('Name', 'Age', 'Eye color')
     .addRowMatrix([
         ['John', 23, 'green'],
@@ -963,14 +964,14 @@ table.getWidths()     // [1, undefined, 3]
 #### instance.setAlign(idx, direction)
 
 * `idx` - column index to align (starts at 1)
-* `direction` - alignment direction, (`AsciiTable3.LEFT`, `AsciiTable3.CENTER`, `AsciiTable3.RIGHT`)
+* `direction` - alignment direction, (`AlignmentEnum.LEFT`, `AlignmentEnum.CENTER`, `AlignmentEnum.RIGHT`)
 
 Example:
 
 ```javascript
 table
-  .setAlign(2, AsciiTable3.CENTER)
-  .setAlign(3, AsciiTable3.RIGHT);
+  .setAlign(2, AlignmentEnum.CENTER)
+  .setAlign(3, AlignmentEnum.RIGHT);
 
 console.log(table.toString());
 ```
@@ -985,15 +986,15 @@ console.log(table.toString());
 
 #### instance.setAlignLeft(idx)
 
-Alias to `instance.setAlign(idx, AsciiTable3.LEFT)`
+Alias to `instance.setAlign(idx, AlignmentEnum.LEFT)`
 
 #### instance.setAlignCenter(idx)
 
-Alias to `instance.setAlign(idx, AsciiTable3.CENTER)`
+Alias to `instance.setAlign(idx, AlignmentEnum.CENTER)`
 
 #### instance.setAlignRight(idx)
 
-Alias to `instance.setAlign(idx, AsciiTable3.RIGHT)`
+Alias to `instance.setAlign(idx, AlignmentEnum.RIGHT)`
 
 #### instance.getAlign(idx)
 
@@ -1006,7 +1007,33 @@ Example:
 ```javascript
 table.setAlignRight(2);
 
-table.getAlign(2)       // AsciiTable3.RIGHT
+table.getAlign(2)       // AlignmentEnum.RIGHT
+```
+
+#### instance.setAligns(directions)
+
+Set column alignment for all columns.
+
+* `direction` - Array with alignment directions for each column (`AlignmentEnum.LEFT`, `AlignmentEnum.CENTER`, `AlignmentEnum.RIGHT`).
+
+Example:
+
+```javascript
+// for a 3 column table
+table.setAligns([AlignmentEnum.LEFT, AlignmentEnum.CENTER, AlignmentEnum.RIGHT]);
+```
+
+#### instance.getAligns()
+
+Get array of column alignment for all table instance columns.
+
+Example:
+
+```javascript
+// for a 3 column table
+table.setAligns([AlignmentEnum.LEFT, AlignmentEnum.CENTER, AlignmentEnum.RIGHT]);
+
+table.getAligns()  // [AlignmentEnum.LEFT, AlignmentEnum.CENTER, AlignmentEnum.RIGHT]
 ```
 
 #### instance.setWrapped(idx, [wrap])
@@ -1018,9 +1045,9 @@ Sets the wrapping property for a specific column (wrapped content will generate 
 
 ```javascript
 var table = 
-    new AsciiTable3.AsciiTable3('Sample table')
+    new AsciiTable3('Sample table')
     .setHeading('Name', 'Age', 'Eye color')
-    .setAlign(3, AsciiTable3.CENTER)
+    .setAlignCenter(3)
     .addRowMatrix([
         ['James Bond', 41, 'blue'],
         ['Harry Potter', 18, 'brown'],
@@ -1058,9 +1085,9 @@ Gets the wrapping setting for a given column (true or false).
 
 ```javascript
 var table = 
-    new AsciiTable3.AsciiTable3('Sample table')
+    new AsciiTable3('Sample table')
     .setHeading('Name', 'Age', 'Eye color')
-    .setAlign(3, AsciiTable3.CENTER)
+    .setAlignCenter(3)
     .addRowMatrix([
         ['James Bond', 41, 'blue'],
         ['Harry Potter', 18, 'brown'],
@@ -1075,6 +1102,32 @@ table.isWrapped(1)     // true
 table.isWrapped(2)     // false
 ```
 
+#### instance.setWrappings(wrappings)
+
+Sets the wrapping property for all columns (wrapped content will generate more than one data row if needed).
+
+* `wrappings` - array of wrap boolean setting for each columns
+
+Example:
+
+```javascript
+// for a 3 column table
+table.setWrappings([true, false, false]);
+```
+
+#### instance.getWrappings()
+
+Gets the wrapping property for all columns .
+
+Example:
+
+```javascript
+// for a 3 column table
+table.setWrappings([true, false, false]);
+
+table.getWrappings()    // [true, false, false]
+```
+
 #### instance.setCellMargin(margin)
 
 Sets internal margin for cell data (table default is 1).
@@ -1085,9 +1138,9 @@ Example 1 (no cell margin):
 
 ```javascript
 var table = 
-    new AsciiTable3.AsciiTable3('Sample table')
+    new AsciiTable3('Sample table')
     .setHeading('Name', 'Age', 'Eye color')
-    .setAlign(3, AsciiTable3.CENTER)
+    .setAlignCenter(3)
     .addRowMatrix([
         ['John', 23, 'green'],
         ['Mary', 16, 'brown'],
@@ -1146,7 +1199,7 @@ Justify all columns to be the same width.
 * `enabled` - Boolean for turning justify on or off (default is true).
 
 ```javascript
-var table = new AsciiTable3.AsciiTable3('Dummy title')
+var table = new AsciiTable3('Dummy title')
             .setHeading('Title', 'Count', 'Rate (%)')
             .addRowMatrix([ 
                 ['Dummy 1', 10, 2.3], 
@@ -1214,9 +1267,10 @@ Example:
 
 ```javascript
 table.sort(function(a, b) {
-  return a[2] - b[2]
-})
-console.log(table.toString())
+  return a[2] - b[2];
+});
+
+console.log(table.toString());
 ```
 ```asciidoc
 +---+------+----+
@@ -1226,20 +1280,40 @@ console.log(table.toString())
 +---+------+----+
 ```
 
-#### instance.sortColumn(index, comparefunc)
+#### instance.sortColumn(index, [comparefunc])
 
 Sorting shortcut for targeting a specific column.
 
 * `index` - column idx to sort
-* `comparefunc` - sorting compare function to run against column values
+* `comparefunc` - sorting compare function to run against column values (optional)
 
 Example:
 
-```js
-// This is quivalent to the `sort` example above
-table.sortColumn(2, function(a, b) {
-  return a - b
-})
+```javascript
+// This is equivalent to the `sort` example above
+table.sortColumn(2)
+```
+
+#### instance.sortColumnDesc(index)
+
+Descend sorting shortcut for targeting a specific column.
+
+* `index` - column idx to sort
+
+Example:
+
+```javascript
+table.sortColumnDesc(1);
+
+// This is equivalent to the `sort` example above
+console.log(table.toString());
+```
+```asciidoc
++---+------+----+
+| 1 | Bob  | 52 |
+| 2 | John | 34 |
+| 3 | Jim  | 83 |
++---+------+----+
 ```
 
 ### Serialization
@@ -1252,7 +1326,7 @@ Return the JSON representation of the table, this also allows us to call
 Example:
 
 ```javascript
-var table = new AsciiTable3.AsciiTable3('Title');
+var table = new AsciiTable3('Title');
 
 table
   .setHeading('id', 'name')
@@ -1260,22 +1334,24 @@ table
   .addRow(2, 'Steve')
   .setWidths([3, 10]);
 
-console.log(table.toJSON())
-console.log(JSON.stringify(table))
+console.log(table.toJSON());
 ```
 ```json
 {
-  title: 'Title'
-, heading: [ 'id', 'name' ]
-, rows: [ 
-    [ 1, 'Bob' ]
-  , [ 2, 'Steve' ] 
-  ]
-, widths: [3, 10]
+   "title": "Title",
+   "heading": ["id","name"],
+   "rows": [[1,"Bob"],[2,"Steve"]],
+   "formatting": {
+       "titleAlign": 2,
+       "headingAlign": 2,
+       "columns": {
+           "aligns": [3,3],
+           "widths": [3,10],
+           "wrappings": [false,false]
+       },
+       "justify": false
+   }
 }
-```
-```
-{"title":"Title","heading":["id","name"],"rows":[[1,"Bob"],[2,"Steve"]], "widths": [3, 10]}
 ```
 
 #### instance.fromJSON(obj)
@@ -1286,17 +1362,23 @@ Populate the table from JSON object, should match the `toJSON` output above.
 * 
 Example:
 
-```js
-var table = new AsciiTable3.AsciiTable3()
+```javascript
+var table = new AsciiTable3()
 .fromJSON({
-  title: 'Title'
-, heading: [ 'id', 'name' ]
-, rows: [ 
-    [ 1, 'Bob' ]
-  , [ 2, 'Steve' ] 
-  ]
-, widths: [3, 10] 
-})
+   "title": "Title",
+   "heading": ["id","name"],
+   "rows": [[1,"Bob"],[2,"Steve"]],
+   "formatting": {
+       "titleAlign": 2,
+       "headingAlign": 2,
+       "columns": {
+           "aligns": [3,3],
+           "widths": [3,10],
+           "wrappings": [false,false]
+       },
+       "justify": false
+   }
+});
 ```
 ### Rendering
 
@@ -1309,9 +1391,9 @@ Example:
 ```javascript
 // create table
 var table = 
-    new AsciiTable3.AsciiTable3('Sample table')
+    new AsciiTable3('Sample table')
     .setHeading('Name', 'Age', 'Eye color')
-    .setAlign(3, AsciiTable3.CENTER)
+    .setAlignCenter(3)
     .addRowMatrix([
         ['John', 23, 'green'],
         ['Mary', 16, 'brown'],

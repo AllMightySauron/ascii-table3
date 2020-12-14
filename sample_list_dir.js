@@ -2,14 +2,14 @@
 
 // load modules
 const fs = require('fs');
-const AsciiTable3 = require('./ascii-table3');
+const { AsciiTable3 } = require('./ascii-table3');
 
 // get path to list from command line
 const path = process.argv.length <= 2 ? '.' : process.argv[2];
 
 // build table
 const dirTable =
-    new AsciiTable3.AsciiTable3(`Directory: ${path}`)
+    new AsciiTable3(`Directory: ${path}`)
     .setHeading('Type', 'Name', 'Size (bytes)', 'Last change')
     .setAlignRight(3);
 

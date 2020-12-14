@@ -3,13 +3,13 @@
 // example 1: base table
 console.log ('>>>>>> example 1. base table');
 
-const AsciiTable3 = require('./ascii-table3');
+const { AsciiTable3 } = require('./ascii-table3');
 
 // create table
 const table = 
-    new AsciiTable3.AsciiTable3('Sample table')
+    new AsciiTable3('Sample table')
     .setHeading('Name', 'Age', 'Eye color')
-    .setAlign(3, AsciiTable3.CENTER)
+    .setAlignCenter(3)
     .addRowMatrix([
         ['John', 23, 'green'],
         ['Mary', 16, 'brown'],

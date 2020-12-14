@@ -26,6 +26,28 @@
  */
 
 /**
+ * @typedef {object} ColumnFormatJSON
+ * @property {number[]} aligns Alignment setting for each data column. 
+ * @property {number[]} widths Width setting for each data column.
+ * @property {boolean[]} wrappings Wrapping setting for each data column.
+ */
+
+/**
+ * @typedef {object} FormattingJSON
+ * @property {number} titleAlign Title alignment setting.
+ * @property {ColumnFormatJSON} columns Format settings for each column.
+ * @property {boolean} justify Whether to justify table columns.
+ */
+
+/**
+ * @typedef {object} TableJSON
+ * @property {string} title Table title text.
+ * @property {string[]} heading Array of table column headings.
+ * @property {string[][]} rows  Array of table rows (each row contains an array of data columns).
+ * @property {FormattingJSON} formatting Table formatting settings.
+ */
+
+/**
  * Filename containing rendering styles.
  */
 const STYLES_FILENAME = 'ascii-table3.styles.json';
@@ -50,15 +72,12 @@ class AsciiTable3 {
      * @param {string} [title] The table title (optional).
      */
     constructor(title = '') {
-        this.clear();
-
         // load styles
         const fs = require('fs');
         /** @type {Style[]}  */
         this.styles = JSON.parse(fs.readFileSync(module.path ? module.path + '/' + STYLES_FILENAME : STYLES_FILENAME, 'utf8'));
 
-        // set default style
-        this.setStyle("ramac");
+        this.clear();
 
         this.setTitle(title);
     }
@@ -294,19 +313,30 @@ class AsciiTable3 {
      * @returns {AsciiTable3} The AsciiTable3 object instance.
      */
     clear() {
-        // clear title and set defualt alignment
-        this.setTitle('');
-        this.setTitleAlignCenter();
+        // set default style
+        this.setStyle("ramac");
 
-        // clear heading and set defualt alignment
+        // clear title and heading
+        this.setTitle();
         this.setHeading();
-        this.setHeadingAlignCenter();
 
         // clear data rows
         this.clearRows();
 
+        // set default alignment
+        this.setTitleAlignCenter();
+        this.setHeadingAlignCenter();
+
         // set default cell margin
         this.setCellMargin(1);
+
+        // clear all columns formats
+        this.dataAlign = undefined;
+        this.colWidths = undefined;
+        this.wrapping = undefined;
+
+        // set default justification
+        this.setJustify(false);
 
         return this;
     }
@@ -326,7 +356,7 @@ class AsciiTable3 {
      * @param {string} title The title to set.
      * @returns {object} The AsciiTable3 object instance.
      */
-    setTitle(title) {
+    setTitle(title = '') {
         this.title = title;
 
         return this;
@@ -610,8 +640,8 @@ class AsciiTable3 {
      */
     setAlign(idx, direction) {
         if (this.dataAlign) {
-            // resize if needed
-            AsciiTable3.arrayResize(this.dataAlign, idx);
+            // add new array elements if needed
+            this.dataAlign.concat(AsciiTable3.arrayFill(idx - this.dataAlign.length, AlignmentEnum.AUTO));
         } else {
             // create array            
             this.dataAlign = AsciiTable3.arrayFill(idx);
@@ -637,6 +667,37 @@ class AsciiTable3 {
         }
         
         return result;
+    }
+
+    /**
+     * Sets the alignment direction for all table columns.
+     * @param {AlignmentEnum[]} directions Desired alignment directions.
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
+    setAligns(directions) {
+        this.dataAlign = Array.from(directions);
+
+        return this;
+    }
+
+    /** 
+     * Gets the alignment direction for all columns.
+     * @returns {AlignmentEnum[]} Array with alignment settings for all columns.
+     */
+    getAligns() {
+        if (!this.dataAlign) {
+            // no alignment yet, set it up
+
+            if (this.getRows().length > 0) {
+                // defaults to auto
+                this.dataAlign = AsciiTable3.arrayFill(this.getRows()[0].length, AlignmentEnum.AUTO);
+            } else {
+                // no rows
+                this.dataAlign = [];
+            }
+        }
+
+        return Array.from(this.dataAlign);
     }
 
     /**
@@ -674,13 +735,13 @@ class AsciiTable3 {
      */
     setWrapped(idx, wrap = true) {
         if (this.wrapping) {
-            // resize if needed
-            AsciiTable3.arrayResize(this.wrapping, idx);
+            // add new array elements if needed
+            this.wrapping.concat(AsciiTable3.arrayFill(idx - this.wrapping.length, false));
         } else {
-            // create array            
-            this.wrapping = AsciiTable3.arrayFill(idx);
+            // create array and default to false
+            this.wrapping = AsciiTable3.arrayFill(idx, false);
         }
-
+        
         // arrays are 0-based
         this.wrapping[idx - 1] = wrap;
 
@@ -701,6 +762,37 @@ class AsciiTable3 {
         }
         
         return result;
+    }
+
+    /**
+     * Sets wrapping for all table columns.
+     * @param {boolean[]} wrapping Boolean array of wrapping settings.
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
+    setWrappings(wrappings) {
+        this.wrapping = Array.from(wrappings);
+
+        return this;
+    }
+
+    /** 
+     * Gets the alignment direction for all columns.
+     * @returns {AlignmentEnum[]} Array with alignment settings for all columns.
+     */
+    getWrappings() {
+        if (!this.wrapping) {
+            // no alignment yet, set it up
+
+            if (this.getRows().length > 0) {
+                // defaults to false (no wrapping)
+                this.wrapping = AsciiTable3.arrayFill(this.getRows()[0].length, false);
+            } else {
+                // no rows
+                this.wrapping = [];
+            }
+        }
+
+        return Array.from(this.wrapping);
     }
 
     /**
@@ -727,15 +819,25 @@ class AsciiTable3 {
      */
     toJSON() {
         return '{\n' +
-            `  "title": ${JSON.stringify(this.getTitle())}\n` +
-            `, "heading": ${JSON.stringify(this.getHeading())}\n` +
-            `, "rows": ${JSON.stringify(this.getRows())}\n` +
-            `, "widths": ${JSON.stringify(this.getWidths())}` +
+                `   "title": ${JSON.stringify(this.getTitle())},\n` +
+                `   "heading": ${JSON.stringify(this.getHeading())},\n` +
+                `   "rows": ${JSON.stringify(this.getRows())},\n` +
+                '   "formatting": {\n' +
+                `       "titleAlign": ${JSON.stringify(this.getTitleAlign())},\n` +
+                `       "headingAlign": ${JSON.stringify(this.getHeadingAlign())},\n` +
+                '       "columns": {\n' +
+                `           "aligns": ${JSON.stringify(this.getAligns())},\n` +
+                `           "widths": ${JSON.stringify(this.getWidths())},\n` +
+                `           "wrappings": ${JSON.stringify(this.getWrappings())}\n` +
+                '       },\n' +
+                `       "justify": ${JSON.stringify(this.isJustify())}\n` +
+                '   }\n' +
             '}';
     }
 
     /**
      * Populate the table from json object, should match the toJSON output above.
+     * @param {TableJSON} obj Object with table definition according to JSON structure.
      * @returns {AsciiTable3} The AsciiTable3 object instance.
      */
     fromJSON(obj) {
@@ -744,7 +846,16 @@ class AsciiTable3 {
         this.setTitle(obj.title);
         this.heading = Array.from(obj.heading);
         this.addRowMatrix(obj.rows);
-        this.setWidths(obj.widths);
+
+        // formatting
+        this.setTitleAlign(obj.formatting.titleAlign);
+        this.setHeadingAlign(obj.formatting.headingAlign);
+
+        this.setAligns(obj.formatting.columns.aligns);
+        this.setWidths(obj.formatting.columns.widths);
+        this.setWrappings(obj.formatting.columns.wrappings);
+
+        this.setJustify(obj.formatting.justify);
 
         return this;
     }
@@ -761,18 +872,30 @@ class AsciiTable3 {
     }
 
     /**
-     * Sorts the table rows based on a specific methods.
+     * Sorts the table rows based on specific methods for a column.
      * @param {number} idx  The column number to base sort on (starts at 1).
-     * @param {function} func The comparison function to use when sorting.
+     * @param {function} func The comparison function to use when sorting (optional, for compatibility with AsciiTable).
      * @returns {AsciiTable3} The AsciiTable3 object instance.
      */
-    sortColumn(idx, func) {
+    sortColumn(idx, func = function(a, b) { return a > b ? 1 : -1; }) {
         this.rows.sort(function(a, b) {
             // zero-based array
             return func(a[idx - 1], b[idx - 1]);
           });
 
         return this;
+    }
+
+    /**
+     * Reverse sorts the table rows based on specific methods for a column.
+     * @param {number} idx  The column number to base sort on (starts at 1).
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
+    sortColumnDesc(idx) {
+        // function for sorting descending
+        const func = function(a, b) { return b > a ? 1 : -1; };
+
+        return this.sortColumn(idx, func);
     }
 
      /**
@@ -1063,4 +1186,4 @@ class AsciiTable3 {
 /*!
  * Module exports.
  */
-module.exports = { AsciiTable3, LEFT: AlignmentEnum.LEFT, RIGHT: AlignmentEnum.RIGHT, CENTER: AlignmentEnum.CENTER, AUTO: AlignmentEnum.AUTO };
+module.exports = { AsciiTable3, AlignmentEnum };
