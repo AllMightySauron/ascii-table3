@@ -8,7 +8,7 @@ Ascii Table 3
 
 Currently with **over a dozen** predefined table styles, the collection style keeps growing. I am pretty sure there is a style for everyone. If not, you can even design your own custom stye and add it to the library!
 
-Please direct any issues, suggestions or feature requests to the [ascii-table3 github] (https://github.com/AllMightySauron/ascii-table3) page.
+Please direct any issues, suggestions or feature requests to the [ascii-table3 github](https://github.com/AllMightySauron/ascii-table3) page.
 
 Existing code for the original `ascii-table` package should run fine with very few changes (see examples below).
 
@@ -41,7 +41,7 @@ var table =
 
 console.log(table.toString());
 ```
-```asciidoc
+```
 +-------------------------+
 |      Sample table       |
 +-------+-----+-----------+
@@ -68,7 +68,7 @@ var table =
 
 console.log(table.toString());
 ```
-```asciidoc
+```
 +-------+----+-------+
 | John  | 23 | green |
 | Mary  | 16 | brown |
@@ -98,7 +98,7 @@ table.setStyle('compact');
 console.log(table.toString());
 ```
 
-```asciidoc
+```
 -------------------------
  Name    Age   Eye color
 ------- ----- -----------
@@ -114,7 +114,7 @@ These styles range from simple to more elaborate.
 table.setStyle('unicode-single');
 console.log(table.toString());
 ```
-```asciidoc
+```
 ┌─────────────────────────┐
 │      Sample table       │
 ├───────┬─────┬───────────┤
@@ -140,7 +140,7 @@ Creates new table object.
 ```javascript
 var { AsciiTable3 } = require('ascii-table3');
 
-var table = AsciiTable3('Data');
+var table = new AsciiTable3('Data');
 ```
 ## Static Methods
 
@@ -448,7 +448,7 @@ table
 
 console.log(table.toString());
 ```
-```asciidoc
+```
 +---+------+----+
 | 1 | Bob  | 52 |
 | 2 | John | 34 |
@@ -472,7 +472,7 @@ table
 
 console.log(table.toString());
 ```
-```asciidoc
+```
 +---+------+----+
 | 1 | Bob  | 52 |
 | 2 | John | 34 |
@@ -486,7 +486,7 @@ table.addNonZeroRow(0, 'Dummy', 0); // should not be added
 
 console.log(table.toString());
 ```
-```asciidoc
+```
 +---+------+----+
 | 1 | Bob  | 52 |
 | 2 | John | 34 |
@@ -509,7 +509,7 @@ table.addRowMatrix([
 
 console.log(table.toString());
 ```
-```asciidoc
+```
 +---+------+----+
 | 2 | John | 34 |
 | 3 | Jim  | 83 |
@@ -548,7 +548,7 @@ Sets the table border style for rendering. Examples are provided below. New bord
 Currently available styles are:
 
 * **none** - Borderless
-```asciidoc
+```
       Sample table
  Name    Age   Eye color
  John     23     green
@@ -557,7 +557,7 @@ Currently available styles are:
  Peter     8     brown
 ```
 * **compact** - Compact
-```asciidoc
+```
 -------------------------
       Sample table
 -------------------------
@@ -569,7 +569,7 @@ Currently available styles are:
  Peter     8     brown
 ```
 * `**ramac** - beautified 7-bit ASCII output ( the *default* style)
-```asciidoc
+```
 +-------------------------+
 |      Sample table       |
 +-------+-----+-----------+
@@ -582,7 +582,7 @@ Currently available styles are:
 +-------+-----+-----------+
 ```
 * **ascii-table** - mimics the original `ascii-table` npm package table style
-```asciidoc
+```
 .-------------------------.
 |      Sample table       |
 |-------------------------|
@@ -595,7 +595,7 @@ Currently available styles are:
 .-------------------------.
 ```
 * **ascii-reStructuredText** - [reStructuredText](http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#tables) grid style
-```asciidoc
+```
 +-------------------------+
 |      Sample table       |
 +-------+-----+-----------+
@@ -608,7 +608,7 @@ Currently available styles are:
 +-------+-----+-----------+
 ```
 * **ascii-reStructuredText-simple** - [reStructuredText](http://docutils.sourceforge.net/docs/ref/rst/restructuredtext.html#tables) simple style
-```asciidoc
+```
 ===========================
        Sample table
 ======== ===== ============
@@ -621,7 +621,7 @@ Currently available styles are:
 ======== ===== ============
 ```
 * **ascii-dots** - Ascii dotted border
-```asciidoc
+```
 ...........................
 :      Sample table       :
 :.........................:
@@ -634,7 +634,7 @@ Currently available styles are:
 :.......:.....:...........:
 ```
 * **ascii-rounded** - Ascii rounded-corner border
-```asciidoc
+```
 .-------------------------.
 |      Sample table       |
 :-------.-----.-----------:
@@ -673,7 +673,7 @@ Currently available styles are:
 \\=======[]=====[]===========//
 ```
 * **unicode-single** - Single line unicode chars border
-```asciidoc
+```
 ┌─────────────────────────┐
 │      Sample table       │
 ├───────┬─────┬───────────┤
@@ -686,7 +686,7 @@ Currently available styles are:
 └───────┴─────┴───────────┘
 ```
 * **unicode-double**- Double line unicode chars border
-```asciidoc
+```
 ╔═════════════════════════╗
 ║      Sample table       ║
 ╠═══════╦═════╦═══════════╣
@@ -699,7 +699,7 @@ Currently available styles are:
 ╚═══════╩═════╩═══════════╝
 ```
 * **unicode-mix** - Mixed single/double line unicode style (single internal border and double external border)
-```asciidoc
+```
 ╔═════════════════════════╗
 ║      Sample table       ║
 ╟═══════╤═════╤═══════════╢
@@ -712,7 +712,7 @@ Currently available styles are:
 ╚═══════╧═════╧═══════════╝
 ```
 * **github-markdown** - github markdown style
-```asciidoc
+```
 |      Sample table       |
 | Name  | Age | Eye color |
 |-------|-----|-----------|
@@ -722,7 +722,7 @@ Currently available styles are:
 | Peter |   8 |   brown   |
 ```
 * **reddit-markdown** - reddit markdown style
-```asciidoc
+```
       Sample table
  Name  | Age | Eye color
 -------|-----|-----------
@@ -818,7 +818,7 @@ table.setStyle("rounded");
 
 console.log(table.toString());
 ```
-```asciidoc
+```
 .--------------------------------.
 |          Sample table          |
 :----------.--------.------------:
@@ -853,7 +853,7 @@ var table =
   
   console.log(table);
 ```
-```asciidoc
+```
       Sample table
  Name    Age   Eye color
  John     23     green
@@ -888,7 +888,7 @@ table.setWidth(1, 10);
 
 console.log(table.toString());
 ```
-```asciidoc
+```
 +----------+-----+-----------+
 |   Name   | Age | Eye color |
 +----------+-----+-----------+
@@ -938,7 +938,7 @@ table.setWidths([10, 8, 12]);
 
 console.log(table.toString());
 ```
-```asciidoc
+```
 +----------+--------+------------+
 |   Name   |  Age   | Eye color  |
 +----------+--------+------------+
@@ -1060,7 +1060,7 @@ table.setWidth(1, 8).setWrapped(1);
 
 console.log(table.toString());
 ```
-```asciidoc
+```
 .------------------------------.
 |         Sample table         |
 :--------.--------.------------:
@@ -1150,7 +1150,7 @@ var table =
     
 table.setCellMargin(0);
 ```
-```asciidoc
+```
 +-------------------+
 |   Sample table    |
 +-----+---+---------+
@@ -1168,7 +1168,7 @@ Example 2 (cell margin set to 2):
 ```javascript
 table.setCellMargin(2);
 ```
-```asciidoc
+```
 +-------------------------------+
 |         Sample table          |
 +---------+-------+-------------+
@@ -1272,7 +1272,7 @@ table.sort(function(a, b) {
 
 console.log(table.toString());
 ```
-```asciidoc
+```
 +---+------+----+
 | 2 | John | 34 |
 | 1 | Bob  | 52 |
@@ -1308,7 +1308,7 @@ table.sortColumnDesc(1);
 // This is equivalent to the `sort` example above
 console.log(table.toString());
 ```
-```asciidoc
+```
 +---+------+----+
 | 1 | Bob  | 52 |
 | 2 | John | 34 |
@@ -1403,7 +1403,7 @@ var table =
     
 console.log(table.toString());
 ```
-```asciidoc
+```
 +-------------------------+
 |      Sample table       |
 +-------+-----+-----------+

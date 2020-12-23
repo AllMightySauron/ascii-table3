@@ -920,7 +920,7 @@ class AsciiTable3 {
         // loop over headings
         for(var col = 0; col < headings.length; col++) {
             // get current cell value string
-            const cell = ''.padStart(this.getCellMargin()) + '' + headings[col]+ ''.padStart(this.getCellMargin());
+            const cell = ''.padStart(this.getCellMargin()) + headings[col] + ''.padStart(this.getCellMargin());
 
             if (cell.length > colSizes[col]) colSizes[col] = cell.length;
         }
@@ -930,7 +930,7 @@ class AsciiTable3 {
             // loop over columns
             for(var col = 0; col < row.length; col++) {
                 // get current cell value string
-                const cell = ''.padStart(this.getCellMargin()) + '' + row[col]+ ''.padStart(this.getCellMargin());
+                const cell = ''.padStart(this.getCellMargin()) + row[col] + ''.padStart(this.getCellMargin());
 
                 if (cell.length > colSizes[col]) colSizes[col] = cell.length;
             }
