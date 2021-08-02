@@ -22,20 +22,24 @@ try {
         // get item full path
         const fullPath = path + '/' + item;
 
-        // retrieve stats
-        const stat = fs.statSync(fullPath);
+        try {
+            // retrieve stats
+            const stat = fs.statSync(fullPath);
 
-        var type;
-        if (stat.isDirectory()) type = 'Directory';
-        else if (stat.isFile()) type = 'File';
-        else if (stat.isSocket()) type = 'Socket';
-        else if (stat.isSymbolicLink) type = 'Sym Link';
-        else type = '??';
-
-        const size = type == 'Directory' ? ' - ' : new Intl.NumberFormat().format(stat.size);
-
-        // add new table row
-        dirTable.addRow(type, item, size, stat.ctime);
+            var type;
+            if (stat.isDirectory()) type = 'Directory';
+            else if (stat.isFile()) type = 'File';
+            else if (stat.isSocket()) type = 'Socket';
+            else if (stat.isSymbolicLink) type = 'Sym Link';
+            else type = '??';
+    
+            const size = type == 'Directory' ? '-' : new Intl.NumberFormat().format(stat.size);
+    
+            // add new table row
+            dirTable.addRow(type, item, size, stat.ctime);
+        } catch (err) {
+            console.log(`${err}`);
+        }
     });
 
 } catch (err) {
