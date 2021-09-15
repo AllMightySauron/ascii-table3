@@ -74,6 +74,7 @@ class AsciiTable3 {
     constructor(title = '') {
         // load styles
         const fs = require('fs');
+
         /** @type {Style[]}  */
         this.styles = JSON.parse(fs.readFileSync(module.path ? module.path + '/' + STYLES_FILENAME : STYLES_FILENAME, 'utf8'));
 
@@ -955,7 +956,7 @@ class AsciiTable3 {
     /**
      * Get string with the rendering of a horizontal line.
      * @private
-     * @param {Style} posStyle The line style for the desired position (between top, middle and bottom).
+     * @param {SectionStyle} posStyle The line style for the desired position (between top, middle and bottom).
      * @param {number[]} colsWidth Array with the desired width for each data column.
      * @returns {string} String representation of table horizontal line.
      */
@@ -1147,6 +1148,7 @@ class AsciiTable3 {
                     style.borders.data.right + '\n';
 
             // special style (between title and headings)
+            /** @type {SectionStyle}  */
             const newStyle = {
                 left: style.borders.middle.left,
                 right: style.borders.middle.right,
