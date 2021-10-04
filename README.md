@@ -31,7 +31,7 @@ var { AsciiTable3, AlignmentEnum } = require('ascii-table3');
 var table = 
     new AsciiTable3('Sample table')
     .setHeading('Name', 'Age', 'Eye color')
-    .setAlignCenter(3, AlignmentEnum.CENTER)
+    .setAlign(3, AlignmentEnum.CENTER)
     .addRowMatrix([
         ['John', 23, 'green'],
         ['Mary', 16, 'brown'],
@@ -295,7 +295,7 @@ Increases existing array size up to the desired limit.
 ```javascript
 var arr = [ 'a', 'b', 'c' ];
 
-AsciiTable3.arrayResize(arr, 4)     // [ 'a', 'b', 'c', undefined ]
+AsciiTable3.arrayResize(arr, 4);    // [ 'a', 'b', 'c', undefined ]
 ```
 
 ## Instance methods
@@ -373,11 +373,11 @@ Set the column headings for the table, takes arguments the same way as `addRow`.
 Example:
 
 ```javascript
-table.setHeading('ID', 'Key', 'Value')
+table.setHeading('ID', 'Key', 'Value');
 
 // or:
 
-table.setHeading(['ID', 'Key', 'Value'])
+table.setHeading(['ID', 'Key', 'Value']);
 ```
 
 #### instance.getHeading()
@@ -1291,7 +1291,7 @@ Example:
 
 ```javascript
 // This is equivalent to the `sort` example above
-table.sortColumn(2)
+table.sortColumn(2);
 ```
 
 #### instance.sortColumnDesc(index)
@@ -1359,7 +1359,7 @@ console.log(table.toJSON());
 Populate the table from JSON object, should match the `toJSON` output above.
 
 * `obj` - json object
-* 
+
 Example:
 
 ```javascript
