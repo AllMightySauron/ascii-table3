@@ -238,9 +238,10 @@ class AsciiTable3 {
      * @static
      * @param {number} len Length of array.
      * @param {*} [value] The fill value (optional).
+     * @returns {*[]} Array filled with with desired value.
      */
     static arrayFill(len, value) {
-        var result = [];
+        const result = [];
 
         for (var i = 0; i < len; i++) {
             result.push(value);
@@ -546,11 +547,31 @@ class AsciiTable3 {
     }
 
     /**
-     * Table rows getter
+     * Table rows getter.
      * @returns {*[]} Array with row cell values (column array).
      */
     getRows() {
         return Array.from(this.rows);
+    }
+
+    /**
+     * Sets cell value for this row and column combination.
+     * @param {number} row Desired row number (1-based index).
+     * @param {number} col Desired column number (1-based index).
+     * @param {*} value The cell value to set.
+     */
+    setCell(row, col, value) {
+        this.rows[row - 1][col - 1] = value;
+    }
+
+    /**
+     * Gets cell value for this row and column combination.
+     * @param {number} row Desired row number (1-based index).
+     * @param {number} col Desired column number (1-based index).
+     * @returns {*} The cell value.
+     */
+    getCell(row, col) {
+        return this.getRows()[row - 1][col - 1];
     }
 
     /**
@@ -812,6 +833,44 @@ class AsciiTable3 {
      */
     isJustify() {
         return this.justify ? this.justify : false;
+    }
+
+    /**
+     * Transposes table by exchanging rows for columns.
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
+    transpose() {
+        // get number of data columns
+        const nCols = this.getHeading().length > 0 ? this.getHeading().length : this.getRows()[0].length;
+
+        // get number of data rows
+        const nRows = this.getRows().length;
+
+        // create new matrix with number of rows equal number of columns
+        const newMatrix = AsciiTable3.arrayFill(nCols);
+
+        // columns where data starts (depends on heading existence)
+        const dataStartCol = this.getHeading().length > 0 ? 1 : 0;
+
+        // loop over rows
+        for (var row = 0; row < newMatrix.length; row++) {
+            // column array for this row (number of rows + heading if needed)
+            newMatrix[row] = AsciiTable3.arrayFill(nRows + dataStartCol);
+
+            if (this.getHeading()) {
+                // setup first column with heading values
+                newMatrix[row][0] = this.getHeading()[row];
+            }
+
+            // loop over columns
+            for (var col = dataStartCol; col < newMatrix[0].length; col++) {
+                // fill row with column data values
+                newMatrix[row][col] = this.getCell(col + Math.abs(dataStartCol - 1), row + 1);
+            }
+        }
+
+        // new value
+        return new AsciiTable3(this.getTitle()).addRowMatrix(newMatrix);
     }
 
     /**

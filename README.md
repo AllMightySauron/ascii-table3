@@ -1315,6 +1315,55 @@ console.log(table.toString());
 | 3 | Jim  | 83 |
 +---+------+----+
 ```
+### Transposing
+
+#### instance.transpose()
+
+Transposes table by exchanging rows for columns.
+
+Example:
+
+```javascript
+const table = 
+    new AsciiTable3('Sample table')
+    .setHeading('Name', 'Age', 'Eye color')
+    .addRowMatrix([
+        ['John', 23, 'green'],
+        ['Mary', 16, 'brown'],
+        ['Rita', 47, 'blue'],
+        ['Peter', 8, 'brown']
+    ]);
+    
+console.log(table.toString());
+```
+```
++-------------------------+
+|      Sample table       |
++-------+-----+-----------+
+| Name  | Age | Eye color |
++-------+-----+-----------+
+| John  |  23 | green     |
+| Mary  |  16 | brown     |
+| Rita  |  47 | blue      |
+| Peter |   8 | brown     |
++-------+-----+-----------+
+```
+
+```javascript
+// transpose table
+table.transpose();
+
+console.log(table.toString());
+```
+```
++------------------------------------------+
+|               Sample table               |
++-----------+-------+-------+------+-------+
+| Name      | John  | Mary  | Rita | Peter |
+| Age       |    23 |    16 |   47 |     8 |
+| Eye color | green | brown | blue | brown |
++-----------+-------+-------+------+-------+
+```
 
 ### Serialization
 

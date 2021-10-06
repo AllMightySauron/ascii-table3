@@ -153,7 +153,7 @@ describe('Heading', () => {
     });
 });
  
-describe('DataRows', () => {
+describe('Data rows', () => {
     it ('addRow/getRows', () => {
         const aTable = new AsciiTable3('Dummy title')
             .setHeading('Title', 'Count', 'Rate (%)')
@@ -190,6 +190,37 @@ describe('DataRows', () => {
         aTable.addNonZeroRow('Dummy 4', 0, 1, 0);
 
         assert.strictEqual(aTable.getRows().length, 4);
+    });
+});
+
+describe('Cell values', () => {
+    it ('getCell', () => {
+        const aTable = new AsciiTable3('People')
+            .setHeading('Name', 'Age', 'Eye color')
+            .addRowMatrix([ 
+                ['John', 18, 'green'], 
+                ['Peter', 5, 'brown'],  
+                ['Mary', 40, 'blue'],
+                ['Timothy', 16, 'hazel'],
+             ]);
+
+        assert.strictEqual(aTable.getCell(1, 1), 'John');
+        assert.strictEqual(aTable.getCell(3, 2), 40);
+    });
+
+    it ('setCell', () => {
+        const aTable = new AsciiTable3('People')
+            .setHeading('Name', 'Age', 'Eye color')
+            .addRowMatrix([ 
+                ['John', 18, 'green'], 
+                ['Peter', 5, 'brown'],  
+                ['Mary', 40, 'blue'],
+                ['Timothy', 16, 'hazel'],
+             ]);
+
+        assert.strictEqual(aTable.getCell(3, 2), 40);
+        aTable.setCell(3, 2, 55);
+        assert.strictEqual(aTable.getCell(3, 2), 55);
     });
 });
 
@@ -818,4 +849,84 @@ describe('Clearing data', () => {
 
         assert.strictEqual(aTable.isJustify(), false);
     });
+});
+
+describe('Transpose', () => {
+    it ('no heading', () => {
+        const aTable = new AsciiTable3('People')
+            .addRowMatrix([ 
+                ['John', 18, 'green'], 
+                ['Peter', 5, 'brown'],  
+                ['Mary', 40, 'blue'],
+                ['Timothy', 16, 'hazel'],
+             ]);
+
+        const newTable = aTable.transpose();
+
+        // same title
+        assert.strictEqual(newTable.getTitle(), aTable.getTitle());
+
+        // number of rows / columns
+        assert.strictEqual(newTable.getRows().length, aTable.getRows()[0].length);
+        assert.strictEqual(newTable.getRows()[0].length, aTable.getRows().length);
+
+        // test cell values
+        for (var row  = 0; row < newTable.getRows().length; row++) {
+            for (var col = 0; col < newTable.getRows()[0].length; col++) {
+                assert.strictEqual(newTable.getCell(row + 1, col + 1), aTable.getCell(col + 1, row + 1));
+            }
+        }
+    });
+
+    it ('heading', () => {
+        const aTable = new AsciiTable3('People')
+            .setHeading('Name', 'Age', 'Eye color')
+            .addRowMatrix([ 
+                ['John', 18, 'green'], 
+                ['Peter', 5, 'brown'],  
+                ['Mary', 40, 'blue'],
+                ['Timothy', 16, 'hazel'],
+             ]);
+
+        const newTable = aTable.transpose();
+
+        // same title
+        assert.strictEqual(newTable.getTitle(), aTable.getTitle());
+
+        // number of rows / columns
+        assert.strictEqual(newTable.getRows().length, aTable.getRows()[0].length);
+        assert.strictEqual(newTable.getRows()[0].length, aTable.getRows().length + 1); // extra column on new table for heading
+
+        // test original heading exists on first column of transposed matrix
+        for (var row = 0; row < newTable.getRows().length; row++) {
+            assert.strictEqual(newTable.getRows()[row][0], aTable.getHeading()[row]);
+        }
+
+         // test cell values
+         for (row  = 0; row < newTable.getRows().length; row++) {
+            for (var col = 1; col < newTable.getRows()[0].length; col++) {
+                assert.strictEqual(newTable.getCell(row + 1, col + 1), aTable.getCell(col, row + 1));
+            }
+        }
+    });
+
+    it ('heading (no data)', () => {
+        const aTable = new AsciiTable3('People')
+            .setHeading('Name', 'Age', 'Eye color');
+
+        const newTable = aTable.transpose();
+
+        // same title
+        assert.strictEqual(newTable.getTitle(), aTable.getTitle());
+
+        // number of rows / columns
+        assert.strictEqual(newTable.getRows().length, aTable.getHeading().length);
+        assert.strictEqual(newTable.getRows()[0].length, 1); // 1 column for heading
+
+        // test original heading exists on first column of transposed matrix
+        for (var row = 0; row < newTable.getRows().length; row++) {
+            assert.strictEqual(newTable.getRows()[row][0], aTable.getHeading()[row]);
+        }
+    });
+
 });
