@@ -75,7 +75,7 @@ class AsciiTable3 {
         // load styles
         const fs = require('fs');
 
-        /** @type {Style[]}  */
+        /** @type {Style[]} */
         this.styles = JSON.parse(fs.readFileSync(module.path ? module.path + '/' + STYLES_FILENAME : STYLES_FILENAME, 'utf8'));
 
         this.clear();
@@ -840,6 +840,9 @@ class AsciiTable3 {
      * @returns {AsciiTable3} The AsciiTable3 object instance.
      */
     transpose() {
+        // sanity check for empty table
+        if (this.getHeading().length == 0 && this.getRows().length == 0) return this;
+        
         // get number of data columns
         const nCols = this.getHeading().length > 0 ? this.getHeading().length : this.getRows()[0].length;
 
@@ -857,7 +860,8 @@ class AsciiTable3 {
             // column array for this row (number of rows + heading if needed)
             newMatrix[row] = AsciiTable3.arrayFill(nRows + dataStartCol);
 
-            if (this.getHeading()) {
+            // check for heading
+            if (this.getHeading().length > 0) {
                 // setup first column with heading values
                 newMatrix[row][0] = this.getHeading()[row];
             }
@@ -870,7 +874,9 @@ class AsciiTable3 {
         }
 
         // new value
-        return new AsciiTable3(this.getTitle()).addRowMatrix(newMatrix);
+        return new AsciiTable3(this.getTitle())
+            .setHeadingAlign(this.getHeadingAlign())
+            .addRowMatrix(newMatrix);
     }
 
     /**

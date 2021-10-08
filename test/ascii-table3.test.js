@@ -852,6 +852,14 @@ describe('Clearing data', () => {
 });
 
 describe('Transpose', () => {
+    it ('empty', () => {
+        const aTable = new AsciiTable3('People');
+
+        const newTable = aTable.transpose();
+
+        assert.strictEqual(newTable.toJSON(), aTable.toJSON());
+    });
+
     it ('no heading', () => {
         const aTable = new AsciiTable3('People')
             .addRowMatrix([ 
