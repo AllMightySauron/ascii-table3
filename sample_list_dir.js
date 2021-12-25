@@ -2,6 +2,7 @@
 
 // load modules
 const fs = require('fs');
+const chalk = require('chalk');
 const { AsciiTable3 } = require('./ascii-table3');
 
 // get path to list from command line
@@ -36,7 +37,7 @@ try {
             const size = type == 'Directory' ? '-' : new Intl.NumberFormat().format(stat.size);
     
             // add new table row
-            dirTable.addRow(type, item, size, stat.ctime);
+            dirTable.addRow(type, chalk.blue(item), size, stat.ctime);
         } catch (err) {
             console.log(`${err}`);
         }

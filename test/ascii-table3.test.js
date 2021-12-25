@@ -49,14 +49,6 @@ describe('String methods', () => {
     });
 
     // word wrapping
-    it('Test for white space', () => {
-        assert.strictEqual(AsciiTable3.isWhiteSpace(' '), true);
-        assert.strictEqual(AsciiTable3.isWhiteSpace('\t'), true);
-        assert.strictEqual(AsciiTable3.isWhiteSpace('\n'), true);
-
-        assert.strictEqual(AsciiTable3.isWhiteSpace('a'), false);
-    });
-    
     it('Word wrapping', () => {
         assert.strictEqual(AsciiTable3.wordWrap('dummy', 5), 'dummy');
         assert.strictEqual(AsciiTable3.wordWrap('this is a test', 5), 'this\nis a\ntest');

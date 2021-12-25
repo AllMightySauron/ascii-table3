@@ -62,6 +62,9 @@ const AlignmentEnum = {
     AUTO: 3
 };
 
+const fs = require('fs');
+const { strlen, isBlank } = require('printable-characters');
+
 /**
  * Class for creating beautiful ASCII tables.
  */
@@ -72,9 +75,6 @@ class AsciiTable3 {
      * @param {string} [title] The table title (optional).
      */
     constructor(title = '') {
-        // load styles
-        const fs = require('fs');
-
         /** @type {Style[]} */
         this.styles = JSON.parse(fs.readFileSync(module.path ? module.path + '/' + STYLES_FILENAME : STYLES_FILENAME, 'utf8'));
 
@@ -92,16 +92,34 @@ class AsciiTable3 {
         return !isNaN(parseFloat(value)) && isFinite(value);
     }
 
-     /**
-     * Returns on whether the character is white space.
-     * @static
-     * @param {string} x   The character to test.
-     * @returns {boolean}   Whether we have found a white char.
+    /**
+     * Pads the start of a string with a given string until the maximum lenght limit is reached.
+     * @param {string}  str         String to pad at the beggining.
+     * @param {number}  maxLength   The resulting string max lenght.
+     * @param {string}  fillStr     The new pad at the begginning.
+     * @returns {string}            Start-padded string.
      */
-    static isWhiteSpace(x) {
-        var white = new RegExp(/^\s$/);
+     static padStart(str, maxLength, fillStr = ' ') {
+        if (strlen(str) >= maxLength) {
+            return str;
+        } else {
+            return AsciiTable3.padStart(fillStr + str, maxLength, fillStr);
+        }
+    }
 
-        return white.test(x.charAt(0));
+    /**
+     * Pads the end of a string with a given string until the maximum lenght limit is reached.
+     * @param {string}  str         String to pad at the end.
+     * @param {number}  maxLength   The resulting string max lenght.
+     * @param {string}  fillStr     The new pad at the end.
+     * @returns {string}            End-padded string.
+     */
+    static padEnd(str, maxLength, fillStr = ' ') {
+        if (strlen(str) >= maxLength) {
+            return str;
+        } else {
+            return AsciiTable3.padEnd(str + fillStr, maxLength, fillStr);
+        }
     }
 
     /**
@@ -110,17 +128,17 @@ class AsciiTable3 {
      * @param {AlignmentEnum} direction The desired aligment direction according to the enum (left, right or center)
      * @param {*} value The value to align.
      * @param {number} len The maximum alignment length.
-     * @param {string} [pad] The pad char (optional, defaults to ' ').
+     * @param {string} pad The pad char (optional, defaults to ' ').
      */
     static align(direction, value, len, pad = ' ') {
         const strValue = '' + value;
 
         if (direction == AlignmentEnum.RIGHT) {
-            return strValue.padStart(len, pad);
+            return AsciiTable3.padStart(strValue, len, pad);
         } else if (direction == AlignmentEnum.LEFT) {
-            return strValue.padEnd(len, pad);
+            return AsciiTable3.padEnd(strValue, len, pad);
         } else if (direction == AlignmentEnum.CENTER) {
-            return strValue.padStart(strValue.length + Math.floor((len - strValue.length) / 2), pad).padEnd(len, pad);
+            return AsciiTable3.padEnd(AsciiTable3.padStart(strValue, strlen(strValue) + Math.floor((len - strlen(strValue)) / 2), pad), len, pad);
         } else {
             return AsciiTable3.alignAuto(value, len, pad);
         }
@@ -191,11 +209,11 @@ class AsciiTable3 {
         var found = false; 
         var res = '';
 
-        while (str.length > maxWidth) {                 
+        while (strlen(str) > maxWidth) {                 
             found = false;
             // Inserts new line at first whitespace of the line
             for (var i = maxWidth - 1; i >= 0; i--) {
-                if (AsciiTable3.isWhiteSpace(str.charAt(i))) {
+                if (isBlank(str.charAt(i))) {
                     res += str.substring(0, i).trimStart() + NEW_LINE;
                     str = str.slice(i + 1);
                     found = true;
@@ -223,10 +241,10 @@ class AsciiTable3 {
     static truncateString(str, maxSize) {
         const SUFIX = '...';
 
-        if (str.length > maxSize) {
+        if (strlen(str) > maxSize) {
             var result = str.substring(0, maxSize - SUFIX.length).concat(SUFIX);
 
-            if (result.length > maxSize) result = result.substring(0, maxSize);
+            if (strlen(result) > maxSize) result = result.substring(0, maxSize);
 
             return result;
         }
@@ -988,7 +1006,7 @@ class AsciiTable3 {
             // get current cell value string
             const cell = ''.padStart(this.getCellMargin()) + headings[col] + ''.padStart(this.getCellMargin());
 
-            if (cell.length > colSizes[col]) colSizes[col] = cell.length;
+            if (strlen(cell) > colSizes[col]) colSizes[col] = strlen(cell);
         }
 
         // determine max column sizes for data rows
@@ -998,7 +1016,7 @@ class AsciiTable3 {
                 // get current cell value string
                 const cell = ''.padStart(this.getCellMargin()) + row[col] + ''.padStart(this.getCellMargin());
 
-                if (cell.length > colSizes[col]) colSizes[col] = cell.length;
+                if (strlen(cell) > colSizes[col]) colSizes[col] = strlen(cell);
             }
         });
 
@@ -1197,7 +1215,7 @@ class AsciiTable3 {
         // full table width
         const maxWidth = 
             colsWidth.reduce(function(a, b) { return a + b; }, 0) +            // data column sizes
-            (colsWidth.length - 1) * style.borders.data.colSeparator.length;   // mid column separators
+            (colsWidth.length - 1) * strlen(style.borders.data.colSeparator);   // mid column separators
 
         var result = '';
 
