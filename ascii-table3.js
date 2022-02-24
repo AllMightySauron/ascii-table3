@@ -258,7 +258,7 @@ class AsciiTable3 {
                 const printableWrapped = AsciiTable3.wordWrapBasic(printable, maxWidth);
 
                 // setup new block
-                result += nonPrintable + printableWrapped.replaceAll('\n', nextNonPrintable + '\n' + nonPrintable) + nextNonPrintable;
+                result += nonPrintable + printableWrapped.split('\n').join(nextNonPrintable + '\n' + nonPrintable) + nextNonPrintable;
             }
         } else {
             // no non-printable chars
