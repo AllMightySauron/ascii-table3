@@ -155,17 +155,6 @@ AsciiTable3.isNumeric('test')  // false
 AsciiTable3.isNumeric(10)      // true
 AsciiTable3.isNumeric(3.14)    // true
 ```
-### AsciiTable3.isWhiteSpace(str)
-
-Return whether this character is whitespace (used internally for word wrapping purposes).
-
-* `str` - character to test
-
-```javascript
-AsciiTable3.isWhiteSpace(' '')   // true
-AsciiTable3.isWhiteSpace('\t')   // true
-AsciiTable3.isWhiteSpace('*')    // false
-```
 
 ### AsciiTable3.align(direction, val, len, [pad])
 

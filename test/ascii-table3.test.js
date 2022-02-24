@@ -1,51 +1,119 @@
 /*jshint esversion: 6 */
 
 const assert = require('assert');
+const chalk = require('chalk');
 const { AsciiTable3, AlignmentEnum } = require('../ascii-table3');
 
 // static methods
 describe('String methods', () => {
-    // left
-    it('Left alignment (no pad char)', () => {
-        assert.strictEqual(AsciiTable3.alignLeft('ab', 4), 'ab  ');
+    // pad start
+    it('Pad start (no pad char)', () => {
+        assert.strictEqual(AsciiTable3.padStart('ab', 4), '  ab');
     });
-    it('Left alignment (with pad char)', () => {
-        assert.strictEqual(AsciiTable3.alignLeft('ab', 5, '*'), 'ab***');
+    it('Pad start (pad char)', () => {
+        assert.strictEqual(AsciiTable3.padStart('ab', 4, '-'), '--ab');
+    });
+    it('Pad start - empty string (no pad char)', () => {
+        assert.strictEqual(AsciiTable3.padStart('', 4), ' '.repeat(4));
+    });
+    it('Pad start - empty string (pad char)', () => {
+        assert.strictEqual(AsciiTable3.padStart('', 4, '+'), '+'.repeat(4));
+    });
+    it('Pad start - ANSI escape codes (no pad char)', () => {
+        assert.strictEqual(AsciiTable3.padStart(chalk.red('ab'), 4), chalk.red('  ab'));
+    });
+    it('Pad start - ANSI escape codes (pad char)', () => {
+        assert.strictEqual(AsciiTable3.padStart(chalk.red('ab'), 4, '-'), chalk.red('--ab'));
     });
 
-    // right
+    // pad end
+    it('Pad end (no pad char)', () => {
+        assert.strictEqual(AsciiTable3.padEnd('xy', 4), 'xy  ');
+    });
+    it('Pad end (pad char)', () => {
+        assert.strictEqual(AsciiTable3.padEnd('wz', 4, '-'), 'wz--');
+    });
+    it('Pad end - empty string (no pad char)', () => {
+        assert.strictEqual(AsciiTable3.padEnd('', 4), ' '.repeat(4));
+    });
+    it('Pad end - empty string (pad char)', () => {
+        assert.strictEqual(AsciiTable3.padEnd('', 4, '+'), '+'.repeat(4));
+    });
+    it('Pad end - ANSI escape codes (no pad char)', () => {
+        assert.strictEqual(AsciiTable3.padEnd(chalk.red('ab'), 4), chalk.red('ab  '));
+    });
+    it('Pad end - ANSI escape codes (pad char)', () => {
+        assert.strictEqual(AsciiTable3.padEnd(chalk.red('ab'), 4, '.'), chalk.red('ab..'));
+    });
+
+    // left align
+    it('Left Alignment (no pad char)', () => {
+        assert.strictEqual(AsciiTable3.alignLeft('ab', 4), 'ab  ');
+    });
+    it('Left Alignment (with pad char)', () => {
+        assert.strictEqual(AsciiTable3.alignLeft('ab', 5, '*'), 'ab***');
+    });
+    it('Left Alignment - ANSI escape codes (no pad char)', () => {
+        assert.strictEqual(AsciiTable3.alignLeft(chalk.blue('ab'), 5), chalk.blue('ab   '));
+    });
+    it('Left Alignment - ANSI escape codes (pad char)', () => {
+        assert.strictEqual(AsciiTable3.alignLeft(chalk.blue('ab'), 5, '+'), chalk.blue('ab+++'));
+    });
+
+    // right align
     it('Right Alignment (no pad char)', () => {
         assert.strictEqual(AsciiTable3.alignRight('ab', 4), '  ab');
     });
     it('Right Alignment (with pad char)', () => {
         assert.strictEqual(AsciiTable3.alignRight('ab', 5, '*'), '***ab');
     });
+    it('Right Alignment - ANSI escape codes (no pad char)', () => {
+        assert.strictEqual(AsciiTable3.alignRight(chalk.blue('ab'), 4), chalk.blue('  ab'));
+    });
+    it('Right Alignment - ANSI escape codes (pad char)', () => {
+        assert.strictEqual(AsciiTable3.alignRight(chalk.blue('cd'), 4, '*'), chalk.blue('**cd'));
+    });
 
-    // center
+    // center align
     it('Center Alignment (no pad char)', () => {
         assert.strictEqual(AsciiTable3.alignCenter('ab', 4), ' ab ');
     });
     it('Center Alignment (with pad char)', () => {
         assert.strictEqual(AsciiTable3.alignCenter('ab', 5, '*'), '*ab**');
     });
+    it('Center Alignment - ANSI escape codes (no pad char)', () => {
+        assert.strictEqual(AsciiTable3.alignCenter(chalk.blue('ab'), 4), chalk.blue(' ab '));
+    });
+    it('Center Alignment - ANSI escape codes (pad char)', () => {
+        assert.strictEqual(AsciiTable3.alignCenter(chalk.blue('ab'), 4, '='), chalk.blue('=ab='));
+    });
 
-    // auto
+    // auto align
     it('Auto Alignment (string)', () => {
         assert.strictEqual(AsciiTable3.alignAuto('ab', 4), 'ab  ');
+    });
+    it('Auto Alignment (string) - ANSI escape codes', () => {
+        assert.strictEqual(AsciiTable3.alignAuto(chalk.red('ab'), 4), chalk.red('ab  '));
     });
     it('Auto Alignment (number)', () => {
         assert.strictEqual(AsciiTable3.alignAuto(32, 4), '  32');
     });
-
     it('Auto Alignment (object)', () => {
         assert.strictEqual(AsciiTable3.alignAuto([ 'a', 'b' ], 5), 'a,b  ');
     });
 
+    // string truncation
     it('Truncate string (normal)', () => {
         assert.strictEqual(AsciiTable3.truncateString('Dummy 1', 5), 'Du...');
     });
     it('Truncate string (small)', () => {
         assert.strictEqual(AsciiTable3.truncateString('Dummy 1', 2), '..');
+    });
+    it('Truncate string - ANSI escape codes (normal)', () => {
+        assert.strictEqual(AsciiTable3.truncateString(chalk.blue('Dummy 1'), 5), chalk.blue('Du...'));
+    });
+    it('Truncate string - ANSI escape codes (small)', () => {
+        assert.strictEqual(AsciiTable3.truncateString(chalk.red('Dummy 1'), 2), chalk.red('..'));
     });
 
     // word wrapping
@@ -55,8 +123,13 @@ describe('String methods', () => {
         assert.strictEqual(AsciiTable3.wordWrap('this is a test', 3), 'thi\ns\nis\na\ntes\nt');
         assert.strictEqual(AsciiTable3.wordWrap('rate (%)', 4), 'rate\n(%)');
     });
+    it('Word wrapping - ANSI escape codes', () => {
+        assert.strictEqual(AsciiTable3.wordWrap(chalk.red('dummy'), 5), chalk.red('dummy'));
+        assert.strictEqual(AsciiTable3.wordWrap(chalk.blue('this is a test'), 5), chalk.blue('this\nis a\ntest'));
+        assert.strictEqual(AsciiTable3.wordWrap(chalk.red('this is a test'), 3), chalk.red('thi\ns\nis\na\ntes\nt'));
+        assert.strictEqual(AsciiTable3.wordWrap(chalk.yellow('rate (%)'), 4), chalk.yellow('rate\n(%)'));
+    });
 });
-
 
 describe('Array methods', () => {
     it('Array fill (string)', () => {
@@ -608,7 +681,6 @@ describe('Rendering', () => {
              ]);
 
         aTable.setWidth(1, 7).setWrapped(1);
-
         assert.strictEqual(aTable.toString(),
             '+--------------------------+\n' + 
             '|       Dummy title        |\n' + 
@@ -691,7 +763,6 @@ describe('Rendering', () => {
         );
 
         aTable.setWidth(3, 6).setWrapped(3);
-
         assert.strictEqual(aTable.toString(),
             '+-----------------------------+\n' + 
             '|         Dummy title         |\n' + 
@@ -731,8 +802,7 @@ describe('Rendering', () => {
 
     it ('toString (no heading)', () => {
         const aTable = new AsciiTable3('Dummy title')
-            .setAlign(1, AsciiTable3.LEFT)
-            .setAlign(2, AsciiTable3.RIGHT)
+            .setAlignLeft(1).setAlignRight(2)
             .setWidths([10, 4, 6])
             .setCellMargin(0)
             .addRowMatrix([ ['Dummy 1', 10, 2.3], ['Dummy 2', 5, 3.1],  ['Dummy 3', 100, 3.14] ]);
@@ -757,9 +827,9 @@ describe('Rendering', () => {
             'Dummy 1      10    2.3\n' +
             'Dummy 2       5    3.1\n' +
             'Dummy 3     100   3.14\n'
-        );
+        ); 
     });
-});
+}); 
 
 describe('Serialization', () => {
     const aTable = new AsciiTable3('Title')

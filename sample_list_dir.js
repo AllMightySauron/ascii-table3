@@ -11,8 +11,8 @@ const path = process.argv.length <= 2 ? '.' : process.argv[2];
 // build table
 const dirTable =
     new AsciiTable3(`Directory: ${path}`)
-    .setHeading('Type', 'Name', 'Size (bytes)', 'Last change')
-    .setAlignRight(3);
+    .setHeading(chalk.red('Type'), 'Name', 'Size (bytes)', 'Last change')
+    .setAlignRight(3).setWidth(4, 30);
 
 try {
     // read items on dir
@@ -37,7 +37,7 @@ try {
             const size = type == 'Directory' ? '-' : new Intl.NumberFormat().format(stat.size);
     
             // add new table row
-            dirTable.addRow(type, chalk.blue(item), size, stat.ctime);
+            dirTable.addRow(chalk.green(type), chalk.blue(item), size, chalk.yellow(stat.ctime));
         } catch (err) {
             console.log(`${err}`);
         }

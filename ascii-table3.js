@@ -63,7 +63,7 @@ const AlignmentEnum = {
 };
 
 const fs = require('fs');
-const { strlen, isBlank } = require('printable-characters');
+const { strlen, isBlank, partition } = require('printable-characters');
 
 /**
  * Class for creating beautiful ASCII tables.
@@ -93,7 +93,7 @@ class AsciiTable3 {
     }
 
     /**
-     * Pads the start of a string with a given string until the maximum lenght limit is reached.
+     * Pads the start of a string with a given string until the maximum length limit is reached.
      * @param {string}  str         String to pad at the beggining.
      * @param {number}  maxLength   The resulting string max lenght.
      * @param {string}  fillStr     The new pad at the begginning.
@@ -103,12 +103,35 @@ class AsciiTable3 {
         if (strlen(str) >= maxLength) {
             return str;
         } else {
-            return AsciiTable3.padStart(fillStr + str, maxLength, fillStr);
+            // partition string
+            const partArray = partition(str);
+
+            var result;
+
+            if (partArray.length > 0) {
+                // get first printable block
+                var printable = partArray[0][1];
+
+                // pad the start of the printable block
+                printable = fillStr.repeat(maxLength - printable.length).concat(printable);
+
+                // replace printable block
+                partArray[0][1] = printable;
+
+                // generate result
+                result = '';
+                partArray.forEach(block => result += block[0] + block[1]);
+            } else {
+                // empty string
+                result = fillStr.repeat(maxLength);
+            }
+
+            return result;
         }
     }
 
     /**
-     * Pads the end of a string with a given string until the maximum lenght limit is reached.
+     * Pads the end of a string with a given string until the maximum length limit is reached.
      * @param {string}  str         String to pad at the end.
      * @param {number}  maxLength   The resulting string max lenght.
      * @param {string}  fillStr     The new pad at the end.
@@ -118,7 +141,29 @@ class AsciiTable3 {
         if (strlen(str) >= maxLength) {
             return str;
         } else {
-            return AsciiTable3.padEnd(str + fillStr, maxLength, fillStr);
+             // partition string
+             const partArray = partition(str);
+
+             var result = '';
+
+             if (partArray.length > 1) {
+                // get last printable block
+                var printable = partArray[partArray.length - 2][1];
+    
+                // pad the end of the printable block
+                printable = printable.concat(fillStr.repeat(maxLength - printable.length));
+    
+                // replace printable block
+                partArray[partArray.length - 2][1] = printable;
+    
+                // generate result
+                partArray.forEach(block => result += block[0] + block[1]);
+             } else {
+                // empty or single block string
+                result = str.concat(fillStr.repeat(maxLength - str.length));
+             }
+ 
+             return result;
         }
     }
 
@@ -194,13 +239,42 @@ class AsciiTable3 {
         }
     }
 
+    static wordWrap(str, maxWidth) {
+        // partition string
+        const partArray = partition(String(str));
+
+        var result = '';
+
+        if (partArray.length > 1) {
+            // loop over parsed array
+            for (var i = 0; i < partArray.length - 1; i += 2) {
+                // get current block
+                const [nonPrintable, printable] = partArray[i];
+
+                // get next non-printable
+                const nextNonPrintable = partArray[i + 1][0];
+
+                // word wrap printable block
+                const printableWrapped = AsciiTable3.wordWrapBasic(printable, maxWidth);
+
+                // setup new block
+                result += nonPrintable + printableWrapped.replaceAll('\n', nextNonPrintable + '\n' + nonPrintable) + nextNonPrintable;
+            }
+        } else {
+            // no non-printable chars
+            result = AsciiTable3.wordWrapBasic(str, maxWidth);
+        }
+
+        return result;
+    }
+
     /**
      * Wraps a string into multiple lines of a limited width.
      * @param {string} str      The string to wrap.
      * @param {num} maxWidth    The maximum width for the wrapped string.
      * @returns {string}        The wrapped string.
      */
-    static wordWrap(str, maxWidth) {
+    static wordWrapBasic(str, maxWidth) {
         const NEW_LINE = "\n";
 
         // make sure we have a string as parameter
@@ -242,13 +316,21 @@ class AsciiTable3 {
         const SUFIX = '...';
 
         if (strlen(str) > maxSize) {
-            var result = str.substring(0, maxSize - SUFIX.length).concat(SUFIX);
+            var result = '';
+            var length = 0;
 
-            if (strlen(result) > maxSize) result = result.substring(0, maxSize);
+            // loop over string partition
+            for (const [nonPrintable, printable] of partition(str)) {
+                const text = Array.from(printable.substring(0, maxSize - SUFIX.length).concat(SUFIX)).slice (0, maxSize - length);
+
+                result += nonPrintable + text.join ('');
+                length += text.length;
+            }
 
             return result;
-        }
-        else return str;
+        } else {
+            return str;
+        } 
     }
 
     /**
