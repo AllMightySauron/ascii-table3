@@ -6,9 +6,11 @@ Ascii Table 3
 
 `ascii-table3` is a pure ascii table renderer and beautifier, heavily inspired by the `ascii-table` package created by Beau Sorensen. The original package lacked support for multiple table styles and that is what motivated me to create this new one.
 
-Currently with **over a dozen** predefined table styles, the collection style keeps growing. I am pretty sure there is a style for everyone. If not, you can even design your own custom stye and add it to the library!
+Currently with **over a dozen** predefined table styles, the collection style keeps growing. I am pretty sure there is a style for everyone. If not, you can even design your own custom style and add it to the library!
 
-Please direct any issues, suggestions or feature requests to the [ascii-table3 github](https://github.com/AllMightySauron/ascii-table3) page.
+This package now **includes support for ANSI escape sequences** so that rendered tables can output rich console content with colors by relying on packages like [chalk](https://github.com/chalk/chalk).
+
+Please direct any issues, suggestions or feature requests to the [ascii-table3](https://github.com/AllMightySauron/ascii-table3) github page.
 
 Existing code for the original `ascii-table` package should run fine with very few changes (see examples below).
 
