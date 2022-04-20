@@ -1,13 +1,13 @@
 {
   "name": "ascii-table3",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "author": "João Simões <joao.santos.simoes@gmail.com> (https://github.com/AllMightySauron)",
   "description": "Javascript ASCII renderer for beautiful console-based tables",
   "repository": {
     "type": "git",
     "url": "git://github.com/AllMightySauron/ascii-table3"
   },
-  "license": "GPLv3",
+  "license": "Apache-2.0",
   "keywords": [
     "table",
     "ascii",
