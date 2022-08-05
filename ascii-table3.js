@@ -335,12 +335,14 @@ class AsciiTable3 {
 
     /**
      * Sets the output style for this table instance.
-     * @param {string} name The desired style name.
+     * @param {string} name The desired style name (defaults to "ramac" if not found).
      * @returns {AsciiTable3} The AsciiTable3 object instance.
      */
     setStyle(name) {
         /** @type {Style} */
-        this.style = this.styles.find(style => style.name == name);
+        const foundStyle = this.styles.find(style => style.name == name);
+
+        this.style = foundStyle ? foundStyle : this.styles.find(style => style.name == "ramac");
 
         return this;
     }

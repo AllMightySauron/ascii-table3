@@ -330,14 +330,17 @@ describe('Sorting', () => {
 describe('Styling', () => {
     it ('setStyle/getStyle', () => {
         const aTable = new AsciiTable3();
-        
-        const style = aTable.getStyle();
 
-        // ramac should be the default
-        assert.strictEqual(style.name, "ramac");
+        // ramac should be the default style
+        assert.strictEqual(aTable.getStyle().name, "ramac");
         
+        // set a new style
         aTable.setStyle("none");
         assert.strictEqual(aTable.getStyle().name, "none");
+
+        // set an unknown style (defaults to ramac)
+        aTable.setStyle("unknown");
+        assert.strictEqual(aTable.getStyle().name, "ramac");
     });
 
     it('getStyles', () => {
