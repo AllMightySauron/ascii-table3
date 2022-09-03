@@ -19,20 +19,9 @@
       "github": "https://github.com/AllMightySauron"
     }
   ],
-  "main": "index.js",
+  "main": "src/index.js",
   "engines": {
     "node": ">=11.14.0"
-  },
-  "scripts": {
-    "qa": "npm run hint && npm run coverage",
-    "hint": "jshint ./",
-    "test": "mocha -R spec",
-    "coverage": "nyc mocha"
-  },
-  "devDependencies": {
-    "jshint": "^2.12.0",
-    "mocha": "^9.2.2",
-    "nyc": "^15.1.0"
   },
   "dependencies": {
     "printable-characters": "^1.0.42"
