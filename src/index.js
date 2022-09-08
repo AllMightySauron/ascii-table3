@@ -34,20 +34,20 @@ class AsciiTable3 {
     }
  
     /**
-      * Returns wether a value is numeric or not, irrespective of its type.
-      * @param {*} value Value to test.
-      */
+     * Returns wether a value is numeric or not, irrespective of its type.
+     * @param {any} value Value to test.
+     */
     static isNumeric(value) {
         return !isNaN(parseFloat(value)) && isFinite(value);
     }
  
     /**
-      * Pads the start of a string with a given string until the maximum length limit is reached.
-      * @param {string}  str         String to pad at the beggining.
-      * @param {number}  maxLength   The resulting string max lenght.
-      * @param {string}  fillStr     The new pad at the begginning.
-      * @returns {string}            Start-padded string.
-      */
+     * Pads the start of a string with a given string until the maximum length limit is reached.
+     * @param {string} str String to pad at the beggining.
+     * @param {number} maxLength The resulting string max length.
+     * @param {string} fillStr The new pad at the beginning.
+     * @returns {string} Start-padded string.
+     */
     static padStart(str, maxLength, fillStr = " ") {
         if (strlen(str) >= maxLength) return str;
         // partition string
@@ -70,12 +70,12 @@ class AsciiTable3 {
     }
  
     /**
-      * Pads the end of a string with a given string until the maximum length limit is reached.
-      * @param {string}  str         String to pad at the end.
-      * @param {number}  maxLength   The resulting string max lenght.
-      * @param {string}  fillStr     The new pad at the end.
-      * @returns {string}            End-padded string.
-      */
+     * Pads the end of a string with a given string until the maximum length limit is reached.
+     * @param {string} str String to pad at the end.
+     * @param {number} maxLength The resulting string max lenght.
+     * @param {string} fillStr The new pad at the end.
+     * @returns {string} End-padded string.
+     */
     static padEnd(str, maxLength, fillStr = " ") {
         if (strlen(str) >= maxLength) return str;
         // partition string
@@ -100,55 +100,45 @@ class AsciiTable3 {
     }
  
     /**
-      * Generic string alignment.
-      * @static
-      * @param {AlignmentEnum} direction The desired aligment direction according to the enum (left, right or center)
-      * @param {*} value The value to align.
-      * @param {number} len The maximum alignment length.
-      * @param {string} pad The pad char (optional, defaults to ' ').
-      */
+     * Generic string alignment.
+     * @param {AlignmentEnum} direction The desired aligment direction according to the enum (left, right or center)
+     * @param {any} value The value to align.
+     * @param {number} len The maximum alignment length.
+     * @param {string} pad The pad char (optional, defaults to ' ').
+     */
     static align(direction, value, len, pad = " ") {
         const strValue = "" + value;
  
-        if (direction == AlignmentEnum.RIGHT) {
-            return AsciiTable3.padStart(strValue, len, pad);
-        } else if (direction == AlignmentEnum.LEFT) {
-            return AsciiTable3.padEnd(strValue, len, pad);
-        } else if (direction == AlignmentEnum.CENTER) {
-            return AsciiTable3.padEnd(AsciiTable3.padStart(strValue, strlen(strValue) + Math.floor((len - strlen(strValue)) / 2), pad), len, pad);
-        } else {
-            return AsciiTable3.alignAuto(value, len, pad);
-        }
+        if (direction == AlignmentEnum.RIGHT) return AsciiTable3.padStart(strValue, len, pad);
+        else if (direction == AlignmentEnum.LEFT) return AsciiTable3.padEnd(strValue, len, pad);
+        else if (direction == AlignmentEnum.CENTER) return AsciiTable3.padEnd(AsciiTable3.padStart(strValue, strlen(strValue) + Math.floor((len - strlen(strValue)) / 2), pad), len, pad);
+        else return AsciiTable3.alignAuto(value, len, pad);
     }
  
     /**
-      * Attempt to do intelligent alignment of provided value (string inputs will be left aligned, number types will be right aligned).
-      * @static
-      * @param {*} value The value to align.
-      * @param {number} len The maximum alignment length.
-      * @param {string} [pad] The pad char (optional, defaults to ' ').
-      */
-    static alignAuto(value, len, pad = " ") {    
-        if (AsciiTable3.isNumeric(value)) {
-            return this.alignRight(value, len, pad);
-        } else if (typeof value == "string") {
-            return this.alignLeft(value, len, pad);
-        } else {
-            return this.alignLeft(value, len, pad);
-        }
+     * Attempt to do intelligent alignment of provided value (string inputs will be left aligned, number types will be right aligned).
+     * @param {any} value The value to align.
+     * @param {number} len The maximum alignment length.
+     * @param {string} [pad] The pad char (optional, defaults to ' ').
+     */
+    static alignAuto(value, len, pad = " ") {
+        if (AsciiTable3.isNumeric(value)) return this.alignRight(value, len, pad);
+        else if (typeof value == "string") return this.alignLeft(value, len, pad);
+        else return this.alignLeft(value, len, pad);
     }
  
     /**
-      * Wraps a string into multiple lines of a limited width.
-      * @param {string} str      The string to wrap.
-      * @param {num} maxWidth    The maximum width for the wrapped string.
-      * @returns {string}        The wrapped string.
-      */
+     * Wraps a string into multiple lines of a limited width.
+     * @param {string} str The string to wrap.
+     * @param {num} maxWidth The maximum width for the wrapped string.
+     * @returns {string} The wrapped string.
+     */
     static wordWrap(str, maxWidth) {
         // partition string
         const partArray = partition(String(str));
  
         if (!partArray.length > 1) return AsciiTable3.wordWrapBasic(str, maxWidth);
+        let result = "";
  
         // loop over parsed array
         for (let i = 0; i < partArray.length - 1; i += 2) {
@@ -161,7 +151,6 @@ class AsciiTable3 {
             // word wrap printable block
             const printableWrapped = AsciiTable3.wordWrapBasic(printable, maxWidth);
 
-            let result = "";
             result += nonPrintable + printableWrapped.split("\n").join(nextNonPrintable + "\n" + nonPrintable) + nextNonPrintable;
         }
  
@@ -169,26 +158,24 @@ class AsciiTable3 {
     }
  
     /**
-      * Wraps a string into multiple lines of a limited width (simple string, no ANSI chars).
-      * @param {string} str      The string to wrap.
-      * @param {num} maxWidth    The maximum width for the wrapped string.
-      * @returns {string}        The wrapped string.
-      */
+     * Wraps a string into multiple lines of a limited width (simple string, no ANSI chars).
+     * @param {string} str The string to wrap.
+     * @param {num} maxWidth The maximum width for the wrapped string.
+     * @returns {string} The wrapped string.
+     */
     static wordWrapBasic(str, maxWidth) {
-        const NEW_LINE = "\n";
- 
         // make sure we have a string as parameter
         str = "" + str;
  
         let found = false; 
         let res = "";
  
-        while (strlen(str) > maxWidth) {                 
+        while (strlen(str) > maxWidth) {
             found = false;
             // Inserts new line at first whitespace of the line
             for (let i = maxWidth - 1; i >= 0; i--) {
                 if (isBlank(str.charAt(i))) {
-                    res += str.substring(0, i).trimStart() + NEW_LINE;
+                    res += str.substring(0, i).trimStart() + "\n";
                     str = str.slice(i + 1);
                     found = true;
                     break;
@@ -197,7 +184,7 @@ class AsciiTable3 {
  
             // Inserts new line at maxWidth position, the word is too long to wrap
             if (!found) {
-                res += str.substring(0, maxWidth).trimStart() + NEW_LINE;
+                res += str.substring(0, maxWidth).trimStart() + "\n";
                 str = str.slice(maxWidth);
             }
         }
@@ -206,68 +193,58 @@ class AsciiTable3 {
     }
  
     /**
-      * Truncates a string up to a maximum number of characters (if needed).
-      * In case of truncation, '...' are appended to the end of the string.
-      * @static
-      * @param {string} str The string to truncate.
-      * @param {number} maxSize The string maximum size.
-      * @returns {string} The truncated string.
-      */
+     * Truncates a string up to a maximum number of characters (if needed).
+     * In case of truncation, '...' are appended to the end of the string.
+     * @param {string} str The string to truncate.
+     * @param {number} maxSize The string maximum size.
+     * @returns {string} The truncated string.
+     */
     static truncateString(str, maxSize) {
-        const SUFIX = "...";
- 
-        if (strlen(str) > maxSize) {
-            let result = "";
-            let length = 0;
- 
-            // loop over string partition
-            for (const [nonPrintable, printable] of partition(str)) {
-                const text = Array.from(printable.substring(0, maxSize - SUFIX.length).concat(SUFIX)).slice (0, maxSize - length);
- 
-                result += nonPrintable + text.join ("");
-                length += text.length;
-            }
- 
-            return result;
-        } else {
-            return str;
-        } 
-    }
- 
-    /**
-      * Create a new array at the given len, filled with the given value, mainly used internally.
-      * @static
-      * @param {number} len Length of array.
-      * @param {*} [value] The fill value (optional).
-      * @returns {*[]} Array filled with with desired value.
-      */
-    static arrayFill(len, value) {
-        const result = [];
- 
-        for (let i = 0; i < len; i++) {
-            result.push(value);
+        if (!strlen(str) > maxSize) return str;
+        let result = "";
+        let length = 0;
+
+        // loop over string partition
+        for (const [nonPrintable, printable] of partition(str)) {
+            const text = Array.from(printable.substring(0, maxSize - "...".length).concat("...")).slice (0, maxSize - length);
+
+            result += nonPrintable + text.join ("");
+            length += text.length;
         }
- 
+
         return result;
     }
  
     /**
-      * Increases existing array size up to the desired limit.
-      * @static
-      * @param {Array} array The array to increase.
-      * @param {number} len The desired array size.
-      * @param {*} [value] The fill value (optional).
-      */
+     * Create a new array at the given len, filled with the given value, mainly used internally.
+     * @param {number} len Length of array.
+     * @param {any} [value] The fill value (optional).
+     * @returns {any[]} Array filled with with desired value.
+     */
+    static arrayFill(len, value) {
+        const result = [];
+ 
+        for (let i = 0; i < len; i++) result.push(value);
+
+        return result;
+    }
+ 
+    /**
+     * Increases existing array size up to the desired limit.
+     * @param {Array} array The array to increase.
+     * @param {number} len The desired array size.
+     * @param {any} [value] The fill value (optional).
+     */
     static arrayResize(array, len, value) {
         // resize as needed
         while (len > array.length) array.push(value);
     }
  
     /**
-      * Sets the output style for this table instance.
-      * @param {string} name The desired style name (defaults to "ramac" if not found).
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
+     * Sets the output style for this table instance.
+     * @param {string} name The desired style name (defaults to "ramac" if not found).
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
     setStyle(name) {
         /** @type {Style} */
         const foundStyle = this.styles.find((style) => style.name == name);
@@ -278,26 +255,26 @@ class AsciiTable3 {
     }
  
     /**
-      * Gets the output style for this table instance.
-      * @returns {Style} The current table style settings.
-      */
+     * Gets the output style for this table instance.
+     * @returns {Style} The current table style settings.
+     */
     getStyle() {
         return this.style;
     }
  
     /**
-      * Gets all available pre-defined styles for this table.
-      * @returns {Style[]} Array of predefined border styles.
-      */
+     * Gets all available pre-defined styles for this table.
+     * @returns {Style[]} Array of predefined border styles.
+     */
     getStyles() {
         return Array.from(this.styles);
     }
  
     /**
-      * Adds a new style to the style library.
-      * @param {Style} style The style object to add.
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
+     * Adds a new style to the style library.
+     * @param {Style} style The style object to add.
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
     addStyle(style) {
         this.styles.push(style);
  
@@ -305,17 +282,17 @@ class AsciiTable3 {
     }
  
     /**
-      * Removes border from table.
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
+     * Removes border from table.
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
     removeBorder() {
         return this.setStyle("none");
     }
  
     /**
-      * Clear / reset all table data.
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
+     * Clear / reset all table data.
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
     clear() {
         // set default style
         this.setStyle("ramac");
@@ -346,9 +323,9 @@ class AsciiTable3 {
     }
  
     /**
-      * Reset all row data, maintains title and headings.
-      * @returns {object} The AsciiTable3 object instance.
-      */
+     * Reset all row data, maintains title and headings.
+     * @returns {object} The AsciiTable3 object instance.
+     */
     clearRows() {
         this.rows = [];
  
@@ -356,10 +333,10 @@ class AsciiTable3 {
     }
  
     /**
-      * Title setter.
-      * @param {string} title The title to set.
-      * @returns {object} The AsciiTable3 object instance.
-      */
+     * Title setter.
+     * @param {string} title The title to set.
+     * @returns {object} The AsciiTable3 object instance.
+     */
     setTitle(title = "") {
         this.title = title;
  
@@ -367,18 +344,18 @@ class AsciiTable3 {
     }
  
     /**
-      * Title getter.
-      * @returns {string} The table title.
-      */
+     * Title getter.
+     * @returns {string} The table title.
+     */
     getTitle() {
         return this.title ? this.title : "";
     }
  
     /**
-      * Title alignment setter.
-      * @param {AlignmentEnum} direction The desired title aligment direction according to the enum (left, right or center)
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
+     * Title alignment setter.
+     * @param {AlignmentEnum} direction The desired title aligment direction according to the enum (left, right or center)
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
     setTitleAlign(direction) {
         this.titleAlignment = direction;
  
@@ -386,67 +363,41 @@ class AsciiTable3 {
     }
  
     /**
-      * Left title alignment setter.
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
-    setTitleAlignLeft() {
-        return this.setTitleAlign(AlignmentEnum.LEFT);
-    }
- 
-    /**
-      * Right title alignment setter.
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
-    setTitleAlignRight() {
-        return this.setTitleAlign(AlignmentEnum.RIGHT);
-    }
- 
-    /**
-      * Center title alignment setter.
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
-    setTitleAlignCenter() {
-        return this.setTitleAlign(AlignmentEnum.CENTER);
-    }
- 
-    /**
-      * Title alignment getter.
-      * @returns {AlignmentEnum} The table title alignment direction.
-      */
+     * Title alignment getter.
+     * @returns {AlignmentEnum} The table title alignment direction.
+     */
     getTitleAlign() {
         return this.titleAlignment;
     }
  
     /**
-      * Table heading setter.
-      * @param {*[]} args Headings to set.
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
+     * Table heading setter.
+     * @param {any[]} args Headings to set.
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
     setHeading(...args) {
         // heading init
         this.heading = AsciiTable3.arrayFill(args.length);
  
         // loop over arguments
-        for (let i = 0; i < args.length; i++) {
-            this.heading[i] = args[i];
-        }
+        for (let i = 0; i < args.length; i++) this.heading[i] = args[i];
  
         return this;
     }
  
     /**
-      * Table heading getter.
-      * @returns {*[]} Array with heading values.
-      */
+     * Table heading getter.
+     * @returns {any[]} Array with heading values.
+     */
     getHeading() {
         return Array.from(this.heading);
     }
  
     /**
-      * Heading alignment setter.
-      * @param {AlignmentEnum} direction The desired heading aligment direction according to the enum (left, right or center)
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
+     * Heading alignment setter.
+     * @param {AlignmentEnum} direction The desired heading aligment direction according to the enum (left, right or center)
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
     setHeadingAlign(direction) {
         this.headingAlign = direction;
  
@@ -454,50 +405,24 @@ class AsciiTable3 {
     }
  
     /**
-      * Left heading alignment setter.
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
-    setHeadingAlignLeft() {
-        return this.setHeadingAlign(AlignmentEnum.LEFT);
-    }
- 
-    /**
-      * Right heading alignment setter.
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
-    setHeadingAlignRight() {
-        return this.setHeadingAlign(AlignmentEnum.RIGHT);
-    }
- 
-    /**
-      * Center heading alignment setter.
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
-    setHeadingAlignCenter() {
-        return this.setHeadingAlign(AlignmentEnum.CENTER);
-    }
- 
-    /**
-      * Heading alignment getter.
-      * @returns  {AlignmentEnum} The instance heading alignment.
-      */
+     * Heading alignment getter.
+     * @returns {AlignmentEnum} The instance heading alignment.
+     */
     getHeadingAlign() {
         return this.headingAlign;
     }
  
     /**
-      * Table row adder.
-      * @param {*[]} args Row cell values to set.
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
+     * Table row adder.
+     * @param {any[]} args Row cell values to set.
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
     addRow(...args) {
         // create array for new row 
         const row = AsciiTable3.arrayFill(args.length);
  
         // loop over arguments
-        for (let i = 0; i < args.length; i++) {
-            row[i] = args[i];
-        }
+        for (let i = 0; i < args.length; i++) row[i] = args[i];
  
         // add new row
         this.rows.push(row);
@@ -506,10 +431,10 @@ class AsciiTable3 {
     }
  
     /**
-      * Adds row to table only if all numeric values are not 0 (zero).
-      * @param {*[]} args Row cell values to set.
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
+     * Adds row to table only if all numeric values are not 0 (zero).
+     * @param {any[]} args Row cell values to set.
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
     addNonZeroRow(...args) {
         let skipRow = true;
  
@@ -521,26 +446,21 @@ class AsciiTable3 {
             const cell = args[i];
  
             // special test for numeric values
-            if (AsciiTable3.isNumeric(cell) && cell != 0) {
-                skipRow = false;
-            }
+            if (AsciiTable3.isNumeric(cell) && cell != 0) skipRow = false;
  
             row[i] = args[i];
         }
  
-        if (!skipRow) {
-            // at least one non-zero value
-            this.rows.push(row);
-        }
+        if (!skipRow) this.rows.push(row);
  
         return this;
     }
  
     /**
-      * Bulk addRow operation.
-      * @param {*[]} rows Multidimensional array of rows.
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
+     * Bulk addRow operation.
+     * @param {any[]} rows Multidimensional array of rows.
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
     addRowMatrix(rows) {
         // add each individual row
         rows.forEach((row) => this.rows.push(row));
@@ -549,76 +469,65 @@ class AsciiTable3 {
     }
  
     /**
-      * Table rows getter.
-      * @returns {*[]} Array with row cell values (column array).
-      */
+     * Table rows getter.
+     * @returns {any[]} Array with row cell values (column array).
+     */
     getRows() {
         return Array.from(this.rows);
     }
  
     /**
-      * Sets cell value for this row and column combination.
-      * @param {number} row Desired row number (1-based index).
-      * @param {number} col Desired column number (1-based index).
-      * @param {*} value The cell value to set.
-      */
+     * Sets cell value for this row and column combination.
+     * @param {number} row Desired row number (1-based index).
+     * @param {number} col Desired column number (1-based index).
+     * @param {any} value The cell value to set.
+     */
     setCell(row, col, value) {
         this.rows[row - 1][col - 1] = value;
     }
  
     /**
-      * Gets cell value for this row and column combination.
-      * @param {number} row Desired row number (1-based index).
-      * @param {number} col Desired column number (1-based index).
-      * @returns {*} The cell value.
-      */
+     * Gets cell value for this row and column combination.
+     * @param {number} row Desired row number (1-based index).
+     * @param {number} col Desired column number (1-based index).
+     * @returns {any} The cell value.
+     */
     getCell(row, col) {
         return this.getRows()[row - 1][col - 1];
     }
  
     /**
-      * Sets the preset width for a given column rendering output.
-      * @param {number} idx Column index to align (starts at 1).
-      * @param {number} width The maximum width for this column (in characters).
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
+     * Sets the preset width for a given column rendering output.
+     * @param {number} idx Column index to align (starts at 1).
+     * @param {number} width The maximum width for this column (in characters).
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
     setWidth(idx, width) {
-        if (this.colWidths) {
-            // resize if needed
-            AsciiTable3.arrayResize(this.colWidths, idx);
-        } else {
-            // create array
-            /** @type {number[]} */
-            this.colWidths = AsciiTable3.arrayFill(idx);
-        }
+        if (this.colWidths) AsciiTable3.arrayResize(this.colWidths, idx);
+        else this.colWidths = AsciiTable3.arrayFill(idx);
  
-        // arrays are 0-based
         this.colWidths[idx - 1] = width;
  
         return this;
     }
  
     /**
-      * Gets the preset width for a given column rendering output.
-      * @param {number} idx Column index to align (starts at 1).
-      * @returns {number} The maximum rendered size for this column.
-      */
+     * Gets the preset width for a given column rendering output.
+     * @param {number} idx Column index to align (starts at 1).
+     * @returns {number} The maximum rendered size for this column.
+     */
     getWidth(idx) {
         let result;
- 
-        if (this.colWidths && idx <= this.colWidths.length) {
-            // arrays are 0-based
-            result = this.colWidths[idx - 1];
-        }
-         
+        if (this.colWidths && idx <= this.colWidths.length) result = this.colWidths[idx - 1];
+
         return result;
     }
  
     /**
-      * Sets the present widths for each column using an array.
-      * @param {number[]} widths Array with widths for columns.
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
+     * Sets the present widths for each column using an array.
+     * @param {number[]} widths Array with widths for columns.
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
     setWidths(widths) {
         this.colWidths = widths;
  
@@ -626,22 +535,18 @@ class AsciiTable3 {
     }
  
     /**
-      * Gets the present widths for each column (if any).
-      * @returns {number[]} Array with widths for columns.
-      */
+     * Gets the present widths for each column (if any).
+     * @returns {number[]} Array with widths for columns.
+     */
     getWidths() {
-        if (this.colWidths) {
-            return this.colWidths;
-        } else {
-            return [];
-        }
+        return this.colWidths ? this.colWidths : [];
     }
  
     /**
-      * Sets the internal cell margin (in characters)
-      * @param {number} margin 
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
+     * Sets the internal cell margin (in characters)
+     * @param {number} margin 
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
     setCellMargin(margin) {
         this.cellMargin = margin;
  
@@ -649,55 +554,46 @@ class AsciiTable3 {
     }
  
     /**
-      * Gets the internal cell margin (in characters)
-      * @returns {number} The cell margin in characters.
-      */
+     * Gets the internal cell margin (in characters)
+     * @returns {number} The cell margin in characters.
+     */
     getCellMargin() {
         return this.cellMargin;
     }
  
     /**
-      * Sets the alignment direction for a given column.
-      * @param {number} idx Column index to align (starts at 1).
-      * @param {AlignmentEnum} direction Desired alignment direction.
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
+     * Sets the alignment direction for a given column.
+     * @param {number} idx Column index to align (starts at 1).
+     * @param {AlignmentEnum} direction Desired alignment direction.
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
     setAlign(idx, direction) {
-        if (this.dataAlign) {
-            // add new array elements if needed
-            this.dataAlign.concat(AsciiTable3.arrayFill(idx - this.dataAlign.length, AlignmentEnum.AUTO));
-        } else {
-            // create array            
-            this.dataAlign = AsciiTable3.arrayFill(idx);
-        }
+        if (this.dataAlign) this.dataAlign.concat(AsciiTable3.arrayFill(idx - this.dataAlign.length, AlignmentEnum.AUTO));
+        else this.dataAlign = AsciiTable3.arrayFill(idx);
  
-        // arrays are 0-based
         this.dataAlign[idx - 1] = direction;
  
         return this;
     }
  
     /**
-      * Get the alignment direction for a given column.
-      * @param {number} idx Column index to align (starts at 1).
-      * @returns {AlignmentEnum} The alignment set for a column.
-      */
+     * Get the alignment direction for a given column.
+     * @param {number} idx Column index to align (starts at 1).
+     * @returns {AlignmentEnum} The alignment set for a column.
+     */
     getAlign(idx) {
         let result = AlignmentEnum.AUTO;
  
-        if (this.dataAlign && idx <= this.dataAlign.length) {
-            // arrays are 0-based
-            result = this.dataAlign[idx - 1];
-        }
+        if (this.dataAlign && idx <= this.dataAlign.length) result = this.dataAlign[idx - 1];
          
         return result;
     }
  
     /**
-      * Sets the alignment direction for all table columns.
-      * @param {AlignmentEnum[]} directions Desired alignment directions.
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
+     * Sets the alignment direction for all table columns.
+     * @param {AlignmentEnum[]} directions Desired alignment directions.
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
     setAligns(directions) {
         this.dataAlign = Array.from(directions);
  
@@ -705,94 +601,51 @@ class AsciiTable3 {
     }
  
     /** 
-      * Gets the alignment direction for all columns.
-      * @returns {AlignmentEnum[]} Array with alignment settings for all columns.
-      */
+     * Gets the alignment direction for all columns.
+     * @returns {AlignmentEnum[]} Array with alignment settings for all columns.
+     */
     getAligns() {
         if (!this.dataAlign) {
-            // no alignment yet, set it up
- 
-            if (this.getRows().length > 0) {
-                // defaults to auto
-                this.dataAlign = AsciiTable3.arrayFill(this.getRows()[0].length, AlignmentEnum.AUTO);
-            } else {
-                // no rows
-                this.dataAlign = [];
-            }
+            if (this.getRows().length > 0) this.dataAlign = AsciiTable3.arrayFill(this.getRows()[0].length, AlignmentEnum.AUTO);
+            else this.dataAlign = [];
         }
  
         return Array.from(this.dataAlign);
     }
  
     /**
-      * Sets left alignment direction for a given column.
-      * @param {number} idx Column index to align (starts at 1).
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
-    setAlignLeft(idx) {
-        return this.setAlign(idx, AlignmentEnum.LEFT);
-    }
- 
-    /**
-      * Sets right alignment direction for a given column.
-      * @param {number} idx Column index to align (starts at 1).
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
-    setAlignRight(idx) {
-        return this.setAlign(idx, AlignmentEnum.RIGHT);
-    }
- 
-    /**
-      * Sets center alignment direction for a given column.
-      * @param {number} idx Column index to align (starts at 1).
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
-    setAlignCenter(idx) {
-        return this.setAlign(idx, AlignmentEnum.CENTER);
-    }
- 
-    /**
-      * Sets the wrapping property for a specific column (wrapped content will generate more than one data row if needed).
-      * @param {number} idx Column index to align (starts at 1).
-      * @param {boolean} wrap Whether to wrap the content (default is true).
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
+     * Sets the wrapping property for a specific column (wrapped content will generate more than one data row if needed).
+     * @param {number} idx Column index to align (starts at 1).
+     * @param {boolean} wrap Whether to wrap the content (default is true).
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
     setWrapped(idx, wrap = true) {
-        if (this.wrapping) {
-            // add new array elements if needed
-            this.wrapping.concat(AsciiTable3.arrayFill(idx - this.wrapping.length, false));
-        } else {
-            // create array and default to false
-            this.wrapping = AsciiTable3.arrayFill(idx, false);
-        }
+        if (this.wrapping) this.wrapping.concat(AsciiTable3.arrayFill(idx - this.wrapping.length, false));
+        else this.wrapping = AsciiTable3.arrayFill(idx, false);
          
-        // arrays are 0-based
         this.wrapping[idx - 1] = wrap;
  
         return this;
     }
  
     /**
-      * Gets the wrapping setting for a given column.
-      * @param {number} idx Column index to get wrapping (starts at 1).
-      */
+     * Gets the wrapping setting for a given column.
+     * @param {number} idx Column index to get wrapping (starts at 1).
+     */
     isWrapped(idx) {
         // wrapping defaults to false
         let result = false;
  
-        if (this.wrapping && idx <= this.wrapping.length) {
-            // arrays are 0-based
-            result = this.wrapping[idx - 1];
-        }
+        if (this.wrapping && idx <= this.wrapping.length) result = this.wrapping[idx - 1];
          
         return result;
     }
  
     /**
-      * Sets wrapping for all table columns.
-      * @param {boolean[]} wrapping Boolean array of wrapping settings.
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
+     * Sets wrapping for all table columns.
+     * @param {boolean[]} wrapping Boolean array of wrapping settings.
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
     setWrappings(wrappings) {
         this.wrapping = Array.from(wrappings);
  
@@ -800,29 +653,22 @@ class AsciiTable3 {
     }
  
     /** 
-      * Gets the alignment direction for all columns.
-      * @returns {AlignmentEnum[]} Array with alignment settings for all columns.
-      */
+     * Gets the alignment direction for all columns.
+     * @returns {AlignmentEnum[]} Array with alignment settings for all columns.
+     */
     getWrappings() {
         if (!this.wrapping) {
-            // no alignment yet, set it up
- 
-            if (this.getRows().length > 0) {
-                // defaults to false (no wrapping)
-                this.wrapping = AsciiTable3.arrayFill(this.getRows()[0].length, false);
-            } else {
-                // no rows
-                this.wrapping = [];
-            }
+            if (this.getRows().length > 0) this.wrapping = AsciiTable3.arrayFill(this.getRows()[0].length, false);
+            else this.wrapping = [];
         }
  
         return Array.from(this.wrapping);
     }
  
     /**
-      * Justify all columns to be the same width.
-      * @param {boolean} enabled Boolean for turning justify on or off (default is true).
-      */
+     * Justify all columns to be the same width.
+     * @param {boolean} enabled Boolean for turning justify on or off (default is true).
+     */
     setJustify(enabled = true) {
         this.justify = enabled;
  
@@ -830,17 +676,17 @@ class AsciiTable3 {
     }
  
     /**
-      * Returns whether all columns are to be rendered with the same width.
-      * @returns {boolean} Whether all columns are to be rendered with the same width.
-      */
+     * Returns whether all columns are to be rendered with the same width.
+     * @returns {boolean} Whether all columns are to be rendered with the same width.
+     */
     isJustify() {
         return this.justify ? this.justify : false;
     }
  
     /**
-      * Transposes table by exchanging rows for columns.
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
+     * Transposes table by exchanging rows for columns.
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
     transpose() {
         // sanity check for empty table
         if (this.getHeading().length == 0 && this.getRows().length == 0) return this;
@@ -863,16 +709,10 @@ class AsciiTable3 {
             newMatrix[row] = AsciiTable3.arrayFill(nRows + dataStartCol);
  
             // check for heading
-            if (this.getHeading().length > 0) {
-                // setup first column with heading values
-                newMatrix[row][0] = this.getHeading()[row];
-            }
+            if (this.getHeading().length > 0) newMatrix[row][0] = this.getHeading()[row];
  
             // loop over columns
-            for (let col = dataStartCol; col < newMatrix[0].length; col++) {
-                // fill row with column data values
-                newMatrix[row][col] = this.getCell(col + Math.abs(dataStartCol - 1), row + 1);
-            }
+            for (let col = dataStartCol; col < newMatrix[0].length; col++) newMatrix[row][col] = this.getCell(col + Math.abs(dataStartCol - 1), row + 1);
         }
  
         // new value
@@ -882,32 +722,32 @@ class AsciiTable3 {
     }
  
     /**
-      * Return the JSON representation of the table, this also allows us to call JSON.stringify on the instance.
-      * @returns {string} The table JSON representation.
-      */
+     * Return the JSON representation of the table, this also allows us to call JSON.stringify on the instance.
+     * @returns {object} The table JSON representation.
+     */
     toJSON() {
-        return "{\n" +
-                 `   "title": ${JSON.stringify(this.getTitle())},\n` +
-                 `   "heading": ${JSON.stringify(this.getHeading())},\n` +
-                 `   "rows": ${JSON.stringify(this.getRows())},\n` +
-                 "   \"formatting\": {\n" +
-                 `       "titleAlign": ${JSON.stringify(this.getTitleAlign())},\n` +
-                 `       "headingAlign": ${JSON.stringify(this.getHeadingAlign())},\n` +
-                 "       \"columns\": {\n" +
-                 `           "aligns": ${JSON.stringify(this.getAligns())},\n` +
-                 `           "widths": ${JSON.stringify(this.getWidths())},\n` +
-                 `           "wrappings": ${JSON.stringify(this.getWrappings())}\n` +
-                 "       },\n" +
-                 `       "justify": ${JSON.stringify(this.isJustify())}\n` +
-                 "   }\n" +
-             "}";
+        return ({
+            title: this.getTitle(),
+            heading: this.getHeading(),
+            rows: this.getRows(),
+            formatting: {
+                titleAlign: this.getTitleAlign(),
+                headingAlign: this.getHeadingAlign(),
+                justify: this.isJustify(),
+                columns: {
+                    aligns: this.getAligns(),
+                    widths: this.getWidths(),
+                    wrappings: this.getWrappings()
+                }
+            }
+        });
     }
  
     /**
-      * Populate the table from json object, should match the toJSON output above.
-      * @param {TableJSON} obj Object with table definition according to JSON structure.
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
+     * Populate the table from json object, should match the toJSON output above.
+     * @param {TableJSON} obj Object with table definition according to JSON structure.
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
     fromJSON(obj) {
         this.clear();
  
@@ -929,10 +769,10 @@ class AsciiTable3 {
     }
  
     /**
-      * Sorts the table rows based on a specific methods.
-      * @param {function} func The comparison function to use when sorting.
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
+     * Sorts the table rows based on a specific methods.
+     * @param {function} func The comparison function to use when sorting.
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
     sort(func) {
         this.rows.sort(func);
  
@@ -940,50 +780,42 @@ class AsciiTable3 {
     }
  
     /**
-      * Sorts the table rows based on specific methods for a column.
-      * @param {number} idx  The column number to base sort on (starts at 1).
-      * @param {function} func The comparison function to use when sorting (optional, for compatibility with AsciiTable).
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
-    sortColumn(idx, func = function(a, b) { return a > b ? 1 : -1; }) {
-        this.rows.sort(function(a, b) {
-            // zero-based array
-            return func(a[idx - 1], b[idx - 1]);
-        });
+     * Sorts the table rows based on specific methods for a column.
+     * @param {number} idx The column number to base sort on (starts at 1).
+     * @param {function} func The comparison function to use when sorting (optional, for compatibility with AsciiTable).
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
+    sortColumn(idx, func = (a, b) => a > b ? 1 : -1) {
+        this.rows.sort((a, b) => func(a[idx - 1], b[idx - 1]));
  
         return this;
     }
  
     /**
-      * Reverse sorts the table rows based on specific methods for a column.
-      * @param {number} idx  The column number to base sort on (starts at 1).
-      * @returns {AsciiTable3} The AsciiTable3 object instance.
-      */
+     * Reverse sorts the table rows based on specific methods for a column.
+     * @param {number} idx The column number to base sort on (starts at 1).
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
+     */
     sortColumnDesc(idx) {
         // function for sorting descending
-        const func = function(a, b) { return b > a ? 1 : -1; };
+        const func = (a, b) => b > a ? 1 : -1;
  
         return this.sortColumn(idx, func);
     }
  
     /**
-      * Get the column sizes for table rendering (in characters).
-      * @private
-      * @returns {number[]} Array with column sizes for rendering.
-      */
+     * Get the column sizes for table rendering (in characters).
+     * @private
+     * @returns {number[]} Array with column sizes for rendering.
+     */
     getColumnsWidth() {
         let colSizes;
  
         const headings = this.getHeading();
  
         // init col sizes (heading)
-        if (headings.length > 0) {
-            // use heading
-            colSizes = AsciiTable3.arrayFill(headings.length, 0);
-        } else {
-            // derive from first row
-            colSizes = AsciiTable3.arrayFill(this.getRows()[0].length, 0);
-        }
+        if (headings.length > 0) colSizes = AsciiTable3.arrayFill(headings.length, 0);
+        else colSizes = AsciiTable3.arrayFill(this.getRows()[0].length, 0);
  
         // loop over headings
         for (let col = 0; col < headings.length; col++) {
@@ -1007,26 +839,22 @@ class AsciiTable3 {
         // override with preset widths
         for (let col2 = 0; col2 < colSizes.length; col2++) {
             // check if width preset has been defined
-            if (this.getWidth(col2 + 1)) {
-                colSizes[col2] = this.getWidth(col2 + 1);
-            }
+            if (this.getWidth(col2 + 1)) colSizes[col2] = this.getWidth(col2 + 1);
         }
  
         // check for justification (all columns of same width)
-        if (this.isJustify()) {
-            colSizes = AsciiTable3.arrayFill(colSizes.length, Math.max(...colSizes));
-        }
+        if (this.isJustify()) colSizes = AsciiTable3.arrayFill(colSizes.length, Math.max(...colSizes));
  
         return colSizes;
     }
- 
+
     /**
-      * Get string with the rendering of a horizontal line.
-      * @private
-      * @param {SectionStyle} posStyle The line style for the desired position (between top, middle and bottom).
-      * @param {number[]} colsWidth Array with the desired width for each data column.
-      * @returns {string} String representation of table horizontal line.
-      */
+     * Get string with the rendering of a horizontal line.
+     * @private
+     * @param {SectionStyle} posStyle The line style for the desired position (between top, middle and bottom).
+     * @param {number[]} colsWidth Array with the desired width for each data column.
+     * @returns {string} String representation of table horizontal line.
+     */
     getHorizontalLine(posStyle, colsWidth) {
         let result = posStyle.left;
          
@@ -1047,11 +875,11 @@ class AsciiTable3 {
     }
  
     /**
-      * Get array of wrapped row data from a "normal" row.
-      * @private
-      * @param {*[]} row Row of data.
-      * @returns         Array of data rows after word wrapping.
-      */
+     * Get array of wrapped row data from a "normal" row.
+     * @private
+     * @param {any[]} row Row of data.
+     * @returns Array of data rows after word wrapping.
+     */
     getWrappedRows(row) {
         // setup a new wrapped row
         const wrappedRow = AsciiTable3.arrayFill(row.length);
@@ -1066,35 +894,29 @@ class AsciiTable3 {
                 wrappedRow[col] = AsciiTable3.wordWrap(cell, this.getWidth(col + 1) - this.getCellMargin() * 2).split("\n");
  
                 if (wrappedRow[col].length > maxRows) maxRows = wrappedRow[col].length;
-            } else {
-                wrappedRow[col] = [ cell ];
-            }
+            } else wrappedRow[col] = [ cell ];
         }
  
         // create resulting array with (potentially) multiple rows
         const result = AsciiTable3.arrayFill(maxRows);
-        for (let i = 0; i < maxRows; i++) {
-            result[i] = AsciiTable3.arrayFill(row.length, "");
-        }
+        for (let i = 0; i < maxRows; i++) result[i] = AsciiTable3.arrayFill(row.length, "");
  
         // fill in values
         for (let nCol = 0; nCol < row.length; nCol++) {
-            for (let nRow = 0; nRow < wrappedRow[nCol].length; nRow++) {
-                result[nRow][nCol] = wrappedRow[nCol][nRow];
-            }
+            for (let nRow = 0; nRow < wrappedRow[nCol].length; nRow++) result[nRow][nCol] = wrappedRow[nCol][nRow];
         }
  
         return result;
     }
  
     /**
-      * Get string with the rendering of a heading row (truncating if needed).
-      * @private
-      * @param {Style} posStyle The heading row style.
-      * @param {number[]} colsWidth Array with the desired width for each heading column.
-      * @param {string} row The heading row to generate.
-      * @returns {string} String representation of table heading row line.
-      */
+     * Get string with the rendering of a heading row (truncating if needed).
+     * @private
+     * @param {Style} posStyle The heading row style.
+     * @param {number[]} colsWidth Array with the desired width for each heading column.
+     * @param {string} row The heading row to generate.
+     * @returns {string} String representation of table heading row line.
+     */
     getHeadingRowTruncated(posStyle, colsWidth, row) {
         let result = posStyle.left;
  
@@ -1104,9 +926,10 @@ class AsciiTable3 {
             // align contents disregarding margins
             const cellAligned = AsciiTable3.align(this.getHeadingAlign(), cell, colsWidth[col] - this.getCellMargin() * 2);
  
-            result += "".padStart(this.getCellMargin()) + 
-                         AsciiTable3.truncateString(cellAligned, colsWidth[col] - this.getCellMargin() * 2) +
-                         "".padStart(this.getCellMargin());
+            result += 
+                "".padStart(this.getCellMargin()) + 
+                AsciiTable3.truncateString(cellAligned, colsWidth[col] - this.getCellMargin() * 2) +
+                "".padStart(this.getCellMargin());
  
             if (col < row.length - 1) result += posStyle.colSeparator;
         }
@@ -1116,33 +939,31 @@ class AsciiTable3 {
     }
  
     /**
-      * Get string with the rendering of a heading row.
-      * @private
-      * @param {Style} posStyle The heading row style.
-      * @param {number[]} colsWidth Array with the desired width for each heading column.
-      * @returns {string} String representation of table heading row line.
-      */
+     * Get string with the rendering of a heading row.
+     * @private
+     * @param {Style} posStyle The heading row style.
+     * @param {number[]} colsWidth Array with the desired width for each heading column.
+     * @returns {string} String representation of table heading row line.
+     */
     getHeadingRow(posStyle, colsWidth) {
         let result = "";
  
         // wrap heading if needed
         const rows = this.getWrappedRows(this.getHeading());
  
-        rows.forEach((aRow) => {
-            result += this.getHeadingRowTruncated(posStyle, colsWidth, aRow);
-        });
+        rows.forEach((aRow) => result += this.getHeadingRowTruncated(posStyle, colsWidth, aRow));
  
         return result;
     }
  
     /**
-      * Get string with the rendering of a data row (truncating if needed).
-      * @private
-      * @param {Style} posStyle The data row style.
-      * @param {number[]} colsWidth Array with the desired width for each data column.
-      * @param {*[]} row Array with cell values for this row.
-      * @returns {string} String representation of table data row line.
-      */
+     * Get string with the rendering of a data row (truncating if needed).
+     * @private
+     * @param {Style} posStyle The data row style.
+     * @param {number[]} colsWidth Array with the desired width for each data column.
+     * @param {any[]} row Array with cell values for this row.
+     * @returns {string} String representation of table data row line.
+     */
     getDataRowTruncated(posStyle, colsWidth, row) {
         let result = posStyle.left;
  
@@ -1153,9 +974,10 @@ class AsciiTable3 {
             // align cell contents disregarding cell margins
             const cellAligned = AsciiTable3.align(this.getAlign(col + 1), cell, colsWidth[col] - this.getCellMargin() * 2);
  
-            result += "".padStart(this.getCellMargin()) + 
-                         AsciiTable3.truncateString(cellAligned, colsWidth[col] - this.getCellMargin() * 2) +
-                         "".padStart(this.getCellMargin());
+            result += 
+                "".padStart(this.getCellMargin()) + 
+                AsciiTable3.truncateString(cellAligned, colsWidth[col] - this.getCellMargin() * 2) +
+                "".padStart(this.getCellMargin());
  
             if (col < colsWidth.length - 1) result += posStyle.colSeparator;
         }
@@ -1165,30 +987,28 @@ class AsciiTable3 {
     }
  
     /**
-      * Get string with the rendering of a data row (please not that it may result in several rows, depending on wrap settings).
-      * @private
-      * @param {Style} posStyle The data row style.
-      * @param {number[]} colsWidth Array with the desired width for each data column.
-      * @param {*[]} row Array with cell values for this row.
-      * @returns {string} String representation of table data row line.
-      */
+     * Get string with the rendering of a data row (please not that it may result in several rows, depending on wrap settings).
+     * @private
+     * @param {Style} posStyle The data row style.
+     * @param {number[]} colsWidth Array with the desired width for each data column.
+     * @param {any[]} row Array with cell values for this row.
+     * @returns {string} String representation of table data row line.
+     */
     getDataRow(posStyle, colsWidth, row) {
         let result = "";
  
         // wrap data row if needed
         const rows = this.getWrappedRows(row);
  
-        rows.forEach((aRow) => {
-            result += this.getDataRowTruncated(posStyle, colsWidth, aRow);
-        });
+        rows.forEach((aRow) => result += this.getDataRowTruncated(posStyle, colsWidth, aRow));
  
         return result;
     }
  
     /**
-      * Render the instance as a string for output.
-      * @returns {string} String rendiring of this instance table.
-      */
+     * Render the instance as a string for output.
+     * @returns {string} String rendiring of this instance table.
+     */
     toString() {
         // determine table columns max width
         const colsWidth = this.getColumnsWidth();
@@ -1198,8 +1018,8 @@ class AsciiTable3 {
  
         // full table width
         const maxWidth = 
-             colsWidth.reduce(function(a, b) { return a + b; }, 0) +             // data column sizes
-             (colsWidth.length - 1) * strlen(style.borders.data.colSeparator);   // mid column separators
+            colsWidth.reduce((a, b) => a + b, 0) + // data column sizes
+            (colsWidth.length - 1) * strlen(style.borders.data.colSeparator); // mid column separators
  
         let result = "";
  
@@ -1211,11 +1031,12 @@ class AsciiTable3 {
             if (result.trim() == "") result = "";
  
             // title line
-            result += style.borders.data.left + AsciiTable3.align(this.getTitleAlign(), this.getTitle(), maxWidth) + 
-                     style.borders.data.right + "\n";
+            result += 
+                style.borders.data.left + AsciiTable3.align(this.getTitleAlign(), this.getTitle(), maxWidth) + 
+                style.borders.data.right + "\n";
  
             // special style (between title and headings)
-            /** @type {SectionStyle}  */
+            /** @type {SectionStyle} */
             const newStyle = {
                 left: style.borders.middle.left,
                 right: style.borders.middle.right,
@@ -1223,14 +1044,8 @@ class AsciiTable3 {
                 colSeparator: style.borders.top.colSeparator
             };
  
-            if (newStyle.center != "" || newStyle.colSeparator != "") {
-                // title / heading separator line
-                result += this.getHorizontalLine(newStyle, colsWidth);
-            }
-        } else {
-            // top line
-            result += this.getHorizontalLine(style.borders.top, colsWidth);
-        }
+            if (newStyle.center != "" || newStyle.colSeparator != "") result += this.getHorizontalLine(newStyle, colsWidth);
+        } else result += this.getHorizontalLine(style.borders.top, colsWidth);
  
         // headings
         if (this.getHeading().length > 0) {
@@ -1241,9 +1056,7 @@ class AsciiTable3 {
         }
  
         // rows
-        this.getRows().forEach((row) => {
-            result += this.getDataRow(style.borders.data, colsWidth, row);
-        });
+        this.getRows().forEach((row) => result += this.getDataRow(style.borders.data, colsWidth, row));
  
         // bottom line
         result += this.getHorizontalLine(style.borders.bottom, colsWidth);
