@@ -130,7 +130,7 @@ class AsciiTable3 {
     /**
      * Wraps a string into multiple lines of a limited width.
      * @param {string} str The string to wrap.
-     * @param {num} maxWidth The maximum width for the wrapped string.
+     * @param {number} maxWidth The maximum width for the wrapped string.
      * @returns {string} The wrapped string.
      */
     static wordWrap(str, maxWidth) {
@@ -160,7 +160,7 @@ class AsciiTable3 {
     /**
      * Wraps a string into multiple lines of a limited width (simple string, no ANSI chars).
      * @param {string} str The string to wrap.
-     * @param {num} maxWidth The maximum width for the wrapped string.
+     * @param {number} maxWidth The maximum width for the wrapped string.
      * @returns {string} The wrapped string.
      */
     static wordWrapBasic(str, maxWidth) {
@@ -305,8 +305,8 @@ class AsciiTable3 {
         this.clearRows();
  
         // set default alignment
-        this.setTitleAlignCenter();
-        this.setHeadingAlignCenter();
+        this.setTitleAlign(AlignmentEnum.CENTER);
+        this.setHeadingAlign(AlignmentEnum.CENTER);
  
         // set default cell margin
         this.setCellMargin(1);
