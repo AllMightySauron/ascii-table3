@@ -1,6 +1,6 @@
 /**
  * Type definition for table section style.
- * @typedef {Object} SectionStyle
+ * @typedef {object} SectionStyle
  * @property {string} left          The left border character.
  * @property {string} center        The center border character.
  * @property {string} right         The right border character.
@@ -15,7 +15,7 @@ export type SectionStyle = {
 
  /**
   * Borders style definition.
-  * @typedef {Object} Borders
+  * @typedef {object} Borders
   * @property {SectionStyle} top    The style for top section borders (above heading). 
   * @property {SectionStyle} middle The style for middle section borders (between heading and data). 
   * @property {SectionStyle} bottom The style for bottom section borders (below data). 
@@ -30,7 +30,7 @@ export type SectionStyle = {
 
 /**
  * Type definition for a table style.
- * @typedef {Object} Style
+ * @typedef {object} Style
  * @property {string} name Style name.
  * @property {Borders} borders The border styles for each section.
  */
