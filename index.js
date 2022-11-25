@@ -1,1 +1,1 @@
-module.exports = require('./ascii-table3');
+module.exports = require('./src/ascii-table3');

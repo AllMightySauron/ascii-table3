@@ -1,6 +1,6 @@
 {
   "name": "ascii-table3",
-  "version": "0.7.8",
+  "version": "0.8.0",
   "author": "João Simões <joao.santos.simoes@gmail.com> (https://github.com/AllMightySauron)",
   "description": "Javascript ASCII renderer for beautiful console-based tables",
   "repository": {
@@ -20,6 +20,7 @@
     }
   ],
   "main": "index.js",
+  "types": "dist/ascii-table3.d.ts",
   "engines": {
     "node": ">=11.14.0"
   },
@@ -27,10 +28,13 @@
     "qa": "npm run hint && npm run coverage",
     "hint": "jshint ./",
     "test": "mocha -R spec",
-    "coverage": "nyc mocha"
+    "coverage": "nyc mocha",
+    "build": "copyfiles -u 1 \"src/**/*.d.ts\" dist && npx tsc"
   },
   "devDependencies": {
     "jshint": "^2.12.0",
+    "typescript": "^4.9.3",
+    "copyfiles": "^2.4.1",
     "mocha": "^9.2.2",
     "nyc": "^15.1.0"
   },

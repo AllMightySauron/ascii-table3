@@ -3,7 +3,7 @@
 // load modules
 const fs = require('fs');
 const chalk = require('chalk');
-const { AsciiTable3 } = require('./ascii-table3');
+const { AsciiTable3 } = require('./src/ascii-table3');
 
 // get path to list from command line
 const path = process.argv.length <= 2 ? '.' : process.argv[2];
@@ -11,7 +11,7 @@ const path = process.argv.length <= 2 ? '.' : process.argv[2];
 // build table
 const dirTable =
     new AsciiTable3(`Directory: ${path}`)
-    .setHeading(chalk.red('Type'), 'Name', 'Size (bytes)', 'Last change')
+    .setHeading('Type', 'Name', 'Size (bytes)', 'Last change')
     .setAlignRight(3).setWidth(4, 30);
 
 try {
@@ -37,7 +37,16 @@ try {
             const size = type == 'Directory' ? '-' : new Intl.NumberFormat().format(stat.size);
     
             // add new table row
-            dirTable.addRow(chalk.green(type), chalk.blue(item), size, chalk.yellow(stat.ctime));
+            switch (type) {
+                case 'Directory':
+                    dirTable.addRow(chalk.blue(type), chalk.blue(item), chalk.blue(size), chalk.blue(stat.ctime));
+                    break;
+                case 'Socket':
+                    dirTable.addRow(chalk.red(type), chalk.red(item), chalk.red(size), chalk.red(stat.ctime));
+                    break;
+                default:
+                    dirTable.addRow(type, item, size, stat.ctime);
+            }
         } catch (err) {
             console.log(`${err}`);
         }

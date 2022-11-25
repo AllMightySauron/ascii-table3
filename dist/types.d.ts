@@ -6,12 +6,12 @@
  * @property {string} right         The right border character.
  * @property {string} colSeparator  The column separator character.
  */
-export type SectionStyle = {
+ export type SectionStyle = {
     left: string,
     center: string,
     right: string,
     colSeparator: string
-};
+}
 
  /**
   * Borders style definition.
@@ -26,7 +26,7 @@ export type SectionStyle = {
      middle: SectionStyle,
      bottom: SectionStyle,
      data: SectionStyle
- };
+ }
 
 /**
  * Type definition for a table style.
@@ -37,7 +37,7 @@ export type SectionStyle = {
 export type Style = {
     name: string,
     borders: Borders
-};
+}
 
 /**
  * @typedef {object} ColumnFormatJSON
@@ -49,7 +49,7 @@ export type ColumnFormatJSON = {
     aligns: number[],
     widths: number[],
     wrappings: boolean[]
-};
+}
 
 /**
  * @typedef {object} FormattingJSON
@@ -61,7 +61,7 @@ export type FormattingJSON = {
     titleAlign: number,
     columns: ColumnFormatJSON,
     justify: boolean
-};
+}
 
 /**
  * @typedef {object} TableJSON
@@ -75,4 +75,4 @@ export type TableJSON = {
     heading: string[],
     rows: string[][],
     formatting: FormattingJSON
-};
+}

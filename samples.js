@@ -3,7 +3,7 @@
 // example 1: base table
 console.log ('>>>>>> example 1. base table');
 
-const { AsciiTable3 } = require('./ascii-table3');
+const { AsciiTable3 } = require('./src/ascii-table3');
 
 // create table
 const table = 

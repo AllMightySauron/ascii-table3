@@ -2,18 +2,18 @@
 
 /**
  * Type imports.
- * @typedef { import("./ascii-table3").SectionStyle } SectionStyle
- * @typedef { import("./ascii-table3").Borders } Borders
- * @typedef { import("./ascii-table3").Style } Style
- * @typedef { import("./ascii-table3").ColumnFormatJSON } ColumnFormatJSON
- * @typedef { import("./ascii-table3").FormattingJSON } FormattingJSON
- * @typedef { import("./ascii-table3").TableJSON } TableJSON
+ * @typedef { import("./types").SectionStyle } SectionStyle
+ * @typedef { import("./types").Borders } Borders
+ * @typedef { import("./types").Style } Style
+ * @typedef { import("./types").ColumnFormatJSON } ColumnFormatJSON
+ * @typedef { import("./types").FormattingJSON } FormattingJSON
+ * @typedef { import("./types").TableJSON } TableJSON
  */
 
 /**
  * Filename containing rendering styles.
  */
-const STYLES_FILENAME = 'ascii-table3.styles.json';
+const STYLES_FILENAME = '../ascii-table3.styles.json';
 
 /**
  * Alignment direction enum.
@@ -47,9 +47,10 @@ class AsciiTable3 {
     }
 
     /**
-     * Returns wether a value is numeric or not, irrespective of its type.
+     * Returns whether a value is numeric or not, irrespective of its type.
      * @static
      * @param {*} value Value to test.
+     * @returns {boolean} Whether the value is numeric or not.
      */
     static isNumeric(value) {
         return !isNaN(parseFloat(value)) && isFinite(value);
@@ -59,7 +60,7 @@ class AsciiTable3 {
      * Pads the start of a string with a given string until the maximum length limit is reached.
      * @param {string}  str         String to pad at the beggining.
      * @param {number}  maxLength   The resulting string max lenght.
-     * @param {string}  fillStr     The new pad at the begginning.
+     * @param {string}  fillStr     The new pad at the begginning (optional, defaults to ' ').
      * @returns {string}            Start-padded string.
      */
      static padStart(str, maxLength, fillStr = ' ') {
@@ -97,7 +98,7 @@ class AsciiTable3 {
      * Pads the end of a string with a given string until the maximum length limit is reached.
      * @param {string}  str         String to pad at the end.
      * @param {number}  maxLength   The resulting string max lenght.
-     * @param {string}  fillStr     The new pad at the end.
+     * @param {string}  fillStr     The new pad at the end (optional, defaults to ' ').
      * @returns {string}            End-padded string.
      */
     static padEnd(str, maxLength, fillStr = ' ') {
@@ -133,10 +134,11 @@ class AsciiTable3 {
     /**
      * Generic string alignment.
      * @static
-     * @param {AlignmentEnum} direction The desired aligment direction according to the enum (left, right or center)
+     * @param {number} direction The desired aligment direction according to the enum (left, right or center).
      * @param {*} value The value to align.
      * @param {number} len The maximum alignment length.
      * @param {string} pad The pad char (optional, defaults to ' ').
+     * @returns {string} Aligned string.
      */
     static align(direction, value, len, pad = ' ') {
         const strValue = '' + value;
@@ -158,6 +160,7 @@ class AsciiTable3 {
      * @param {*} value The value to align.
      * @param {number} len The maximum alignment length.
      * @param {string} [pad] The pad char (optional, defaults to ' ').
+     * @returns {string} Left aligned string.
      */
     static alignLeft(value, len, pad = ' ') {
         return this.align(AlignmentEnum.LEFT, value, len, pad);
@@ -169,6 +172,7 @@ class AsciiTable3 {
      * @param {*} value The value to align.
      * @param {number} len The maximum alignment length.
      * @param {string} [pad] The pad char (optional, defaults to ' ').
+     * @returns {string} Right aligned string.
      */
     static alignRight(value, len, pad = ' ') {
         return this.align(AlignmentEnum.RIGHT, value, len, pad);
@@ -180,6 +184,7 @@ class AsciiTable3 {
      * @param {*} value The value to align.
      * @param {number} len The maximum alignment length.
      * @param {string} [pad] The pad char (optional, defaults to ' ').
+     * @returns {string} Center aligned string.
      */
     static alignCenter(value, len, pad = ' ') {
         return this.align(AlignmentEnum.CENTER, value, len, pad);
@@ -205,7 +210,7 @@ class AsciiTable3 {
     /**
      * Wraps a string into multiple lines of a limited width.
      * @param {string} str      The string to wrap.
-     * @param {num} maxWidth    The maximum width for the wrapped string.
+     * @param {number} maxWidth The maximum width for the wrapped string.
      * @returns {string}        The wrapped string.
      */
     static wordWrap(str, maxWidth) {
@@ -240,7 +245,7 @@ class AsciiTable3 {
     /**
      * Wraps a string into multiple lines of a limited width (simple string, no ANSI chars).
      * @param {string} str      The string to wrap.
-     * @param {num} maxWidth    The maximum width for the wrapped string.
+     * @param {number} maxWidth    The maximum width for the wrapped string.
      * @returns {string}        The wrapped string.
      */
     static wordWrapBasic(str, maxWidth) {
@@ -323,7 +328,7 @@ class AsciiTable3 {
     /**
      * Increases existing array size up to the desired limit.
      * @static
-     * @param {Array} array The array to increase.
+     * @param {*[]} array The array to increase.
      * @param {number} len The desired array size.
      * @param {*} [value] The fill value (optional).
      */
@@ -427,8 +432,8 @@ class AsciiTable3 {
 
     /**
      * Title setter.
-     * @param {string} title The title to set.
-     * @returns {object} The AsciiTable3 object instance.
+     * @param {string} title The title to set (optional, defaults to '').
+     * @returns {AsciiTable3} The AsciiTable3 object instance.
      */
     setTitle(title = '') {
         this.title = title;
@@ -446,7 +451,7 @@ class AsciiTable3 {
 
     /**
      * Title alignment setter.
-     * @param {AlignmentEnum} direction The desired title aligment direction according to the enum (left, right or center)
+     * @param {number} direction The desired title aligment direction according to the enum (left, right or center).
      * @returns {AsciiTable3} The AsciiTable3 object instance.
      */
     setTitleAlign(direction) {
@@ -481,7 +486,7 @@ class AsciiTable3 {
 
     /**
      * Title alignment getter.
-     * @returns {AlignmentEnum} The table title alignment direction.
+     * @returns {number} The table title alignment direction.
      */
     getTitleAlign() {
         return this.titleAlignment;
@@ -514,7 +519,7 @@ class AsciiTable3 {
 
     /**
      * Heading alignment setter.
-     * @param {AlignmentEnum} direction The desired heading aligment direction according to the enum (left, right or center)
+     * @param {number} direction The desired heading aligment direction according to the enum (left, right or center).
      * @returns {AsciiTable3} The AsciiTable3 object instance.
      */
     setHeadingAlign(direction) {
@@ -549,7 +554,7 @@ class AsciiTable3 {
 
     /**
      * Heading alignment getter.
-     * @returns  {AlignmentEnum} The instance heading alignment.
+     * @returns  {number} The instance heading alignment.
      */
     getHeadingAlign() {
         return this.headingAlign;
@@ -608,7 +613,7 @@ class AsciiTable3 {
 
     /**
      * Bulk addRow operation.
-     * @param {*[]} rows Multidimensional array of rows.
+     * @param {*[][]} rows Multidimensional array of rows.
      * @returns {AsciiTable3} The AsciiTable3 object instance.
      */
     addRowMatrix(rows) {
@@ -729,7 +734,7 @@ class AsciiTable3 {
     /**
      * Sets the alignment direction for a given column.
      * @param {number} idx Column index to align (starts at 1).
-     * @param {AlignmentEnum} direction Desired alignment direction.
+     * @param {number} direction Desired alignment direction.
      * @returns {AsciiTable3} The AsciiTable3 object instance.
      */
     setAlign(idx, direction) {
@@ -750,7 +755,7 @@ class AsciiTable3 {
     /**
      * Get the alignment direction for a given column.
      * @param {number} idx Column index to align (starts at 1).
-     * @returns {AlignmentEnum} The alignment set for a column.
+     * @returns {number} The alignment set for a column.
      */
     getAlign(idx) {
         var result = AlignmentEnum.AUTO;
@@ -765,7 +770,7 @@ class AsciiTable3 {
 
     /**
      * Sets the alignment direction for all table columns.
-     * @param {AlignmentEnum[]} directions Desired alignment directions.
+     * @param {number[]} directions Desired alignment directions.
      * @returns {AsciiTable3} The AsciiTable3 object instance.
      */
     setAligns(directions) {
@@ -776,7 +781,7 @@ class AsciiTable3 {
 
     /** 
      * Gets the alignment direction for all columns.
-     * @returns {AlignmentEnum[]} Array with alignment settings for all columns.
+     * @returns {number[]} Array with alignment settings for all columns.
      */
     getAligns() {
         if (!this.dataAlign) {
@@ -870,8 +875,8 @@ class AsciiTable3 {
     }
 
     /** 
-     * Gets the alignment direction for all columns.
-     * @returns {AlignmentEnum[]} Array with alignment settings for all columns.
+     * Gets the wrapping settings for all columns.
+     * @returns {boolean[]} Array with wrapping settings for all columns.
      */
     getWrappings() {
         if (!this.wrapping) {
@@ -1120,7 +1125,7 @@ class AsciiTable3 {
      * Get array of wrapped row data from a "normal" row.
      * @private
      * @param {*[]} row Row of data.
-     * @returns         Array of data rows after word wrapping.
+     * @returns {string[]}  Array of data rows after word wrapping.
      */
     getWrappedRows(row) {
         // setup a new wrapped row

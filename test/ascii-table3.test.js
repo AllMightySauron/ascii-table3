@@ -2,7 +2,7 @@
 
 const assert = require('assert');
 const chalk = require('chalk');
-const { AsciiTable3, AlignmentEnum } = require('../ascii-table3');
+const { AsciiTable3, AlignmentEnum } = require('../src/ascii-table3');
 
 // static methods
 describe('String methods', () => {
