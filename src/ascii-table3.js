@@ -124,7 +124,7 @@ class AsciiTable3 {
                 partArray.forEach(block => result += block[0] + block[1]);
              } else {
                 // empty or single block string
-                result = str.concat(fillStr.repeat(maxLength - str.length));
+                result = str.concat(fillStr.repeat(maxLength - strlen(str)));
              }
  
              return result;
