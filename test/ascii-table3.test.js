@@ -22,11 +22,14 @@ describe('String methods', () => {
     it('Pad start - ANSI escape codes (no pad char)', () => {
         assert.strictEqual(AsciiTable3.padStart(chalk.red('ab'), 4), chalk.red('  ab'));
     });
+    it('Pad start - multiple ANSI escape codes (no pad char)', () => {
+        assert.strictEqual(AsciiTable3.padStart(chalk.red('ab') + chalk.blue('de'), 6), chalk.red('  ab') + chalk.blue('de'));
+    });
     it('Pad start - ANSI escape codes (pad char)', () => {
         assert.strictEqual(AsciiTable3.padStart(chalk.red('ab'), 4, '-'), chalk.red('--ab'));
     });
     it('Pad start - unicode string', () => {
-        assert.strictEqual(AsciiTable3.padStart('𝓢𝓵𝓲𝔃𝓮𝓷𝓸𝓴', 10, '.'), chalk.red('..𝓢𝓵𝓲𝔃𝓮𝓷𝓸𝓴'));
+        assert.strictEqual(AsciiTable3.padStart('𝓢𝓵𝓲𝔃𝓮𝓷𝓸𝓴', 10, '.'), '..𝓢𝓵𝓲𝔃𝓮𝓷𝓸𝓴');
     });
 
     // pad end
@@ -45,11 +48,14 @@ describe('String methods', () => {
     it('Pad end - ANSI escape codes (no pad char)', () => {
         assert.strictEqual(AsciiTable3.padEnd(chalk.red('ab'), 4), chalk.red('ab  '));
     });
+    it('Pad end - multiple ANSI escape codes (no pad char)', () => {
+        assert.strictEqual(AsciiTable3.padEnd(chalk.red('ab') + chalk.blue('de'), 6), chalk.red('ab') + chalk.blue('de  '));
+    });
     it('Pad end - ANSI escape codes (pad char)', () => {
         assert.strictEqual(AsciiTable3.padEnd(chalk.red('ab'), 4, '.'), chalk.red('ab..'));
     });
     it('Pad end - unicode string', () => {
-        assert.strictEqual(AsciiTable3.padEnd('𝓢𝓵𝓲𝔃𝓮𝓷𝓸𝓴', 10, '.'), chalk.red('𝓢𝓵𝓲𝔃𝓮𝓷𝓸𝓴..'));
+        assert.strictEqual(AsciiTable3.padEnd('𝓢𝓵𝓲𝔃𝓮𝓷𝓸𝓴', 10, '.'), '𝓢𝓵𝓲𝔃𝓮𝓷𝓸𝓴..');
     });
 
     // left align

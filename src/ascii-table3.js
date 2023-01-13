@@ -60,7 +60,7 @@ class AsciiTable3 {
      * Pads the start of a string with a given string until the maximum length limit is reached.
      * @param {string}  str         String to pad at the beggining.
      * @param {number}  maxLength   The resulting string max lenght.
-     * @param {string}  fillStr     The new pad at the begginning (optional, defaults to ' ').
+     * @param {string}  fillStr     The new pad at the beginning (optional, defaults to ' ').
      * @returns {string}            Start-padded string.
      */
      static padStart(str, maxLength, fillStr = ' ') {
@@ -73,11 +73,18 @@ class AsciiTable3 {
             var result;
 
             if (partArray.length > 0) {
+                var endPrintLen = 0;
+
+                // calculate printable size of all blocks but first
+                for (var i = 1; i < partArray.length; i++) {
+                    endPrintLen += strlen(partArray[i][1]);
+                }
+
                 // get first printable block
                 var printable = partArray[0][1];
 
                 // pad the start of the printable block
-                printable = fillStr.repeat(maxLength - strlen(printable)).concat(printable);
+                printable = fillStr.repeat(maxLength - endPrintLen - strlen(printable)).concat(printable);
 
                 // replace printable block
                 partArray[0][1] = printable;
@@ -111,11 +118,18 @@ class AsciiTable3 {
              var result = '';
 
              if (partArray.length > 1) {
+                var initialPrintLen = 0;
+
+                // calculate printable size of all blocks but last
+                for (var i = 0; i < partArray.length - 2; i++) {
+                    initialPrintLen += strlen(partArray[i][1]);
+                }
+
                 // get last printable block
                 var printable = partArray[partArray.length - 2][1];
     
                 // pad the end of the printable block
-                printable = printable.concat(fillStr.repeat(maxLength - printable.length));
+                printable = printable.concat(fillStr.repeat(maxLength - initialPrintLen - strlen(printable)));
     
                 // replace printable block
                 partArray[partArray.length - 2][1] = printable;
