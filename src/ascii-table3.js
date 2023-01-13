@@ -77,7 +77,7 @@ class AsciiTable3 {
                 var printable = partArray[0][1];
 
                 // pad the start of the printable block
-                printable = fillStr.repeat(maxLength - printable.length).concat(printable);
+                printable = fillStr.repeat(maxLength - strlen(printable)).concat(printable);
 
                 // replace printable block
                 partArray[0][1] = printable;
