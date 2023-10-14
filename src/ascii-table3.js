@@ -39,7 +39,7 @@ class AsciiTable3 {
      */
     constructor(title = '') {
         /** @type {Style[]} */
-        this.styles = JSON.parse(fs.readFileSync(module.path ? module.path + '/' + STYLES_FILENAME : STYLES_FILENAME, 'utf8'));
+        this.styles = JSON.parse(fs.readFileSync(require.resolve(STYLES_FILENAME), 'utf8'))
 
         this.clear();
 
@@ -127,20 +127,20 @@ class AsciiTable3 {
 
                 // get last printable block
                 var printable = partArray[partArray.length - 2][1];
-    
+
                 // pad the end of the printable block
                 printable = printable.concat(fillStr.repeat(maxLength - initialPrintLen - strlen(printable)));
-    
+
                 // replace printable block
                 partArray[partArray.length - 2][1] = printable;
-    
+
                 // generate result
                 partArray.forEach(block => result += block[0] + block[1]);
              } else {
                 // empty or single block string
                 result = str.concat(fillStr.repeat(maxLength - strlen(str)));
              }
- 
+
              return result;
         }
     }
@@ -211,7 +211,7 @@ class AsciiTable3 {
      * @param {number} len The maximum alignment length.
      * @param {string} [pad] The pad char (optional, defaults to ' ').
      */
-    static alignAuto(value, len, pad = ' ') {    
+    static alignAuto(value, len, pad = ' ') {
         if (AsciiTable3.isNumeric(value)) {
             return this.alignRight(value, len, pad);
         } else if (typeof value == "string") {
@@ -268,10 +268,10 @@ class AsciiTable3 {
         // make sure we have a string as parameter
         str = '' + str;
 
-        var found = false; 
+        var found = false;
         var res = '';
 
-        while (strlen(str) > maxWidth) {                 
+        while (strlen(str) > maxWidth) {
             found = false;
             // Inserts new line at first whitespace of the line
             for (var i = maxWidth - 1; i >= 0; i--) {
@@ -289,7 +289,7 @@ class AsciiTable3 {
                 str = str.slice(maxWidth);
             }
         }
-    
+
         return res + str.trimStart();
     }
 
@@ -319,7 +319,7 @@ class AsciiTable3 {
             return result;
         } else {
             return str;
-        } 
+        }
     }
 
     /**
@@ -580,7 +580,7 @@ class AsciiTable3 {
      * @returns {AsciiTable3} The AsciiTable3 object instance.
      */
     addRow(...args) {
-        // create array for new row 
+        // create array for new row
         const row = AsciiTable3.arrayFill(args.length);
 
         // loop over arguments
@@ -602,7 +602,7 @@ class AsciiTable3 {
     addNonZeroRow(...args) {
         var skipRow = true;
 
-        // create array for new row 
+        // create array for new row
         const row = AsciiTable3.arrayFill(args.length);
 
         // loop over arguments
@@ -699,7 +699,7 @@ class AsciiTable3 {
             // arrays are 0-based
             result = this.colWidths[idx - 1];
         }
-        
+
         return result;
     }
 
@@ -728,7 +728,7 @@ class AsciiTable3 {
 
     /**
      * Sets the internal cell margin (in characters)
-     * @param {number} margin 
+     * @param {number} margin
      * @returns {AsciiTable3} The AsciiTable3 object instance.
      */
     setCellMargin(margin) {
@@ -756,7 +756,7 @@ class AsciiTable3 {
             // add new array elements if needed
             this.dataAlign.concat(AsciiTable3.arrayFill(idx - this.dataAlign.length, AlignmentEnum.AUTO));
         } else {
-            // create array            
+            // create array
             this.dataAlign = AsciiTable3.arrayFill(idx);
         }
 
@@ -778,7 +778,7 @@ class AsciiTable3 {
             // arrays are 0-based
             result = this.dataAlign[idx - 1];
         }
-        
+
         return result;
     }
 
@@ -793,7 +793,7 @@ class AsciiTable3 {
         return this;
     }
 
-    /** 
+    /**
      * Gets the alignment direction for all columns.
      * @returns {number[]} Array with alignment settings for all columns.
      */
@@ -854,7 +854,7 @@ class AsciiTable3 {
             // create array and default to false
             this.wrapping = AsciiTable3.arrayFill(idx, false);
         }
-        
+
         // arrays are 0-based
         this.wrapping[idx - 1] = wrap;
 
@@ -873,7 +873,7 @@ class AsciiTable3 {
             // arrays are 0-based
             result = this.wrapping[idx - 1];
         }
-        
+
         return result;
     }
 
@@ -888,7 +888,7 @@ class AsciiTable3 {
         return this;
     }
 
-    /** 
+    /**
      * Gets the wrapping settings for all columns.
      * @returns {boolean[]} Array with wrapping settings for all columns.
      */
@@ -933,7 +933,7 @@ class AsciiTable3 {
     transpose() {
         // sanity check for empty table
         if (this.getHeading().length == 0 && this.getRows().length == 0) return this;
-        
+
         // get number of data columns
         const nCols = this.getHeading().length > 0 ? this.getHeading().length : this.getRows()[0].length;
 
@@ -1118,7 +1118,7 @@ class AsciiTable3 {
      */
     getHorizontalLine(posStyle, colsWidth) {
         var result = posStyle.left;
-        
+
         for (var i = 0; i < colsWidth.length; i++) {
             result += ''.padStart(colsWidth[i], posStyle.center);
 
@@ -1129,7 +1129,7 @@ class AsciiTable3 {
 
         // trim result
         result = result.trim();
-        
+
         if (result != '') result = result + '\n';
 
         return result;
@@ -1193,7 +1193,7 @@ class AsciiTable3 {
             // align contents disregarding margins
             const cellAligned = AsciiTable3.align(this.getHeadingAlign(), cell, colsWidth[col] - this.getCellMargin() * 2);
 
-            result += ''.padStart(this.getCellMargin()) + 
+            result += ''.padStart(this.getCellMargin()) +
                         AsciiTable3.truncateString(cellAligned, colsWidth[col] - this.getCellMargin() * 2) +
                         ''.padStart(this.getCellMargin());
 
@@ -1242,7 +1242,7 @@ class AsciiTable3 {
             // align cell contents disregarding cell margins
             const cellAligned = AsciiTable3.align(this.getAlign(col + 1), cell, colsWidth[col] - this.getCellMargin() * 2);
 
-            result += ''.padStart(this.getCellMargin()) + 
+            result += ''.padStart(this.getCellMargin()) +
                         AsciiTable3.truncateString(cellAligned, colsWidth[col] - this.getCellMargin() * 2) +
                         ''.padStart(this.getCellMargin());
 
@@ -1286,7 +1286,7 @@ class AsciiTable3 {
         const style = this.getStyle();
 
         // full table width
-        const maxWidth = 
+        const maxWidth =
             colsWidth.reduce(function(a, b) { return a + b; }, 0) +             // data column sizes
             (colsWidth.length - 1) * strlen(style.borders.data.colSeparator);   // mid column separators
 
@@ -1300,7 +1300,7 @@ class AsciiTable3 {
             if (result.trim() == '') result = '';
 
             // title line
-            result += style.borders.data.left + AsciiTable3.align(this.getTitleAlign(), this.getTitle(), maxWidth) + 
+            result += style.borders.data.left + AsciiTable3.align(this.getTitleAlign(), this.getTitle(), maxWidth) +
                     style.borders.data.right + '\n';
 
             // special style (between title and headings)
