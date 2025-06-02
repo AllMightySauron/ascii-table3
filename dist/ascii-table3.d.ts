@@ -37,7 +37,7 @@ export class AsciiTable3 {
      * Pads the start of a string with a given string until the maximum length limit is reached.
      * @param {string}  str         String to pad at the beggining.
      * @param {number}  maxLength   The resulting string max lenght.
-     * @param {string}  fillStr     The new pad at the begginning (optional, defaults to ' ').
+     * @param {string}  fillStr     The new pad at the beginning (optional, defaults to ' ').
      * @returns {string}            Start-padded string.
      */
     static padStart(str: string, maxLength: number, fillStr?: string): string;
