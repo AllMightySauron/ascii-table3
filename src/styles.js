@@ -1,4 +1,4 @@
-[
+const styles = [
     {
         "name": "none",
         "borders": {
@@ -272,3 +272,5 @@
         }
     }
 ]
+
+module.exports = { styles };

@@ -11,11 +11,6 @@
  */
 
 /**
- * Filename containing rendering styles.
- */
-const STYLES_FILENAME = '../ascii-table3.styles.json';
-
-/**
  * Alignment direction enum.
  */
 const AlignmentEnum = {
@@ -27,6 +22,7 @@ const AlignmentEnum = {
 
 const fs = require('fs');
 const { strlen, isBlank, partition } = require('printable-characters');
+const { styles } = require('./styles');
 
 /**
  * Class for creating beautiful ASCII tables.
@@ -39,7 +35,7 @@ class AsciiTable3 {
      */
     constructor(title = '') {
         /** @type {Style[]} */
-        this.styles = JSON.parse(fs.readFileSync(require.resolve(STYLES_FILENAME), 'utf8'))
+        this.styles = styles;
 
         this.clear();
 
