@@ -20,7 +20,6 @@ const AlignmentEnum = {
     AUTO: 3
 };
 
-const fs = require('fs');
 const { strlen, isBlank, partition } = require('printable-characters');
 const { styles } = require('./styles');
 
