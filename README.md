@@ -717,7 +717,7 @@ Currently available styles are:
 ```
 * **github-markdown** - github markdown style
 ```
-|      Sample table       |
+# Sample table
 | Name  | Age | Eye color |
 |-------|-----|-----------|
 | John  |  23 |   green   |
@@ -727,7 +727,7 @@ Currently available styles are:
 ```
 * **reddit-markdown** - reddit markdown style
 ```
-      Sample table
+# Sample table
  Name  | Age | Eye color
 -------|-----|-----------
  John  |  23 |   green
