@@ -498,8 +498,7 @@ describe('Styling', () => {
 });
 
 describe('Rendering', () => {
-    it ('toString (ramac)', () => {
-        const aTable = new AsciiTable3('Dummy title')
+    const aTable = new AsciiTable3('Dummy title')
             .setHeading('Title', 'Count', 'Rate (%)')
             .setAlign(1, AsciiTable3.LEFT)
             .addRowMatrix([ 
@@ -510,6 +509,7 @@ describe('Rendering', () => {
              ])
              .setCellMargin(0);
 
+    it ('toString (ramac)', () => {
         aTable.setStyle("ramac");
         assert.strictEqual(
             aTable.toString(),
@@ -524,7 +524,9 @@ describe('Rendering', () => {
             '|Dummy 4|    0|       1|\n' +
             '+-------+-----+--------+\n'
         );
+    });
 
+    it ('toString (none)', () => {
         aTable.setStyle("none");
         assert.strictEqual(
             aTable.toString(),
@@ -535,7 +537,9 @@ describe('Rendering', () => {
             'Dummy 3   100     3.14\n' +
             'Dummy 4     0        1\n'
         );
+    });
 
+    it ('toString (compact)', () => {
         aTable.setStyle("compact");
         assert.strictEqual(
             aTable.toString(),
@@ -549,7 +553,9 @@ describe('Rendering', () => {
             'Dummy 3   100     3.14\n' +
             'Dummy 4     0        1\n'
         );
+    });
 
+    it ('toString (unicode-single)', () => {
         aTable.setStyle("unicode-single");
         assert.strictEqual(
             aTable.toString(),
@@ -564,7 +570,9 @@ describe('Rendering', () => {
             '│Dummy 4│    0│       1│\n' +
             '└───────┴─────┴────────┘\n'
         );
+    });
 
+    it ('toString (unicode-double)', () => {
         aTable.setStyle("unicode-double");
         assert.strictEqual(
             aTable.toString(),
@@ -578,6 +586,47 @@ describe('Rendering', () => {
             '║Dummy 3║  100║    3.14║\n' +
             '║Dummy 4║    0║       1║\n' +
             '╚═══════╩═════╩════════╝\n'
+        );
+    });
+
+    it ('toString (github-markdown)', () => {
+        aTable.setStyle("github-markdown");
+        assert.strictEqual(
+            aTable.toString(),
+            '# Dummy title\n' +
+            '| Title |Count|Rate (%)|\n' +
+            '|-------|----:|-------:|\n' +
+            '|Dummy 1|   10|     2.3|\n' +
+            '|Dummy 2|    5|     3.1|\n' +
+            '|Dummy 3|  100|    3.14|\n' +
+            '|Dummy 4|    0|       1|\n'
+        );
+
+        aTable.setAlign(2, AlignmentEnum.LEFT);
+
+        assert.strictEqual(
+            aTable.toString(),
+            '# Dummy title\n' +
+            '| Title |Count|Rate (%)|\n' +
+            '|-------|:----|-------:|\n' +
+            '|Dummy 1|10   |     2.3|\n' +
+            '|Dummy 2|5    |     3.1|\n' +
+            '|Dummy 3|100  |    3.14|\n' +
+            '|Dummy 4|0    |       1|\n'
+        );
+
+        aTable.setAlign(2, AlignmentEnum.CENTER);
+        aTable.setAlign(3, AlignmentEnum.LEFT);
+
+        assert.strictEqual(
+            aTable.toString(),
+            '# Dummy title\n' +
+            '| Title |Count|Rate (%)|\n' +
+            '|-------|:---:|:-------|\n' +
+            '|Dummy 1| 10  |2.3     |\n' +
+            '|Dummy 2|  5  |3.1     |\n' +
+            '|Dummy 3| 100 |3.14    |\n' +
+            '|Dummy 4|  0  |1       |\n'
         );
     });
 

@@ -459,6 +459,14 @@ export class AsciiTable3 {
      */
     private getHorizontalLine;
     /**
+     * Get string with the rendering of a line with markdown justifications.
+     * @private
+     * @param {SectionStyle} posStyle The line style for the desired position (between top, middle and bottom).
+     * @param {number[]} colsWidth Array with the desired width for each data column.
+     * @returns {string} String representation of table horizontal line.
+     */
+    private getMarkdownJustifyLine;
+    /**
      * Get array of wrapped row data from a "normal" row.
      * @private
      * @param {*[]} row Row of data.
@@ -502,7 +510,7 @@ export class AsciiTable3 {
     private getDataRow;
     /**
      * Render the instance as a string for output.
-     * @returns {string} String rendiring of this instance table.
+     * @returns {string} String rendering of this instance table.
      */
     toString(): string;
 }

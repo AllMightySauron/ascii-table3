@@ -58,7 +58,7 @@ class AsciiTable3 {
      * @param {string}  fillStr     The new pad at the beginning (optional, defaults to ' ').
      * @returns {string}            Start-padded string.
      */
-     static padStart(str, maxLength, fillStr = ' ') {
+    static padStart(str, maxLength, fillStr = ' ') {
         if (strlen(str) >= maxLength) {
             return str;
         } else {
@@ -107,12 +107,12 @@ class AsciiTable3 {
         if (strlen(str) >= maxLength) {
             return str;
         } else {
-             // partition string
-             const partArray = partition(str);
+            // partition string
+            const partArray = partition(str);
 
-             var result = '';
+            var result = '';
 
-             if (partArray.length > 1) {
+            if (partArray.length > 1) {
                 var initialPrintLen = 0;
 
                 // calculate printable size of all blocks but last
@@ -131,12 +131,12 @@ class AsciiTable3 {
 
                 // generate result
                 partArray.forEach(block => result += block[0] + block[1]);
-             } else {
+            } else {
                 // empty or single block string
                 result = str.concat(fillStr.repeat(maxLength - strlen(str)));
-             }
+            }
 
-             return result;
+            return result;
         }
     }
 
@@ -305,9 +305,9 @@ class AsciiTable3 {
 
             // loop over string partition
             for (const [nonPrintable, printable] of partition(str)) {
-                const text = Array.from(printable.substring(0, maxSize - SUFIX.length).concat(SUFIX)).slice (0, maxSize - length);
+                const text = Array.from(printable.substring(0, maxSize - SUFIX.length).concat(SUFIX)).slice(0, maxSize - length);
 
-                result += nonPrintable + text.join ('');
+                result += nonPrintable + text.join('');
                 length += text.length;
             }
 
@@ -343,7 +343,7 @@ class AsciiTable3 {
      */
     static arrayResize(array, len, value) {
         // resize as needed
-        while(len > array.length)
+        while (len > array.length)
             array.push(value);
     }
 
@@ -971,19 +971,19 @@ class AsciiTable3 {
      */
     toJSON() {
         return '{\n' +
-                `   "title": ${JSON.stringify(this.getTitle())},\n` +
-                `   "heading": ${JSON.stringify(this.getHeading())},\n` +
-                `   "rows": ${JSON.stringify(this.getRows())},\n` +
-                '   "formatting": {\n' +
-                `       "titleAlign": ${JSON.stringify(this.getTitleAlign())},\n` +
-                `       "headingAlign": ${JSON.stringify(this.getHeadingAlign())},\n` +
-                '       "columns": {\n' +
-                `           "aligns": ${JSON.stringify(this.getAligns())},\n` +
-                `           "widths": ${JSON.stringify(this.getWidths())},\n` +
-                `           "wrappings": ${JSON.stringify(this.getWrappings())}\n` +
-                '       },\n' +
-                `       "justify": ${JSON.stringify(this.isJustify())}\n` +
-                '   }\n' +
+            `   "title": ${JSON.stringify(this.getTitle())},\n` +
+            `   "heading": ${JSON.stringify(this.getHeading())},\n` +
+            `   "rows": ${JSON.stringify(this.getRows())},\n` +
+            '   "formatting": {\n' +
+            `       "titleAlign": ${JSON.stringify(this.getTitleAlign())},\n` +
+            `       "headingAlign": ${JSON.stringify(this.getHeadingAlign())},\n` +
+            '       "columns": {\n' +
+            `           "aligns": ${JSON.stringify(this.getAligns())},\n` +
+            `           "widths": ${JSON.stringify(this.getWidths())},\n` +
+            `           "wrappings": ${JSON.stringify(this.getWrappings())}\n` +
+            '       },\n' +
+            `       "justify": ${JSON.stringify(this.isJustify())}\n` +
+            '   }\n' +
             '}';
     }
 
@@ -1012,11 +1012,11 @@ class AsciiTable3 {
         return this;
     }
 
-       /**
-     * Sorts the table rows based on a specific methods.
-     * @param {function} func The comparison function to use when sorting.
-     * @returns {AsciiTable3} The AsciiTable3 object instance.
-     */
+    /**
+  * Sorts the table rows based on a specific methods.
+  * @param {function} func The comparison function to use when sorting.
+  * @returns {AsciiTable3} The AsciiTable3 object instance.
+  */
     sort(func) {
         this.rows.sort(func);
 
@@ -1029,11 +1029,11 @@ class AsciiTable3 {
      * @param {function} func The comparison function to use when sorting (optional, for compatibility with AsciiTable).
      * @returns {AsciiTable3} The AsciiTable3 object instance.
      */
-    sortColumn(idx, func = function(a, b) { return a > b ? 1 : -1; }) {
-        this.rows.sort(function(a, b) {
+    sortColumn(idx, func = function (a, b) { return a > b ? 1 : -1; }) {
+        this.rows.sort(function (a, b) {
             // zero-based array
             return func(a[idx - 1], b[idx - 1]);
-          });
+        });
 
         return this;
     }
@@ -1045,16 +1045,16 @@ class AsciiTable3 {
      */
     sortColumnDesc(idx) {
         // function for sorting descending
-        const func = function(a, b) { return b > a ? 1 : -1; };
+        const func = function (a, b) { return b > a ? 1 : -1; };
 
         return this.sortColumn(idx, func);
     }
 
-     /**
-     * Get the column sizes for table rendering (in characters).
-     * @private
-     * @returns {number[]} Array with column sizes for rendering.
-     */
+    /**
+    * Get the column sizes for table rendering (in characters).
+    * @private
+    * @returns {number[]} Array with column sizes for rendering.
+    */
     getColumnsWidth() {
         var colSizes;
 
@@ -1070,7 +1070,7 @@ class AsciiTable3 {
         }
 
         // loop over headings
-        for(var col = 0; col < headings.length; col++) {
+        for (var col = 0; col < headings.length; col++) {
             // get current cell value string
             const cell = ''.padStart(this.getCellMargin()) + headings[col] + ''.padStart(this.getCellMargin());
 
@@ -1080,7 +1080,7 @@ class AsciiTable3 {
         // determine max column sizes for data rows
         this.getRows().forEach(row => {
             // loop over columns
-            for(var col = 0; col < row.length; col++) {
+            for (var col = 0; col < row.length; col++) {
                 // get current cell value string
                 const cell = ''.padStart(this.getCellMargin()) + row[col] + ''.padStart(this.getCellMargin());
 
@@ -1089,7 +1089,7 @@ class AsciiTable3 {
         });
 
         // override with preset widths
-        for(var col2 = 0; col2 < colSizes.length; col2++) {
+        for (var col2 = 0; col2 < colSizes.length; col2++) {
             // check if width preset has been defined
             if (this.getWidth(col2 + 1)) {
                 colSizes[col2] = this.getWidth(col2 + 1);
@@ -1131,6 +1131,63 @@ class AsciiTable3 {
     }
 
     /**
+     * Get string with the rendering of a line with markdown justifications.
+     * @private
+     * @param {SectionStyle} posStyle The line style for the desired position (between top, middle and bottom).
+     * @param {number[]} colsWidth Array with the desired width for each data column.
+     * @returns {string} String representation of table horizontal line.
+     */
+    getMarkdownJustifyLine(posStyle, colsWidth) {
+        var getFinalAlign = function (align, value) {
+            var result = align;
+
+            if (result == AlignmentEnum.AUTO) {
+                if (AsciiTable3.isNumeric(value))
+                    result = AlignmentEnum.RIGHT;
+                else if (typeof value == "string")
+                    result = AlignmentEnum.LEFT;
+                else
+                    result = AlignmentEnum.LEFT;
+            }
+
+            return result;
+        }
+
+        var result = posStyle.left;
+
+        // loop over columns
+        for (var i = 0; i < colsWidth.length; i++) {
+            var align = getFinalAlign(this.getAlign(i + 1), this.getCell(1, i + 1));
+
+            // get column alignment
+            switch (align) {
+                case AlignmentEnum.AUTO:
+                    result += ''.padStart(colsWidth[i], posStyle.center);
+                    break;
+                case AlignmentEnum.CENTER:
+                    result += ':' + ''.padStart(colsWidth[i] - 2, posStyle.center) + ':';
+                    break;
+                case AlignmentEnum.LEFT:
+                    result += ':' + ''.padStart(colsWidth[i] - 1, posStyle.center);
+                    break;
+                case AlignmentEnum.RIGHT:
+                    result += ''.padStart(colsWidth[i] - 1, posStyle.center) + ':';
+                    break;
+                default:
+                    result += ''.padStart(colsWidth[i], posStyle.center);
+            }
+
+            if (i < colsWidth.length - 1) result += posStyle.colSeparator;
+        }
+
+        result += posStyle.right;
+
+        if (result != '') result = result + '\n';
+
+        return result;
+    }
+
+    /**
      * Get array of wrapped row data from a "normal" row.
      * @private
      * @param {*[]} row Row of data.
@@ -1151,7 +1208,7 @@ class AsciiTable3 {
 
                 if (wrappedRow[col].length > maxRows) maxRows = wrappedRow[col].length;
             } else {
-                wrappedRow[col] = [ cell ];
+                wrappedRow[col] = [cell];
             }
         }
 
@@ -1189,8 +1246,8 @@ class AsciiTable3 {
             const cellAligned = AsciiTable3.align(this.getHeadingAlign(), cell, colsWidth[col] - this.getCellMargin() * 2);
 
             result += ''.padStart(this.getCellMargin()) +
-                        AsciiTable3.truncateString(cellAligned, colsWidth[col] - this.getCellMargin() * 2) +
-                        ''.padStart(this.getCellMargin());
+                AsciiTable3.truncateString(cellAligned, colsWidth[col] - this.getCellMargin() * 2) +
+                ''.padStart(this.getCellMargin());
 
             if (col < row.length - 1) result += posStyle.colSeparator;
         }
@@ -1238,8 +1295,8 @@ class AsciiTable3 {
             const cellAligned = AsciiTable3.align(this.getAlign(col + 1), cell, colsWidth[col] - this.getCellMargin() * 2);
 
             result += ''.padStart(this.getCellMargin()) +
-                        AsciiTable3.truncateString(cellAligned, colsWidth[col] - this.getCellMargin() * 2) +
-                        ''.padStart(this.getCellMargin());
+                AsciiTable3.truncateString(cellAligned, colsWidth[col] - this.getCellMargin() * 2) +
+                ''.padStart(this.getCellMargin());
 
             if (col < colsWidth.length - 1) result += posStyle.colSeparator;
         }
@@ -1271,7 +1328,7 @@ class AsciiTable3 {
 
     /**
      * Render the instance as a string for output.
-     * @returns {string} String rendiring of this instance table.
+     * @returns {string} String rendering of this instance table.
      */
     toString() {
         // determine table columns max width
@@ -1282,34 +1339,38 @@ class AsciiTable3 {
 
         // full table width
         const maxWidth =
-            colsWidth.reduce(function(a, b) { return a + b; }, 0) +             // data column sizes
+            colsWidth.reduce(function (a, b) { return a + b; }, 0) +             // data column sizes
             (colsWidth.length - 1) * strlen(style.borders.data.colSeparator);   // mid column separators
 
         var result = '';
 
         // title
         if (this.getTitle().length > 0) {
-            // top line (above title)
-            result += style.borders.top.left + ''.padStart(maxWidth, style.borders.top.center) + style.borders.top.right + '\n';
+            if (style.name.includes('markdown')) {
+                result += '# ' + this.getTitle() + '\n';
+            } else {
+                // top line (above title)
+                result += style.borders.top.left + ''.padStart(maxWidth, style.borders.top.center) + style.borders.top.right + '\n';
 
-            if (result.trim() == '') result = '';
+                if (result.trim() == '') result = '';
 
-            // title line
-            result += style.borders.data.left + AsciiTable3.align(this.getTitleAlign(), this.getTitle(), maxWidth) +
+                // title line
+                result += style.borders.data.left + AsciiTable3.align(this.getTitleAlign(), this.getTitle(), maxWidth) +
                     style.borders.data.right + '\n';
 
-            // special style (between title and headings)
-            /** @type {SectionStyle}  */
-            const newStyle = {
-                left: style.borders.middle.left,
-                right: style.borders.middle.right,
-                center: style.borders.top.center,
-                colSeparator: style.borders.top.colSeparator
-            };
+                // special style (between title and headings)
+                /** @type {SectionStyle}  */
+                const newStyle = {
+                    left: style.borders.middle.left,
+                    right: style.borders.middle.right,
+                    center: style.borders.top.center,
+                    colSeparator: style.borders.top.colSeparator
+                };
 
-            if (newStyle.center != '' || newStyle.colSeparator != '') {
-                // title / heading separator line
-                result += this.getHorizontalLine(newStyle, colsWidth);
+                if (newStyle.center != '' || newStyle.colSeparator != '') {
+                    // title / heading separator line
+                    result += this.getHorizontalLine(newStyle, colsWidth);
+                }
             }
         } else {
             // top line
@@ -1321,7 +1382,10 @@ class AsciiTable3 {
             result += this.getHeadingRow(style.borders.data, colsWidth);
 
             // heading / rows separator line
-            result += this.getHorizontalLine(style.borders.middle, colsWidth);
+            if (!style.name.includes('markdown'))
+                result += this.getHorizontalLine(style.borders.middle, colsWidth);
+            else
+                result += this.getMarkdownJustifyLine(style.borders.middle, colsWidth);
         }
 
         // rows
