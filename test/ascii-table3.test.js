@@ -626,6 +626,16 @@ describe('Rendering', () => {
             '|Dummy 3| 100 |3.14    |\n' +
             '|Dummy 4|  0  |1       |\n'
         );
+
+        // no rows
+        aTable.clearRows();
+
+        assert.strictEqual(
+            aTable.toString(),
+            '# Dummy title\n' +
+            '|Title|Count|Rate (%)|\n' +
+            '|-----|-----|--------|\n'
+        );
     });
 
     it ('toString (custom style)', () => {

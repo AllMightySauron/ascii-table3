@@ -1155,7 +1155,9 @@ class AsciiTable3 {
 
         // loop over columns
         for (var i = 0; i < colsWidth.length; i++) {
-            var align = getFinalAlign(this.getAlign(i + 1), this.getCell(1, i + 1));
+            var align;
+            
+            if (this.getRows().length > 0) align = getFinalAlign(this.getAlign(i + 1), this.getCell(1, i + 1));
 
             // get column alignment
             switch (align) {
