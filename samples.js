@@ -1,5 +1,3 @@
-/*jshint esversion: 6 */
-
 // example 1: base table
 console.log ('>>>>>> example 1. base table');
 

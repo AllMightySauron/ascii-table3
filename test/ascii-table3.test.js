@@ -1,5 +1,3 @@
-/*jshint esversion: 6 */
-
 const assert = require('assert');
 const chalk = require('chalk');
 const { AsciiTable3, AlignmentEnum } = require('../src/ascii-table3');
@@ -906,7 +904,7 @@ describe('Serialization', () => {
             ['Susan', 32, 'F']
         ]);
 
-    const tableJSON = JSON.parse(aTable.toJSON());
+    const tableJSON = aTable.toJSON();
 
     it ('toJSON', () => {
         assert.strictEqual(tableJSON.title, aTable.getTitle());
@@ -926,7 +924,7 @@ describe('Serialization', () => {
     it ('fromJSON', () => {
         const newTable = new AsciiTable3().fromJSON(tableJSON);
 
-        assert.strictEqual(newTable.toJSON(), aTable.toJSON());
+        assert.deepStrictEqual(newTable.toJSON(), aTable.toJSON());
     });
 });
 
@@ -983,7 +981,7 @@ describe('Transpose', () => {
 
         const newTable = aTable.transpose();
 
-        assert.strictEqual(newTable.toJSON(), aTable.toJSON());
+        assert.deepStrictEqual(newTable.toJSON(), aTable.toJSON());
     });
 
     it ('no heading', () => {

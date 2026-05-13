@@ -3,6 +3,16 @@
 Release notes are derived from the GitHub release descriptions and local tag
 messages for `AllMightySauron/ascii-table3`.
 
+## 1.0.3 - 2026-05-13
+
+- Fixed `toJSON()` to return a JSON object instead of a serialized JSON string.
+- Replaced JSHint with ESLint for project linting.
+- Scoped linting to first-party JavaScript sources, tests, and sample files.
+- Added `chalk` as a development dependency for tests and sample scripts.
+- Bumped development dependencies for Mocha and NYC.
+- Removed obsolete JSHint file pragmas.
+- Fixed semicolon lint findings in source files.
+
 ## 1.0.2 - 2026-05-12
 
 - Fixed alignment and titles for markdown tables

@@ -1373,7 +1373,7 @@ console.log(table.toString());
 
 #### instance.toJSON()
 
-Return the JSON representation of the table, this also allows us to call 
+Return the JSON object representation of the table, this also allows us to call 
 `JSON.stringify` on the instance.
 
 Example:
@@ -1387,7 +1387,7 @@ table
   .addRow(2, 'Steve')
   .setWidths([3, 10]);
 
-console.log(table.toJSON());
+console.log(JSON.stringify(table.toJSON(), null, 3));
 ```
 ```json
 {

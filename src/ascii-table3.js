@@ -1,5 +1,3 @@
-/*jshint esversion: 6 */
-
 /**
  * Type imports.
  * @typedef { import("./types").SectionStyle } SectionStyle
@@ -967,24 +965,24 @@ class AsciiTable3 {
 
     /**
      * Return the JSON representation of the table, this also allows us to call JSON.stringify on the instance.
-     * @returns {string} The table JSON representation.
+     * @returns {TableJSON} The table JSON representation.
      */
     toJSON() {
-        return '{\n' +
-            `   "title": ${JSON.stringify(this.getTitle())},\n` +
-            `   "heading": ${JSON.stringify(this.getHeading())},\n` +
-            `   "rows": ${JSON.stringify(this.getRows())},\n` +
-            '   "formatting": {\n' +
-            `       "titleAlign": ${JSON.stringify(this.getTitleAlign())},\n` +
-            `       "headingAlign": ${JSON.stringify(this.getHeadingAlign())},\n` +
-            '       "columns": {\n' +
-            `           "aligns": ${JSON.stringify(this.getAligns())},\n` +
-            `           "widths": ${JSON.stringify(this.getWidths())},\n` +
-            `           "wrappings": ${JSON.stringify(this.getWrappings())}\n` +
-            '       },\n' +
-            `       "justify": ${JSON.stringify(this.isJustify())}\n` +
-            '   }\n' +
-            '}';
+        return {
+            title: this.getTitle(),
+            heading: this.getHeading(),
+            rows: this.getRows(),
+            formatting: {
+                titleAlign: this.getTitleAlign(),
+                headingAlign: this.getHeadingAlign(),
+                columns: {
+                    aligns: this.getAligns(),
+                    widths: this.getWidths(),
+                    wrappings: this.getWrappings()
+                },
+                justify: this.isJustify()
+            }
+        };
     }
 
     /**
@@ -1151,7 +1149,7 @@ class AsciiTable3 {
             }
 
             return result;
-        }
+        };
 
         var result = posStyle.left;
 

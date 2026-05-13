@@ -416,9 +416,9 @@ export class AsciiTable3 {
     transpose(): AsciiTable3;
     /**
      * Return the JSON representation of the table, this also allows us to call JSON.stringify on the instance.
-     * @returns {string} The table JSON representation.
+     * @returns {TableJSON} The table JSON representation.
      */
-    toJSON(): string;
+    toJSON(): TableJSON;
     /**
      * Populate the table from json object, should match the toJSON output above.
      * @param {TableJSON} obj Object with table definition according to JSON structure.
