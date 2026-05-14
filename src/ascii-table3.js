@@ -261,6 +261,16 @@ class AsciiTable3 {
         // make sure we have a string as parameter
         str = '' + str;
 
+        // guard against invalid / too-small widths to avoid infinite loops
+        // (e.g. maxWidth <= 0 would never reduce `str` in the loop below)
+        if (typeof maxWidth !== 'number' || !Number.isFinite(maxWidth)) {
+            maxWidth = strlen(str);
+        }
+
+        if (maxWidth <= 0) {
+            maxWidth = 1;
+        }
+
         var found = false;
         var res = '';
 
@@ -1057,14 +1067,20 @@ class AsciiTable3 {
         var colSizes;
 
         const headings = this.getHeading();
+        const rows = this.getRows();
 
         // init col sizes (heading)
         if (headings.length > 0) {
             // use heading
             colSizes = AsciiTable3.arrayFill(headings.length, 0);
         } else {
-            // derive from first row
-            colSizes = AsciiTable3.arrayFill(this.getRows()[0].length, 0);
+            // derive from first row (if any)
+            if (rows.length > 0) {
+                colSizes = AsciiTable3.arrayFill(rows[0].length, 0);
+            } else {
+                // empty table (no headings, no rows)
+                return [];
+            }
         }
 
         // loop over headings
@@ -1076,7 +1092,7 @@ class AsciiTable3 {
         }
 
         // determine max column sizes for data rows
-        this.getRows().forEach(row => {
+        rows.forEach(row => {
             // loop over columns
             for (var col = 0; col < row.length; col++) {
                 // get current cell value string
@@ -1096,7 +1112,9 @@ class AsciiTable3 {
 
         // check for justification (all columns of same width)
         if (this.isJustify()) {
-            colSizes = AsciiTable3.arrayFill(colSizes.length, Math.max(...colSizes));
+            if (colSizes.length > 0) {
+                colSizes = AsciiTable3.arrayFill(colSizes.length, Math.max(...colSizes));
+            }
         }
 
         return colSizes;
@@ -1156,7 +1174,7 @@ class AsciiTable3 {
         // loop over columns
         for (var i = 0; i < colsWidth.length; i++) {
             var align;
-            
+
             if (this.getRows().length > 0) align = getFinalAlign(this.getAlign(i + 1), this.getCell(1, i + 1));
 
             // get column alignment
