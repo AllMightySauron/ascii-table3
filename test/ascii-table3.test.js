@@ -49,6 +49,9 @@ describe('String methods', () => {
     it('Pad end - multiple ANSI escape codes (no pad char)', () => {
         assert.strictEqual(AsciiTable3.padEnd(chalk.red('ab') + chalk.blue('de'), 6), chalk.red('ab') + chalk.blue('de  '));
     });
+    it('Pad end - printable text after ANSI escape codes (no pad char)', () => {
+        assert.strictEqual(AsciiTable3.padEnd(chalk.red('ab') + 'cd', 6), chalk.red('ab') + 'cd  ');
+    });
     it('Pad end - ANSI escape codes (pad char)', () => {
         assert.strictEqual(AsciiTable3.padEnd(chalk.red('ab'), 4, '.'), chalk.red('ab..'));
     });
@@ -68,6 +71,9 @@ describe('String methods', () => {
     });
     it('Left Alignment - ANSI escape codes (pad char)', () => {
         assert.strictEqual(AsciiTable3.alignLeft(chalk.blue('ab'), 5, '+'), chalk.blue('ab+++'));
+    });
+    it('Left Alignment - printable text after ANSI escape codes (no pad char)', () => {
+        assert.strictEqual(AsciiTable3.alignLeft(chalk.blue('ab') + 'cd', 6), chalk.blue('ab') + 'cd  ');
     });
 
     // right align

@@ -111,21 +111,26 @@ class AsciiTable3 {
             var result = '';
 
             if (partArray.length > 1) {
+                // index of the last block holding printable content; the final block has an
+                // empty printable part only when the string ends with non-printable chars (e.g. an ANSI reset)
+                const lastIndex = partArray[partArray.length - 1][1] !== '' ?
+                    partArray.length - 1 : partArray.length - 2;
+
                 var initialPrintLen = 0;
 
-                // calculate printable size of all blocks but last
-                for (var i = 0; i < partArray.length - 2; i++) {
+                // calculate printable size of all blocks before the last printable one
+                for (var i = 0; i < lastIndex; i++) {
                     initialPrintLen += strlen(partArray[i][1]);
                 }
 
                 // get last printable block
-                var printable = partArray[partArray.length - 2][1];
+                var printable = partArray[lastIndex][1];
 
                 // pad the end of the printable block
                 printable = printable.concat(fillStr.repeat(maxLength - initialPrintLen - strlen(printable)));
 
                 // replace printable block
-                partArray[partArray.length - 2][1] = printable;
+                partArray[lastIndex][1] = printable;
 
                 // generate result
                 partArray.forEach(block => result += block[0] + block[1]);
