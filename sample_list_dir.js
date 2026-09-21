@@ -1,10 +1,19 @@
 // load modules
 const fs = require('fs');
+const nodePath = require('path');
 const chalk = require('chalk');
 const { AsciiTable3 } = require('./src/ascii-table3');
 
 // get path to list from command line
-const path = process.argv.length <= 2 ? '.' : process.argv[2];
+const inputPath = process.argv.length <= 2 ? '.' : process.argv[2];
+
+// resolve against the current working directory and reject any path that escapes it
+const baseDir = process.cwd();
+const path = nodePath.resolve(baseDir, inputPath);
+if (path !== baseDir && !path.startsWith(baseDir + nodePath.sep)) {
+    console.error('Error: access outside the current working directory is not allowed.');
+    process.exit(1);
+}
 
 // build table
 const dirTable =
