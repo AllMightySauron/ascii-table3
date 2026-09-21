@@ -3,6 +3,13 @@
 Release notes are derived from the GitHub release descriptions and local tag
 messages for `AllMightySauron/ascii-table3`.
 
+## 1.0.4 - 2026-09-21
+
+- Fixed rendering for completely empty tables.
+- Fixed GitHub Markdown rendering for tables with headings but no rows.
+- Fixed column width calculation for tables with no headings and no rows.
+- Guarded word wrapping against invalid or too-small widths.
+
 ## 1.0.3 - 2026-05-13
 
 - Fixed `toJSON()` to return a JSON object instead of a serialized JSON string.
