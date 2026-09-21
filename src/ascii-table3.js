@@ -1349,6 +1349,10 @@ class AsciiTable3 {
      * @returns {string} String rendering of this instance table.
      */
     toString() {
+        // sanity check
+        if (this.getTitle() === '' && this.getHeading().length === 0 && this.getRows().length === 0)
+            return '';
+
         // determine table columns max width
         const colsWidth = this.getColumnsWidth();
 

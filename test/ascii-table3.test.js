@@ -636,6 +636,13 @@ describe('Rendering', () => {
             '|Title|Count|Rate (%)|\n' +
             '|-----|-----|--------|\n'
         );
+
+        // no rows, no heading
+        aTable.clear();
+        assert.strictEqual(
+            aTable.toString(),
+            ''
+        );
     });
 
     it ('toString (custom style)', () => {
@@ -852,23 +859,30 @@ describe('Rendering', () => {
 
     it ('toString (no title)', () => {
         const aTable = new AsciiTable3()
-            .setHeading('Name', 'Age', 'Size')
-            .addRowMatrix([ 
-                ['Dummy 1', 10, 2.3], 
-                ['Dummy 2', 5, 3.1],  
-                ['Dummy 3', 100, 3.14] ]);
+            .setHeading('Title', 'Count', 'Rate (%)')
+            .setAlign(1, AsciiTable3.LEFT)
+            .addRowMatrix([
+                ['Dummy 1', 10, 2.3],
+                ['Dummy 2', 5, 3.1],
+                ['Dummy 3', 100, 3.14],
+                ['Dummy 4', 0, 1],
+            ])
+            .setCellMargin(0);
+
+        aTable.setTitle(undefined);
 
         // ramac
         aTable.setStyle("ramac");
         assert.strictEqual(
             aTable.toString(),
-            '+---------+-----+------+\n' +
-            '|  Name   | Age | Size |\n' +
-            '+---------+-----+------+\n' +
-            '| Dummy 1 |  10 |  2.3 |\n' +
-            '| Dummy 2 |   5 |  3.1 |\n' +
-            '| Dummy 3 | 100 | 3.14 |\n' +
-            '+---------+-----+------+\n'
+            '+-------+-----+--------+\n' +
+            '| Title |Count|Rate (%)|\n' +
+            '+-------+-----+--------+\n' +
+            '|Dummy 1|   10|     2.3|\n' +
+            '|Dummy 2|    5|     3.1|\n' +
+            '|Dummy 3|  100|    3.14|\n' +
+            '|Dummy 4|    0|       1|\n' +
+            '+-------+-----+--------+\n'
         );
     });
 
@@ -900,6 +914,16 @@ describe('Rendering', () => {
             'Dummy 2       5    3.1\n' +
             'Dummy 3     100   3.14\n'
         ); 
+    });
+
+    it ('toString (empty)', () => {
+        const aTable = new AsciiTable3();
+
+        // ramac
+        assert.strictEqual(
+            aTable.toString(),
+            ''
+        );
     });
 }); 
 
