@@ -369,6 +369,21 @@ describe('Styling', () => {
         
     });
 
+    it('addStyle does not leak to other instances', () => {
+        const customStyle = {
+            name: 'custom-local',
+            borders: new AsciiTable3().getStyle().borders
+        };
+
+        const aTable = new AsciiTable3();
+        aTable.addStyle(customStyle);
+
+        const otherTable = new AsciiTable3();
+
+        assert.strictEqual(aTable.getStyles().some(style => style.name == 'custom-local'), true);
+        assert.strictEqual(otherTable.getStyles().some(style => style.name == 'custom-local'), false);
+    });
+
     it ('removeBorder', () => {
         const aTable = new AsciiTable3();
 
@@ -400,6 +415,20 @@ describe('Styling', () => {
         assert.deepStrictEqual(aTable.getWidths(), [5, undefined, undefined]);
     });
 
+    it('invalid and tiny widths do not break rendering', () => {
+        const values = [0, -1, Number.NaN, Number.POSITIVE_INFINITY, 'tiny'];
+
+        values.forEach(width => {
+            const aTable = new AsciiTable3()
+                .setHeading('Title')
+                .setWidth(1, width)
+                .setWrapped(1)
+                .addRow('Dummy');
+
+            assert.doesNotThrow(() => aTable.toString());
+        });
+    });
+
     it('setAlign(s)/getAlign(s)', () => {
         const dummyTable = new AsciiTable3();
 
@@ -427,6 +456,16 @@ describe('Styling', () => {
         assert.deepStrictEqual(aTable.getAligns(), [ AlignmentEnum.CENTER, AlignmentEnum.RIGHT, AlignmentEnum.CENTER ]);
     });
 
+    it('setAlign fills skipped columns with default alignment', () => {
+        const aTable = new AsciiTable3()
+            .setHeading('Title', 'Count', 'Rate (%)')
+            .addRow('Dummy 1', 10, 2.3);
+
+        aTable.setAlign(3, AlignmentEnum.RIGHT);
+
+        assert.deepStrictEqual(aTable.getAligns(), [ AlignmentEnum.AUTO, AlignmentEnum.AUTO, AlignmentEnum.RIGHT ]);
+    });
+
     it('setWrapped/isWrapped', () => {
         const aTable = new AsciiTable3()
             .setHeading('Title', 'Count', 'Rate (%)')
@@ -440,6 +479,16 @@ describe('Styling', () => {
 
         aTable.setWrapped(2, false);
         assert.strictEqual(aTable.isWrapped(2), false);
+    });
+
+    it('setWrapped fills skipped columns with default wrapping', () => {
+        const aTable = new AsciiTable3()
+            .setHeading('Title', 'Count', 'Rate (%)')
+            .addRow('Dummy 1', 10, 2.3);
+
+        aTable.setWrapped(3);
+
+        assert.deepStrictEqual(aTable.getWrappings(), [ false, false, true ]);
     });
 
     it('setWrappings/getWrappings', () => {
@@ -947,6 +996,25 @@ describe('Rendering', () => {
         );
     });
 
+    it ('toString (literal newlines)', () => {
+        const aTable = new AsciiTable3()
+            .setHeading('H', 'I')
+            .addRow('a\nb', 'c')
+            .addRow('d', 'e\nf');
+
+        assert.strictEqual(
+            aTable.toString(),
+            '+---+---+\n' +
+            '| H | I |\n' +
+            '+---+---+\n' +
+            '| a | c |\n' +
+            '| b |   |\n' +
+            '| d | e |\n' +
+            '|   | f |\n' +
+            '+---+---+\n'
+        );
+    });
+
     it ('toString (empty)', () => {
         const aTable = new AsciiTable3();
 
@@ -990,6 +1058,21 @@ describe('Serialization', () => {
         const newTable = new AsciiTable3().fromJSON(tableJSON);
 
         assert.deepStrictEqual(newTable.toJSON(), aTable.toJSON());
+    });
+
+    it ('fromJSON accepts partial objects', () => {
+        const newTable = new AsciiTable3().fromJSON({
+            title: 'Partial',
+            rows: [['a']]
+        });
+
+        assert.strictEqual(newTable.getTitle(), 'Partial');
+        assert.deepStrictEqual(newTable.getHeading(), []);
+        assert.deepStrictEqual(newTable.getRows(), [['a']]);
+        assert.deepStrictEqual(newTable.getAligns(), [AlignmentEnum.AUTO]);
+        assert.deepStrictEqual(newTable.getWidths(), []);
+        assert.deepStrictEqual(newTable.getWrappings(), [false]);
+        assert.strictEqual(newTable.isJustify(), false);
     });
 });
 
