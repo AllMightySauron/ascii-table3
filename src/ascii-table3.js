@@ -948,7 +948,9 @@ class AsciiTable3 {
         if (this.getHeading().length == 0 && this.getRows().length == 0) return this;
 
         // get number of data columns
-        const nCols = this.getHeading().length > 0 ? this.getHeading().length : this.getRows()[0].length;
+        const nCols = this.getRows().reduce(function (max, row) {
+            return Math.max(max, row.length);
+        }, this.getHeading().length);
 
         // get number of data rows
         const nRows = this.getRows().length;

@@ -1126,4 +1126,43 @@ describe('Transpose', () => {
         }
     });
 
+    it ('ragged rows without heading', () => {
+        const aTable = new AsciiTable3('People')
+            .addRowMatrix([
+                ['John'],
+                ['Peter', 5, 'brown']
+            ]);
+
+        const newTable = aTable.transpose();
+
+        assert.deepStrictEqual(
+            newTable.getRows(),
+            [
+                ['John', 'Peter'],
+                [undefined, 5],
+                [undefined, 'brown']
+            ]
+        );
+    });
+
+    it ('ragged rows with short heading', () => {
+        const aTable = new AsciiTable3('People')
+            .setHeading('Name')
+            .addRowMatrix([
+                ['John', 18, 'green'],
+                ['Peter']
+            ]);
+
+        const newTable = aTable.transpose();
+
+        assert.deepStrictEqual(
+            newTable.getRows(),
+            [
+                ['Name', 'John', 'Peter'],
+                [undefined, 18, undefined],
+                [undefined, 'green', undefined]
+            ]
+        );
+    });
+
 });
