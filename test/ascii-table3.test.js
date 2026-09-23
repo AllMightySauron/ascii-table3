@@ -916,6 +916,37 @@ describe('Rendering', () => {
         ); 
     });
 
+    it ('toString (ragged rows without heading)', () => {
+        const aTable = new AsciiTable3()
+            .addRow('a')
+            .addRow('b', 'EXTRA');
+
+        assert.strictEqual(
+            aTable.toString(),
+            '+---+-------+\n' +
+            '| a |       |\n' +
+            '| b | EXTRA |\n' +
+            '+---+-------+\n'
+        );
+    });
+
+    it ('toString (ragged rows with heading)', () => {
+        const aTable = new AsciiTable3()
+            .setHeading('H')
+            .addRow('a', 'EXTRA')
+            .addRow('b');
+
+        assert.strictEqual(
+            aTable.toString(),
+            '+---+-------+\n' +
+            '| H |       |\n' +
+            '+---+-------+\n' +
+            '| a | EXTRA |\n' +
+            '| b |       |\n' +
+            '+---+-------+\n'
+        );
+    });
+
     it ('toString (empty)', () => {
         const aTable = new AsciiTable3();
 

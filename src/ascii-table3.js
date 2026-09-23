@@ -356,6 +356,16 @@ class AsciiTable3 {
     }
 
     /**
+     * Gets the string representation of a cell value for rendering.
+     * @private
+     * @param {*} value The cell value to render.
+     * @returns {string} Cell value converted to string.
+     */
+    static getCellString(value) {
+        return value === undefined ? '' : '' + value;
+    }
+
+    /**
      * Sets the output style for this table instance.
      * @param {string} name The desired style name (defaults to "ramac" if not found).
      * @returns {AsciiTable3} The AsciiTable3 object instance.
@@ -1064,29 +1074,22 @@ class AsciiTable3 {
     * @returns {number[]} Array with column sizes for rendering.
     */
     getColumnsWidth() {
-        var colSizes;
-
         const headings = this.getHeading();
         const rows = this.getRows();
+        const nCols = rows.reduce(function (max, row) {
+            return Math.max(max, row.length);
+        }, headings.length);
 
-        // init col sizes (heading)
-        if (headings.length > 0) {
-            // use heading
-            colSizes = AsciiTable3.arrayFill(headings.length, 0);
-        } else {
-            // derive from first row (if any)
-            if (rows.length > 0) {
-                colSizes = AsciiTable3.arrayFill(rows[0].length, 0);
-            } else {
-                // empty table (no headings, no rows)
-                return [];
-            }
-        }
+        // empty table (no headings, no rows)
+        if (nCols == 0) return [];
+
+        // init col sizes
+        var colSizes = AsciiTable3.arrayFill(nCols, 0);
 
         // loop over headings
         for (var col = 0; col < headings.length; col++) {
             // get current cell value string
-            const cell = ''.padStart(this.getCellMargin()) + headings[col] + ''.padStart(this.getCellMargin());
+            const cell = ''.padStart(this.getCellMargin()) + AsciiTable3.getCellString(headings[col]) + ''.padStart(this.getCellMargin());
 
             if (strlen(cell) > colSizes[col]) colSizes[col] = strlen(cell);
         }
@@ -1096,7 +1099,7 @@ class AsciiTable3 {
             // loop over columns
             for (var col = 0; col < row.length; col++) {
                 // get current cell value string
-                const cell = ''.padStart(this.getCellMargin()) + row[col] + ''.padStart(this.getCellMargin());
+                const cell = ''.padStart(this.getCellMargin()) + AsciiTable3.getCellString(row[col]) + ''.padStart(this.getCellMargin());
 
                 if (strlen(cell) > colSizes[col]) colSizes[col] = strlen(cell);
             }
@@ -1257,8 +1260,8 @@ class AsciiTable3 {
     getHeadingRowTruncated(posStyle, colsWidth, row) {
         var result = posStyle.left;
 
-        for (var col = 0; col < row.length; col++) {
-            const cell = '' + row[col];
+        for (var col = 0; col < colsWidth.length; col++) {
+            const cell = AsciiTable3.getCellString(row[col]);
 
             // align contents disregarding margins
             const cellAligned = AsciiTable3.align(this.getHeadingAlign(), cell, colsWidth[col] - this.getCellMargin() * 2);
@@ -1267,7 +1270,7 @@ class AsciiTable3 {
                 AsciiTable3.truncateString(cellAligned, colsWidth[col] - this.getCellMargin() * 2) +
                 ''.padStart(this.getCellMargin());
 
-            if (col < row.length - 1) result += posStyle.colSeparator;
+            if (col < colsWidth.length - 1) result += posStyle.colSeparator;
         }
         result += posStyle.right + '\n';
 
@@ -1307,7 +1310,7 @@ class AsciiTable3 {
 
         // loop over data columns in row
         for (var col = 0; col < colsWidth.length; col++) {
-            const cell = '' + row[col];
+            const cell = AsciiTable3.getCellString(row[col]);
 
             // align cell contents disregarding cell margins
             const cellAligned = AsciiTable3.align(this.getAlign(col + 1), cell, colsWidth[col] - this.getCellMargin() * 2);
