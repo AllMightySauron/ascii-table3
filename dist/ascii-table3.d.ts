@@ -134,6 +134,13 @@ export class AsciiTable3 {
      */
     static arrayResize(array: any[], len: number, value?: any): void;
     /**
+     * Gets the string representation of a cell value for rendering.
+     * @private
+     * @param {*} value The cell value to render.
+     * @returns {string} Cell value converted to string.
+     */
+    private static getCellString;
+    /**
      * Default constructor.
      * @param {string} [title] The table title (optional).
      */
