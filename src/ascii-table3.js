@@ -32,7 +32,7 @@ class AsciiTable3 {
      */
     constructor(title = '') {
         /** @type {Style[]} */
-        this.styles = styles;
+        this.styles = Array.from(styles);
 
         this.clear();
 
@@ -363,6 +363,31 @@ class AsciiTable3 {
      */
     static getCellString(value) {
         return value === undefined ? '' : '' + value;
+    }
+
+    /**
+     * Gets the rendered lines for a cell value.
+     * @private
+     * @param {*} value The cell value to render.
+     * @returns {string[]} Cell lines converted to strings.
+     */
+    static getCellLines(value) {
+        return AsciiTable3.getCellString(value).split("\n");
+    }
+
+    /**
+     * Normalizes a user-supplied render width.
+     * @private
+     * @param {*} width The user-supplied width.
+     * @param {number} minWidth The minimum supported width.
+     * @returns {number|undefined} Safe width, or undefined when no override should apply.
+     */
+    static normalizeWidth(width, minWidth) {
+        const result = Number(width);
+
+        if (!Number.isFinite(result)) return undefined;
+
+        return Math.max(Math.floor(result), minWidth);
     }
 
     /**
@@ -767,10 +792,10 @@ class AsciiTable3 {
     setAlign(idx, direction) {
         if (this.dataAlign) {
             // add new array elements if needed
-            this.dataAlign.concat(AsciiTable3.arrayFill(idx - this.dataAlign.length, AlignmentEnum.AUTO));
+            AsciiTable3.arrayResize(this.dataAlign, idx, AlignmentEnum.AUTO);
         } else {
             // create array
-            this.dataAlign = AsciiTable3.arrayFill(idx);
+            this.dataAlign = AsciiTable3.arrayFill(idx, AlignmentEnum.AUTO);
         }
 
         // arrays are 0-based
@@ -862,7 +887,7 @@ class AsciiTable3 {
     setWrapped(idx, wrap = true) {
         if (this.wrapping) {
             // add new array elements if needed
-            this.wrapping.concat(AsciiTable3.arrayFill(idx - this.wrapping.length, false));
+            AsciiTable3.arrayResize(this.wrapping, idx, false);
         } else {
             // create array and default to false
             this.wrapping = AsciiTable3.arrayFill(idx, false);
@@ -1015,19 +1040,27 @@ class AsciiTable3 {
     fromJSON(obj) {
         this.clear();
 
+        obj = obj || {};
+
         this.setTitle(obj.title);
-        this.heading = Array.from(obj.heading);
-        this.addRowMatrix(obj.rows);
+        this.heading = Array.isArray(obj.heading) ? Array.from(obj.heading) : [];
+
+        if (Array.isArray(obj.rows)) {
+            this.addRowMatrix(obj.rows);
+        }
 
         // formatting
-        this.setTitleAlign(obj.formatting.titleAlign);
-        this.setHeadingAlign(obj.formatting.headingAlign);
+        const formatting = obj.formatting || {};
+        const columns = formatting.columns || {};
 
-        this.setAligns(obj.formatting.columns.aligns);
-        this.setWidths(obj.formatting.columns.widths);
-        this.setWrappings(obj.formatting.columns.wrappings);
+        if (formatting.titleAlign !== undefined) this.setTitleAlign(formatting.titleAlign);
+        if (formatting.headingAlign !== undefined) this.setHeadingAlign(formatting.headingAlign);
 
-        this.setJustify(obj.formatting.justify);
+        if (Array.isArray(columns.aligns)) this.setAligns(columns.aligns);
+        if (Array.isArray(columns.widths)) this.setWidths(columns.widths);
+        if (Array.isArray(columns.wrappings)) this.setWrappings(columns.wrappings);
+
+        if (formatting.justify !== undefined) this.setJustify(formatting.justify);
 
         return this;
     }
@@ -1090,28 +1123,33 @@ class AsciiTable3 {
 
         // loop over headings
         for (var col = 0; col < headings.length; col++) {
-            // get current cell value string
-            const cell = ''.padStart(this.getCellMargin()) + AsciiTable3.getCellString(headings[col]) + ''.padStart(this.getCellMargin());
+            AsciiTable3.getCellLines(headings[col]).forEach(cellLine => {
+                // get current cell value string
+                const cell = ''.padStart(this.getCellMargin()) + cellLine + ''.padStart(this.getCellMargin());
 
-            if (strlen(cell) > colSizes[col]) colSizes[col] = strlen(cell);
+                if (strlen(cell) > colSizes[col]) colSizes[col] = strlen(cell);
+            });
         }
 
         // determine max column sizes for data rows
         rows.forEach(row => {
             // loop over columns
             for (var col = 0; col < row.length; col++) {
-                // get current cell value string
-                const cell = ''.padStart(this.getCellMargin()) + AsciiTable3.getCellString(row[col]) + ''.padStart(this.getCellMargin());
+                AsciiTable3.getCellLines(row[col]).forEach(cellLine => {
+                    // get current cell value string
+                    const cell = ''.padStart(this.getCellMargin()) + cellLine + ''.padStart(this.getCellMargin());
 
-                if (strlen(cell) > colSizes[col]) colSizes[col] = strlen(cell);
+                    if (strlen(cell) > colSizes[col]) colSizes[col] = strlen(cell);
+                });
             }
         });
 
         // override with preset widths
         for (var col2 = 0; col2 < colSizes.length; col2++) {
             // check if width preset has been defined
-            if (this.getWidth(col2 + 1)) {
-                colSizes[col2] = this.getWidth(col2 + 1);
+            const width = AsciiTable3.normalizeWidth(this.getWidth(col2 + 1), this.getCellMargin() * 2 + 1);
+            if (width !== undefined) {
+                colSizes[col2] = width;
             }
         }
 
@@ -1225,14 +1263,17 @@ class AsciiTable3 {
         // loop over columns and wrap
         for (var col = 0; col < row.length; col++) {
             const cell = row[col];
+            const cellWidth = AsciiTable3.normalizeWidth(this.getWidth(col + 1), this.getCellMargin() * 2 + 1);
 
-            if (this.getWidth(col + 1) && this.isWrapped(col + 1)) {
-                wrappedRow[col] = AsciiTable3.wordWrap(cell, this.getWidth(col + 1) - this.getCellMargin() * 2).split("\n");
+            if (cellWidth !== undefined && this.isWrapped(col + 1)) {
+                wrappedRow[col] = AsciiTable3.wordWrap(cell, cellWidth - this.getCellMargin() * 2).split("\n");
 
                 if (wrappedRow[col].length > maxRows) maxRows = wrappedRow[col].length;
             } else {
-                wrappedRow[col] = [cell];
+                wrappedRow[col] = AsciiTable3.getCellLines(cell);
             }
+
+            if (wrappedRow[col].length > maxRows) maxRows = wrappedRow[col].length;
         }
 
         // create resulting array with (potentially) multiple rows

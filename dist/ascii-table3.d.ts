@@ -141,6 +141,21 @@ export class AsciiTable3 {
      */
     private static getCellString;
     /**
+     * Gets the rendered lines for a cell value.
+     * @private
+     * @param {*} value The cell value to render.
+     * @returns {string[]} Cell lines converted to strings.
+     */
+    private static getCellLines;
+    /**
+     * Normalizes a user-supplied render width.
+     * @private
+     * @param {*} width The user-supplied width.
+     * @param {number} minWidth The minimum supported width.
+     * @returns {number|undefined} Safe width, or undefined when no override should apply.
+     */
+    private static normalizeWidth;
+    /**
      * Default constructor.
      * @param {string} [title] The table title (optional).
      */
